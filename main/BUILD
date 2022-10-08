@@ -6,5 +6,6 @@ cc_binary(
     deps = [
         "//crow:crow_all",
     ],
-    linkopts = ["-lpthread"],
+	copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
+    linkopts = ["-lpthread", "-lmysqlcppconn"],
 )
