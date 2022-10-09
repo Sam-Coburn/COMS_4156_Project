@@ -38,7 +38,7 @@
 	Enter Root Password when prompted
 
 	Run the provided SQL File (replace path with path to sql file):\
-	```source /home/deb/Desktop/game_api_db_sql.sql;```
+	```source /home/deb/Desktop/matchmaking_api_db_sql.sql;```
 
 	Exit Console: ```quit```
 
@@ -74,26 +74,26 @@ Developer: developer_email = techlead@apex.com, developer_password = another_pas
 Successfully retrieved all developers
 Connecting to MYSQL to get all game details
 GameDetails:
-game_id = 1, game_name = Apex Legends
+game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
 game_parameter1_name = kills, game_parameter1_weight = 1.000000
 game_parameter2_name = deaths, game_parameter2_weight = -0.800000
 game_parameter3_name = assists, game_parameter3_weight = 0.500000
 game_parameter4_name = heals, game_parameter4_weight = 0.500000
 category = Battle Royale, players_per_team = 3, teams_per_match = 20
 GameDetails:
-game_id = 2, game_name = Chess
+game_id = 2, developer_email = developer@chess.com, game_name = Chess
 game_parameter1_name = rating, game_parameter1_weight = 1.000000
 category = Strategy, players_per_team = 1, teams_per_match = 2
 GameDetails:
-game_id = 3, game_name = Overwatch
+game_id = 3, developer_email = admin@overwatch.com, game_name = Overwatch
 game_parameter1_name = kills, game_parameter1_weight = 1.000000
 game_parameter2_name = deaths, game_parameter2_weight = -1.000000
 game_parameter3_name = assists, game_parameter3_weight = 0.500000
 game_parameter4_name = heals, game_parameter4_weight = 0.800000
 category = FPS, players_per_team = 5, teams_per_match = 2
 Successfully retrieved all game details
-(2022-10-09 15:37:10) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
-(2022-10-09 15:37:10) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
+(2022-10-09 18:36:50) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
+(2022-10-09 18:36:50) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
 ```
 
 
