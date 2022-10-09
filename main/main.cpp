@@ -7,8 +7,13 @@ using namespace std;
 int main(void)
 {
 	get_all_players();
+	cout << "\n";
 	get_all_developers();
+	cout << "\n";
 	get_all_games();
+	cout << "\n";
+	join_player_game_ratings_for_game(1);
+	cout << "\n";
 	crow::SimpleApp app; //define your crow application
 
 	//define your endpoint at the root directory

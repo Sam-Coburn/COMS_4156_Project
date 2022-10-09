@@ -48,7 +48,7 @@ struct Game_Details {
     {
         std::string output = "GameDetails:\ngame_id = " + std::to_string(game_id) + ", developer_email = " + developer_email 
         + ", game_name = " + game_name;
-        
+
         if(!game_parameter1_name.empty())
             output += "\ngame_parameter1_name = " + game_parameter1_name + ", game_parameter1_weight = " + std::to_string(game_parameter1_weight);
         
@@ -80,27 +80,50 @@ struct Player_Game_Ratings {
 struct Joined_Player_Game_Ratings {
     std::string player_email;
     int game_id;
+    std::string developer_email;
     std::string game_name;
 
     std::string game_parameter1_name;
     float game_parameter1_weight;
-    std::string game_parameter1_value;
+    int game_parameter1_value;
 
     std::string game_parameter2_name;
     float game_parameter2_weight;
-    std::string game_parameter2_value;
+    int game_parameter2_value;
 
     std::string game_parameter3_name;
     float game_parameter3_weight;
-    std::string game_parameter3_value;
+    int game_parameter3_value;
 
     std::string game_parameter4_name;
     float game_parameter4_weight;
-    std::string game_parameter4_value;
+    int game_parameter4_value;
     
     std::string category;
     int players_per_team;
     int teams_per_match;
+
+    std::string toString()
+    {
+        std::string output = "Player Game Ratings:\ngame_id = " + std::to_string(game_id) + ", developer_email = " + developer_email 
+        + ", game_name = " + game_name + "\nplayer_email = " + player_email;
+
+        if(!game_parameter1_name.empty())
+            output += "\ngame_parameter1_name = " + game_parameter1_name + ", game_parameter1_weight = " + std::to_string(game_parameter1_weight) + ", game_parameter1_value = " + std::to_string(game_parameter1_value);
+        
+        if(!game_parameter2_name.empty())
+            output += "\ngame_parameter2_name = " + game_parameter2_name + ", game_parameter2_weight = " + std::to_string(game_parameter2_weight) + ", game_parameter2_value = " + std::to_string(game_parameter2_value);
+        
+        if(!game_parameter3_name.empty())
+            output += "\ngame_parameter3_name = " + game_parameter3_name + ", game_parameter3_weight = " + std::to_string(game_parameter3_weight) + ", game_parameter3_value = " + std::to_string(game_parameter3_value);
+        
+        if(!game_parameter4_name.empty())
+            output += "\ngame_parameter4_name = " + game_parameter4_name + ", game_parameter4_weight = " + std::to_string(game_parameter4_weight) + ", game_parameter4_value = " + std::to_string(game_parameter4_value);
+        
+        output += "\ncategory = " + category + ", players_per_team = " + std::to_string(players_per_team) + ", teams_per_match = " + std::to_string(teams_per_match);
+
+        return output;
+    }
 };
 
 std::vector<Player> get_all_players();
@@ -111,6 +134,16 @@ Developer add_developer(Developer D);
 Player add_player(Player P);
 Game_Details add_game_details(Game_Details GD);
 Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
+
+Developer remove_developer(std::string developer_email);
+Player remove_player(std::string player_email);
+Game_Details remove_game_details(int game_id);
+Player_Game_Ratings remove_player_rating(std::string player_email, int game_id);
+
+Developer update_developer(Developer D);
+Player update_player(Player P);
+Game_Details update_game_details(Game_Details GD);
+Player_Game_Ratings update_player_rating(Player_Game_Ratings PGR);
 
 std::vector<Game_Details> get_all_games_for_developer(std::string developer_email);
 std::vector<Joined_Player_Game_Ratings> join_player_game_ratings_for_game(int game_id);

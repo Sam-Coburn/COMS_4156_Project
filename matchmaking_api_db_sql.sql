@@ -76,17 +76,3 @@ INSERT INTO Player_Game_Ratings VALUES('apex_player@gmail.com', 1, 100, 50, 25, 
 INSERT INTO Player_Game_Ratings VALUES('chess_player@gmail.com', 2, 1236, 0, 0, 0);
 INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 1, 500, 343, 37, 82);
 INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 2, 1321, 0, 0, 0);
-
--- Get all ratings for given player along with relevant game details
-SELECT P.player_email, GD.*
-FROM Players P 
-JOIN Player_Game_Ratings PGR ON P.player_email = PGR.player_email
-JOIN Game_Details GD ON PGR.game_id = GD.game_id
-WHERE P.player_email = 'apex_and_chess_player@gmail.com';
-
--- Get all users and their rating for APEX LEGENDS
-SELECT P.player_email, GD.*
-FROM Players P 
-JOIN Player_Game_Ratings PGR ON P.player_email = PGR.player_email
-JOIN Game_Details GD ON PGR.game_id = GD.game_id
-WHERE GD.game_name = 'APEX LEGENDS';

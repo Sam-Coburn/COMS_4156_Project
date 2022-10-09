@@ -67,11 +67,13 @@ Player: player_email = apex_and_chess_player@gmail.com
 Player: player_email = apex_player@gmail.com
 Player: player_email = chess_player@gmail.com
 Successfully retrieved all players
+
 Connecting to MYSQL to get all developers
 Developer: developer_email = admin@overwatch.com, developer_password = password123
 Developer: developer_email = developer@chess.com, developer_password = super_secret_password
 Developer: developer_email = techlead@apex.com, developer_password = another_password
 Successfully retrieved all developers
+
 Connecting to MYSQL to get all game details
 GameDetails:
 game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
@@ -92,8 +94,29 @@ game_parameter3_name = assists, game_parameter3_weight = 0.500000
 game_parameter4_name = heals, game_parameter4_weight = 0.800000
 category = FPS, players_per_team = 5, teams_per_match = 2
 Successfully retrieved all game details
-(2022-10-09 18:36:50) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
-(2022-10-09 18:36:50) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
+
+Connecting to MYSQL to get all player ratings for a game
+Player Game Ratings:
+game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
+player_email = apex_and_chess_player@gmail.com
+game_parameter1_name = kills, game_parameter1_weight = 1.000000, game_parameter1_value = 500
+game_parameter2_name = deaths, game_parameter2_weight = -0.800000, game_parameter2_value = 343
+game_parameter3_name = assists, game_parameter3_weight = 0.500000, game_parameter3_value = 37
+game_parameter4_name = heals, game_parameter4_weight = 0.500000, game_parameter4_value = 82
+category = Battle Royale, players_per_team = 3, teams_per_match = 20
+Player Game Ratings:
+game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
+player_email = apex_player@gmail.com
+game_parameter1_name = kills, game_parameter1_weight = 1.000000, game_parameter1_value = 100
+game_parameter2_name = deaths, game_parameter2_weight = -0.800000, game_parameter2_value = 50
+game_parameter3_name = assists, game_parameter3_weight = 0.500000, game_parameter3_value = 25
+game_parameter4_name = heals, game_parameter4_weight = 0.500000, game_parameter4_value = 10
+category = Battle Royale, players_per_team = 3, teams_per_match = 20
+Successfully retrieved all player game ratings
+
+(2022-10-09 19:16:06) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
+(2022-10-09 19:16:06) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
+
 ```
 
 
