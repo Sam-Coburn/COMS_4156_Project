@@ -60,19 +60,38 @@ The project does a simple SQL query and then starts the server
 So you should see something like the following:
 
 ```
-Let's have MySQL count from 10 to 1...
-	... MySQL counts: 10
-	... MySQL counts: 9
-	... MySQL counts: 8
-	... MySQL counts: 7
-	... MySQL counts: 6
-	... MySQL counts: 5
-	... MySQL counts: 4
-	... MySQL counts: 3
-	... MySQL counts: 2
-	... MySQL counts: 1
-(2022-10-08 15:51:17) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
-(2022-10-08 15:51:17) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
+Connecting to MYSQL to get all players
+Player: player_email = apex_and_chess_player@gmail.com
+Player: player_email = apex_player@gmail.com
+Player: player_email = chess_player@gmail.com
+Successfully retrieved all players
+Connecting to MYSQL to get all developers
+Developer: developer_email = admin@overwatch.com, developer_password = password123
+Developer: developer_email = developer@chess.com, developer_password = super_secret_password
+Developer: developer_email = techlead@apex.com, developer_password = another_password
+Successfully retrieved all developers
+Connecting to MYSQL to get all game details
+GameDetails:
+game_id = 1, game_name = Apex Legends
+game_parameter1_name = kills, game_parameter1_weight = 1.000000
+game_parameter2_name = deaths, game_parameter2_weight = -0.800000
+game_parameter3_name = assists, game_parameter3_weight = 0.500000
+game_parameter4_name = heals, game_parameter4_weight = 0.500000
+category = Battle Royale, players_per_team = 3, teams_per_match = 20
+GameDetails:
+game_id = 2, game_name = Chess
+game_parameter1_name = rating, game_parameter1_weight = 1.000000
+category = Strategy, players_per_team = 1, teams_per_match = 2
+GameDetails:
+game_id = 3, game_name = Overwatch
+game_parameter1_name = kills, game_parameter1_weight = 1.000000
+game_parameter2_name = deaths, game_parameter2_weight = -1.000000
+game_parameter3_name = assists, game_parameter3_weight = 0.500000
+game_parameter4_name = heals, game_parameter4_weight = 0.800000
+category = FPS, players_per_team = 5, teams_per_match = 2
+Successfully retrieved all game details
+(2022-10-09 15:37:10) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
+(2022-10-09 15:37:10) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
 ```
 
 
