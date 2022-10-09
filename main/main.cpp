@@ -8,6 +8,7 @@ int main(void)
 {
 	get_all_players();
 	get_all_developers();
+	get_all_games();
 	crow::SimpleApp app; //define your crow application
 
 	//define your endpoint at the root directory

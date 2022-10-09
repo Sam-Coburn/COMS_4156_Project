@@ -66,7 +66,7 @@ INSERT INTO Game_Details (game_name, game_parameter1_name, game_parameter1_weigh
                         game_parameter2_weight, game_parameter3_name, game_parameter3_weight,
                         game_parameter4_name, game_parameter4_weight, category, players_per_team,
                         teams_per_match)
-VALUES('Chess', 'rating', 1, null, null, null, null, null, null, 'Strategy', 1, 2);
+VALUES('Chess', 'rating', 1, "", 0, "", 0, "", 0, 'Strategy', 1, 2);
 
 INSERT INTO Game_Details (game_name, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
                         game_parameter2_weight, game_parameter3_name, game_parameter3_weight,
@@ -83,9 +83,9 @@ INSERT INTO Players VALUES('apex_and_chess_player@gmail.com');
 INSERT INTO Players VALUES('chess_player@gmail.com');
 
 INSERT INTO Player_Game_Ratings VALUES('apex_player@gmail.com', 1, 100, 50, 25, 10);
-INSERT INTO Player_Game_Ratings VALUES('chess_player@gmail.com', 2, 1236, null, null, null);
+INSERT INTO Player_Game_Ratings VALUES('chess_player@gmail.com', 2, 1236, 0, 0, 0);
 INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 1, 500, 343, 37, 82);
-INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 2, 1321, null, null, null);
+INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 2, 1321, 0, 0, 0);
 
 -- Get all ratings for given player along with relevant game details
 SELECT P.player_email, GD.*

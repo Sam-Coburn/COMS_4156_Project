@@ -40,8 +40,28 @@ struct Game_Details {
     float game_parameter4_weight;
 
     std::string category;
-    int player_per_team;
-    int teams_per_team;
+    int players_per_team;
+    int teams_per_match;
+
+    std::string toString()
+    {
+        std::string output = "GameDetails:\ngame_id = " + std::to_string(game_id) + ", game_name = " + game_name;
+        if(!game_parameter1_name.empty())
+            output += "\ngame_parameter1_name = " + game_parameter1_name + ", game_parameter1_weight = " + std::to_string(game_parameter1_weight);
+        
+        if(!game_parameter2_name.empty())
+            output += "\ngame_parameter2_name = " + game_parameter2_name + ", game_parameter2_weight = " + std::to_string(game_parameter2_weight);
+        
+        if(!game_parameter3_name.empty())
+            output += "\ngame_parameter3_name = " + game_parameter3_name + ", game_parameter3_weight = " + std::to_string(game_parameter3_weight);
+        
+        if(!game_parameter4_name.empty())
+            output += "\ngame_parameter4_name = " + game_parameter4_name + ", game_parameter4_weight = " + std::to_string(game_parameter4_weight);
+        
+        output += "\ncategory = " + category + ", players_per_team = " + std::to_string(players_per_team) + ", teams_per_match = " + std::to_string(teams_per_match);
+
+        return output;
+    }
 };
 
 struct Joined_Developer_Games {
@@ -61,8 +81,8 @@ struct Joined_Developer_Games {
     float game_parameter4_weight;
 
     std::string category;
-    int player_per_team;
-    int teams_per_team;
+    int players_per_team;
+    int teams_per_match;
 };
 
 struct Player_Game_Ratings {
@@ -97,8 +117,8 @@ struct Joined_Player_Game_Ratings {
     std::string game_parameter4_value;
     
     std::string category;
-    int player_per_team;
-    int teams_per_team;
+    int players_per_team;
+    int teams_per_match;
 };
 
 std::vector<Player> get_all_players();

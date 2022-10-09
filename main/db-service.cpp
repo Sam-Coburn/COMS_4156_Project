@@ -102,7 +102,63 @@ std::vector<Developer> get_all_developers() {
     }
 }
 
-std::vector<Game_Details> get_all_games();
+std::vector<Game_Details> get_all_games() {
+    std::cout << "Connecting to MYSQL to get all game details" << std::endl;
+    std::vector<Game_Details> game_details;
+
+    try {
+        sql::Driver *driver;
+        sql::Connection *con;
+        sql::Statement *stmt;
+        sql::ResultSet *res;
+        Game_Details gd;
+
+        driver = get_driver_instance();
+        con = driver->connect(hostname, username, password);
+
+        con->setSchema(database);
+
+        stmt = con->createStatement();
+        res = stmt->executeQuery("SELECT * FROM Game_Details");
+        while (res->next()) {
+            gd.game_id = std::stoi(res->getString("game_id"));
+            gd.game_name = res->getString("game_name");
+            gd.game_parameter1_name = res->getString("game_parameter1_name");
+            gd.game_parameter1_weight = std::stof(res->getString("game_parameter1_weight"));
+
+            gd.game_parameter2_name = res->getString("game_parameter2_name");
+            gd.game_parameter2_weight = std::stof(res->getString("game_parameter2_weight"));
+
+            gd.game_parameter3_name = res->getString("game_parameter3_name");
+            gd.game_parameter3_weight = std::stof(res->getString("game_parameter3_weight"));
+
+            gd.game_parameter4_name = res->getString("game_parameter4_name");
+            gd.game_parameter4_weight = std::stof(res->getString("game_parameter4_weight"));
+
+            gd.category = res->getString("category");
+            gd.players_per_team = std::stoi(res->getString("players_per_team"));
+            gd.teams_per_match = std::stoi(res->getString("teams_per_match"));
+            std::cout << gd.toString() << std::endl;
+            game_details.push_back(gd);
+        }
+
+        delete stmt;
+        delete res;
+        delete con;
+
+        std::cout << "Successfully retrieved all game details" << std::endl;
+        return game_details;
+
+    } catch (sql::SQLException &e) {
+        std::cout << "Error getting all game details" << std::endl;
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+        std::cout << "# ERR: " << e.what();
+        std::cout << " (MySQL error code: " << e.getErrorCode();
+        std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+        return game_details;
+    }
+}
 
 Developer add_developer(Developer D);
 Player add_player(Player P);
