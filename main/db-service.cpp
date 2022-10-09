@@ -122,6 +122,7 @@ std::vector<Game_Details> get_all_games() {
         res = stmt->executeQuery("SELECT * FROM Game_Details");
         while (res->next()) {
             gd.game_id = std::stoi(res->getString("game_id"));
+            gd.developer_email = res->getString("developer_email");
             gd.game_name = res->getString("game_name");
             gd.game_parameter1_name = res->getString("game_parameter1_name");
             gd.game_parameter1_weight = std::stof(res->getString("game_parameter1_weight"));
@@ -165,5 +166,5 @@ Player add_player(Player P);
 Game_Details add_game_details(Game_Details GD);
 Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
 
-std::vector<Joined_Developer_Games> join_developer_games(std::string developer_email);
+std::vector<Game_Details> get_all_games_for_developer(std::string developer_email);
 std::vector<Joined_Player_Game_Ratings> join_player_game_ratings_for_game(int game_id);

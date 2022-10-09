@@ -17,6 +17,7 @@ CREATE TABLE Players (
 
 CREATE TABLE Game_Details (
     game_id int NOT NULL auto_increment,
+	developer_email varchar(255) NOT NULL,
   	game_name varchar(255) NOT NULL,
   	game_parameter1_name varchar(255),
   	game_parameter1_weight float,
@@ -29,15 +30,8 @@ CREATE TABLE Game_Details (
   	category varchar(255),
   	players_per_team int,
   	teams_per_match int,
-  	PRIMARY KEY (game_id)
-);
-
-CREATE TABLE Developer_Games (
-  	developer_email varchar(255) NOT NULL,
-    game_id int NOT NULL,
-  	PRIMARY KEY (developer_email, game_id),
-  	FOREIGN KEY (developer_email) REFERENCES Developers(developer_email),
-  	FOREIGN KEY (game_id) REFERENCES Game_Details(game_id)
+  	PRIMARY KEY (game_id),
+	FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) ON DELETE CASCADE
 );
 
 CREATE TABLE Player_Game_Ratings (
@@ -48,35 +42,31 @@ CREATE TABLE Player_Game_Ratings (
   	game_parameter3_value int,
   	game_parameter4_value int,
   	PRIMARY KEY (player_email, game_id),
-  	FOREIGN KEY (player_email) REFERENCES Players(player_email),
-  	FOREIGN KEY (game_id) REFERENCES Game_Details(game_id)
+  	FOREIGN KEY (player_email) REFERENCES Players(player_email) ON DELETE CASCADE,
+  	FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) ON DELETE CASCADE
 );
 
 INSERT INTO Developers VALUES('developer@chess.com', 'super_secret_password');
 INSERT INTO Developers VALUES('techlead@apex.com', 'another_password');
 INSERT INTO Developers VALUES('admin@overwatch.com', 'password123');
 
-INSERT INTO Game_Details (game_name, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
+INSERT INTO Game_Details (game_name, developer_email, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
                         game_parameter2_weight, game_parameter3_name, game_parameter3_weight,
                         game_parameter4_name, game_parameter4_weight, category, players_per_team,
                         teams_per_match)
-VALUES('Apex Legends', 'kills', 1.0, 'deaths', -.8, 'assists', .5, 'heals', .5, 'Battle Royale', 3, 20);
+VALUES('Apex Legends', 'techlead@apex.com', 'kills', 1.0, 'deaths', -.8, 'assists', .5, 'heals', .5, 'Battle Royale', 3, 20);
 
-INSERT INTO Game_Details (game_name, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
+INSERT INTO Game_Details (game_name, developer_email, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
                         game_parameter2_weight, game_parameter3_name, game_parameter3_weight,
                         game_parameter4_name, game_parameter4_weight, category, players_per_team,
                         teams_per_match)
-VALUES('Chess', 'rating', 1, "", 0, "", 0, "", 0, 'Strategy', 1, 2);
+VALUES('Chess','developer@chess.com', 'rating', 1, '', 0, '', 0, '', 0, 'Strategy', 1, 2);
 
-INSERT INTO Game_Details (game_name, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
+INSERT INTO Game_Details (game_name, developer_email, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
                         game_parameter2_weight, game_parameter3_name, game_parameter3_weight,
                         game_parameter4_name, game_parameter4_weight, category, players_per_team,
                         teams_per_match)
-VALUES('Overwatch', 'kills', 1, 'deaths', -1, 'assists', .5, 'heals', .8, 'FPS', 5, 2);
-
-INSERT INTO Developer_Games VALUES('developer@chess.com', 1);
-INSERT INTO Developer_Games VALUES('techlead@apex.com', 2);
-INSERT INTO Developer_Games VALUES('admin@overwatch.com', 3);
+VALUES('Overwatch','admin@overwatch.com', 'kills', 1, 'deaths', -1, 'assists', .5, 'heals', .8, 'FPS', 5, 2);
 
 INSERT INTO Players VALUES('apex_player@gmail.com');
 INSERT INTO Players VALUES('apex_and_chess_player@gmail.com');

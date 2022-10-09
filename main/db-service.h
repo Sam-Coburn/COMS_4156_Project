@@ -25,6 +25,7 @@ struct Developer {
 
 struct Game_Details {
     int game_id;
+    std::string developer_email;
     std::string game_name;
 
     std::string game_parameter1_name;
@@ -45,7 +46,9 @@ struct Game_Details {
 
     std::string toString()
     {
-        std::string output = "GameDetails:\ngame_id = " + std::to_string(game_id) + ", game_name = " + game_name;
+        std::string output = "GameDetails:\ngame_id = " + std::to_string(game_id) + ", developer_email = " + developer_email 
+        + ", game_name = " + game_name;
+        
         if(!game_parameter1_name.empty())
             output += "\ngame_parameter1_name = " + game_parameter1_name + ", game_parameter1_weight = " + std::to_string(game_parameter1_weight);
         
@@ -62,27 +65,6 @@ struct Game_Details {
 
         return output;
     }
-};
-
-struct Joined_Developer_Games {
-    std::string developer_email;
-    std::string game_name;
-
-    std::string game_parameter1_name;
-    float game_parameter1_weight;
-
-    std::string game_parameter2_name;
-    float game_parameter2_weight;
-
-    std::string game_parameter3_name;
-    float game_parameter3_weight;
-
-    std::string game_parameter4_name;
-    float game_parameter4_weight;
-
-    std::string category;
-    int players_per_team;
-    int teams_per_match;
 };
 
 struct Player_Game_Ratings {
@@ -130,7 +112,7 @@ Player add_player(Player P);
 Game_Details add_game_details(Game_Details GD);
 Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
 
-std::vector<Joined_Developer_Games> join_developer_games(std::string developer_email);
+std::vector<Game_Details> get_all_games_for_developer(std::string developer_email);
 std::vector<Joined_Player_Game_Ratings> join_player_game_ratings_for_game(int game_id);
 
 #endif
