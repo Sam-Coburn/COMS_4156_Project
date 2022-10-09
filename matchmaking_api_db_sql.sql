@@ -1,8 +1,8 @@
 CREATE USER 'dbuser' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON *.* TO 'dbuser';
 	
-CREATE SCHEMA game_api_db;
-USE game_api_db;
+CREATE SCHEMA matchmaking_api_db;
+USE matchmaking_api_db;
 
 CREATE TABLE Developers (
     developer_email varchar(255) NOT NULL,
