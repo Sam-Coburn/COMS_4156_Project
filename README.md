@@ -1,6 +1,8 @@
 # Matchmaking API
 
+
 ### How to Run the Project
+**Platform: Debian 11**
 1. Install Bazel: https://bazel.build/install/ubuntu
 ```
 	sudo apt install apt-transport-https curl gnupg
