@@ -19,6 +19,7 @@ std::string database = "matchmaking_api_db";
 Player get_player(std::string player_email) {
     std::cout << "Connecting to MYSQL to get player with email: " + player_email << std::endl;
     Player P;
+    P.is_valid = false;
 
     try {
         sql::Driver *driver;
@@ -36,8 +37,9 @@ Player get_player(std::string player_email) {
         prep_stmt->setString(1, player_email);
 
         res = prep_stmt->executeQuery();
-        while (res->next()) {
+        while(res->next()) {
             P.player_email = res->getString("player_email");
+            P.is_valid = true;
             std::cout << P.toString() << std::endl;
         }
 
@@ -46,7 +48,6 @@ Player get_player(std::string player_email) {
         delete con;
 
         std::cout << "Successfully retrieved player with email: " + player_email << std::endl;
-        return P;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all player with email: " + player_email << std::endl;
@@ -55,13 +56,14 @@ Player get_player(std::string player_email) {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return P;
     }
+    return P;
 }
 
 Developer get_developer(std::string developer_email){
     std::cout << "Connecting to MYSQL to get developer with email: " + developer_email << std::endl;
     Developer D;
+    D.is_valid = false;
 
     try {
         sql::Driver *driver;
@@ -79,9 +81,10 @@ Developer get_developer(std::string developer_email){
         prep_stmt->setString(1, developer_email);
 
         res = prep_stmt->executeQuery();
-        while (res->next()) {
+        while(res->next()) {
             D.developer_email = res->getString("developer_email");
             D.developer_password = res->getString("developer_password");
+            D.is_valid = true;
             std::cout << D.toString() << std::endl;
         }
 
@@ -90,7 +93,6 @@ Developer get_developer(std::string developer_email){
         delete con;
 
         std::cout << "Successfully retrieved developer with email: " + developer_email << std::endl;
-        return D;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all developer with email: " + developer_email << std::endl;
@@ -99,13 +101,14 @@ Developer get_developer(std::string developer_email){
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return D;
     }
+    return D;
 }
 
 Game_Details get_game_details(int game_id) {
     std::cout << "Connecting to MYSQL to get game with with: " + std::to_string(game_id) << std::endl;
     Game_Details GD;
+    GD.is_valid = false;
 
     try {
         sql::Driver *driver;
@@ -123,7 +126,7 @@ Game_Details get_game_details(int game_id) {
         prep_stmt->setInt(1, game_id);
 
         res = prep_stmt->executeQuery();
-        while (res->next()) {
+        while(res->next()) {
             GD.game_id = std::stoi(res->getString("game_id"));
             GD.developer_email = res->getString("developer_email");
             GD.game_name = res->getString("game_name");
@@ -142,6 +145,7 @@ Game_Details get_game_details(int game_id) {
             GD.category = res->getString("category");
             GD.players_per_team = std::stoi(res->getString("players_per_team"));
             GD.teams_per_match = std::stoi(res->getString("teams_per_match"));
+            GD.is_valid = true;
             std::cout << GD.toString() << std::endl;
         }
 
@@ -150,7 +154,6 @@ Game_Details get_game_details(int game_id) {
         delete con;
 
         std::cout << "Successfully retrieved game with game_id: " + std::to_string(game_id) << std::endl;
-        return GD;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all game with game_id: " + std::to_string(game_id) << std::endl;
@@ -159,13 +162,15 @@ Game_Details get_game_details(int game_id) {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return GD;
     }
+
+    return GD;
 }
 
 Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id){
     std::cout << "Connecting to MYSQL to get rating in game with game_id: " + std::to_string(game_id) + " for player with email: " + player_email<< std::endl;
     Player_Game_Ratings PGR;
+    PGR.is_valid = false;
 
     try {
         sql::Driver *driver;
@@ -184,13 +189,14 @@ Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id
         prep_stmt->setInt(2, game_id);
 
         res = prep_stmt->executeQuery();
-        while (res->next()) {
+        while(res->next()) {
             PGR.player_email = res->getString("player_email");
             PGR.game_id = std::stoi(res->getString("game_id"));
             PGR.game_parameter1_value = std::stoi(res->getString("game_parameter1_value"));
             PGR.game_parameter2_value = std::stoi(res->getString("game_parameter2_value"));
             PGR.game_parameter3_value = std::stoi(res->getString("game_parameter3_value"));
             PGR.game_parameter4_value = std::stoi(res->getString("game_parameter4_value"));
+            PGR.is_valid = true;
             std::cout << PGR.toString() << std::endl;
         }
 
@@ -199,7 +205,6 @@ Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id
         delete con;
 
         std::cout << "Successfully retrieved rating in game with game_id: " + std::to_string(game_id) + " for player with email: " + player_email<< std::endl;
-        return PGR;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting rating in game with game_id: " + std::to_string(game_id) + " for player with email: " + player_email<< std::endl;
@@ -208,13 +213,15 @@ Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return PGR;
     }
+
+    return PGR;
 }
 
 Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_email, int game_id) {
     std::cout << "Connecting to MYSQL to get rating in game with game_id: " + std::to_string(game_id) + " for player with email: " + player_email<< std::endl;
     Joined_Player_Game_Ratings JPGR;
+    JPGR.is_valid = false;
 
     try {
         sql::Driver *driver;
@@ -233,7 +240,7 @@ Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_emai
         prep_stmt->setInt(2, game_id);
 
         res = prep_stmt->executeQuery();
-        while (res->next()) {
+        while(res->next()) {
             JPGR.player_email = res->getString("player_email");
             JPGR.game_id = std::stoi(res->getString("game_id"));
             JPGR.developer_email = res->getString("developer_email");
@@ -257,6 +264,7 @@ Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_emai
             JPGR.category = res->getString("category");
             JPGR.players_per_team = std::stoi(res->getString("players_per_team"));
             JPGR.teams_per_match = std::stoi(res->getString("teams_per_match"));
+            JPGR.is_valid = true;
             std::cout << JPGR.toString() << std::endl;
         }
 
@@ -265,7 +273,6 @@ Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_emai
         delete con;
 
         std::cout << "Successfully retrieved rating in game with game_id: " + std::to_string(game_id) + " for player with email: " + player_email<< std::endl;
-        return JPGR;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting rating in game with game_id: " + std::to_string(game_id) + " for player with email: " + player_email<< std::endl;
@@ -274,8 +281,9 @@ Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_emai
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return JPGR;
     }
+
+    return JPGR;
 }
 
 std::vector<Player> get_all_players(){
@@ -298,6 +306,7 @@ std::vector<Player> get_all_players(){
         res = stmt->executeQuery("SELECT * FROM Players");
         while (res->next()) {
             p.player_email = res->getString("player_email");
+            p.is_valid = true;
             std::cout << p.toString() << std::endl;
             players.push_back(p);
         }
@@ -307,7 +316,6 @@ std::vector<Player> get_all_players(){
         delete con;
 
         std::cout << "Successfully retrieved all players" << std::endl;
-        return players;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all players" << std::endl;
@@ -316,8 +324,9 @@ std::vector<Player> get_all_players(){
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return players;
     }
+
+    return players;
 
 }
 
@@ -342,6 +351,7 @@ std::vector<Developer> get_all_developers() {
         while (res->next()) {
             d.developer_email = res->getString("developer_email");
             d.developer_password = res->getString("developer_password");
+            d.is_valid = true;
             std::cout << d.toString() << std::endl;
             developers.push_back(d);
         }
@@ -351,7 +361,6 @@ std::vector<Developer> get_all_developers() {
         delete con;
 
         std::cout << "Successfully retrieved all developers" << std::endl;
-        return developers;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all developers" << std::endl;
@@ -360,8 +369,8 @@ std::vector<Developer> get_all_developers() {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return developers;
     }
+    return developers;
 }
 
 std::vector<Game_Details> get_all_games() {
@@ -401,6 +410,7 @@ std::vector<Game_Details> get_all_games() {
             gd.category = res->getString("category");
             gd.players_per_team = std::stoi(res->getString("players_per_team"));
             gd.teams_per_match = std::stoi(res->getString("teams_per_match"));
+            gd.is_valid = true;
             std::cout << gd.toString() << std::endl;
             game_details.push_back(gd);
         }
@@ -410,7 +420,6 @@ std::vector<Game_Details> get_all_games() {
         delete con;
 
         std::cout << "Successfully retrieved all game details" << std::endl;
-        return game_details;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all game details" << std::endl;
@@ -419,8 +428,9 @@ std::vector<Game_Details> get_all_games() {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return game_details;
     }
+
+    return game_details;
 }
 
 
@@ -469,6 +479,7 @@ std::vector<Joined_Player_Game_Ratings> get_all_player_game_ratings_for_game(int
             jpgr.category = res->getString("category");
             jpgr.players_per_team = std::stoi(res->getString("players_per_team"));
             jpgr.teams_per_match = std::stoi(res->getString("teams_per_match"));
+            jpgr.is_valid = true;
             std::cout << jpgr.toString() << std::endl;
             JPGR.push_back(jpgr);
         }
@@ -478,7 +489,6 @@ std::vector<Joined_Player_Game_Ratings> get_all_player_game_ratings_for_game(int
         delete con;
 
         std::cout << "Successfully retrieved all player game ratings" << std::endl;
-        return JPGR;
 
     } catch (sql::SQLException &e) {
         std::cout << "Error getting all player game ratings" << std::endl;
@@ -487,8 +497,9 @@ std::vector<Joined_Player_Game_Ratings> get_all_player_game_ratings_for_game(int
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
-        return JPGR;
     }
+
+    return JPGR;
 }
 
 

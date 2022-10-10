@@ -6,6 +6,7 @@
 
 struct Player {
     std::string player_email;
+    bool is_valid;
 
     std::string toString()
     {
@@ -16,6 +17,7 @@ struct Player {
 struct Developer {
     std::string developer_email;
     std::string developer_password;
+    bool is_valid;
 
     std::string toString()
     {
@@ -43,6 +45,8 @@ struct Game_Details {
     std::string category;
     int players_per_team;
     int teams_per_match;
+
+    bool is_valid;
 
     std::string toString()
     {
@@ -75,6 +79,8 @@ struct Player_Game_Ratings {
     int game_parameter2_value;
     int game_parameter3_value;
     int game_parameter4_value;
+
+    bool is_valid;
 
     std::string toString()
     {
@@ -113,6 +119,8 @@ struct Joined_Player_Game_Ratings {
     std::string category;
     int players_per_team;
     int teams_per_match;
+
+    bool is_valid;
 
     std::string toString()
     {
