@@ -71,10 +71,21 @@ struct Player_Game_Ratings {
     std::string player_email;
     int game_id;
 
-    std::string game_parameter1_value;
-    std::string game_parameter2_value;
-    std::string game_parameter3_value;
-    std::string game_parameter4_value;
+    int game_parameter1_value;
+    int game_parameter2_value;
+    int game_parameter3_value;
+    int game_parameter4_value;
+
+    std::string toString()
+    {
+        std::string output = "Player Game Ratings:\nplayer_email = " +player_email  + "game_id = " +  std::to_string(game_id) +
+        "\ngame_parameter1_value = " + std::to_string(game_parameter1_value) + 
+        "\ngame_parameter2_value = " + std::to_string(game_parameter2_value) +
+        "\ngame_parameter3_value = " + std::to_string(game_parameter3_value) +
+        "\ngame_parameter4_value = " + std::to_string(game_parameter4_value);
+
+        return output;
+    }
 };
 
 struct Joined_Player_Game_Ratings {
@@ -105,7 +116,7 @@ struct Joined_Player_Game_Ratings {
 
     std::string toString()
     {
-        std::string output = "Player Game Ratings:\ngame_id = " + std::to_string(game_id) + ", developer_email = " + developer_email 
+        std::string output = "Joined Player Game Ratings:\ngame_id = " + std::to_string(game_id) + ", developer_email = " + developer_email 
         + ", game_name = " + game_name + "\nplayer_email = " + player_email;
 
         if(!game_parameter1_name.empty())
@@ -126,9 +137,16 @@ struct Joined_Player_Game_Ratings {
     }
 };
 
+Player get_player(std::string player_email);
+Developer get_developer(std::string developer_email);
+Game_Details get_game_details(int game_id);
+Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id);
+Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_email, int game_id);
+
 std::vector<Player> get_all_players();
 std::vector<Developer> get_all_developers();
 std::vector<Game_Details> get_all_games();
+std::vector<Joined_Player_Game_Ratings> get_all_player_game_ratings_for_game(int game_id);
 
 Developer add_developer(Developer D);
 Player add_player(Player P);
@@ -146,6 +164,5 @@ Game_Details update_game_details(Game_Details GD);
 Player_Game_Ratings update_player_rating(Player_Game_Ratings PGR);
 
 std::vector<Game_Details> get_all_games_for_developer(std::string developer_email);
-std::vector<Joined_Player_Game_Ratings> join_player_game_ratings_for_game(int game_id);
 
 #endif
