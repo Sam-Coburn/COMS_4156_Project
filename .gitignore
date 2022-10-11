@@ -1,0 +1,5 @@
+# ignore build-generated files
+bazel-bin
+bazel-COMS_4156_Project
+bazel-out
+bazel-testlogs
