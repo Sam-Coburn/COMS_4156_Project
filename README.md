@@ -28,6 +28,14 @@ For example,
 ## Repo Structure
 
     └── COMS_4156_Project
+       ├── crow
+       │   ├── BUILD
+       │   └── crow-all.h
+       ├── main
+       │   ├── BUILD
+       │   ├── db-service.cpp
+       │   ├── db-service.h
+       │   └── main.cpp
        ├── hello-world-pkg
        │   ├── BUILD
        │   ├── hello-world.cc
@@ -50,6 +58,7 @@ For example,
 
 General Install Instructions:
 https://bazel.build/install
+
 ## Extra Notes
 Tutorials I read to make this repo:
 https://bazel.build/start/cpp
@@ -61,8 +70,9 @@ https://bazel.build/tutorials/cpp-use-cases
 http://google.github.io/googletest/primer.html
 http://google.github.io/googletest/gmock_for_dummies.html
 https://qiangbo-workspace.oss-cn-shanghai.aliyuncs.com/2018-12-05-gtest-and-coverage/PlainGoogleQuickTestReferenceGuide1.pdf
-# Matchmaking API
 
+
+# Matchmaking API
 
 ### How to Run the Project
 **Platform: Debian 11**
