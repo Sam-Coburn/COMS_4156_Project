@@ -16,19 +16,30 @@ Executable files are located in bazel-bin like so
 For example, to run hello world, do
 
     bazel-bin/hello-world-pkg/hello-world
+### Testing
+Test command is of the form
+
+**`bazel test --test_output=all //package-name:test-target-name`**
+
+For example,
+
+    bazel test --test_output=all //testing:hello_test
 
 ## Repo Structure
 
     └── COMS_4156_Project
-       ├── hello-world
+       ├── hello-world-pkg
        │   ├── BUILD
        │   ├── hello-world.cc
        │   ├── hello-greet.cc
        │   └── hello-greet.h
-       ├── hello-world-lib
+       ├── hello-world-lib-pkg
        │   ├── BUILD
        │   ├── hello-time.cc
        │   └── hello-time.h
+       ├── testing
+       │   ├── BUILD
+       │   └── hello_test.cc
        └── WORKSPACE
 
 ## Install Bazel
@@ -49,3 +60,4 @@ https://bazel.build/build/style-guide
 https://bazel.build/tutorials/cpp-use-cases
 http://google.github.io/googletest/primer.html
 http://google.github.io/googletest/gmock_for_dummies.html
+https://qiangbo-workspace.oss-cn-shanghai.aliyuncs.com/2018-12-05-gtest-and-coverage/PlainGoogleQuickTestReferenceGuide1.pdf
