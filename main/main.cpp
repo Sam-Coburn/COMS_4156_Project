@@ -24,6 +24,9 @@ int main(void)
 	cout << "\n";
 	get_all_player_game_ratings_for_game(1);
 	cout << "\n";
+	get_all_games_for_developer("developer@chess.com");
+	cout << "\n";
+	
 	crow::SimpleApp app; //define your crow application
 
 	//define your endpoint at the root directory
