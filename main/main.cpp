@@ -34,6 +34,71 @@ int main(void)
 		return "Hello world";
 	});
 
+	// Login doesn't do much since we are always expecting to get the email and password with every request
+	CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)([](const crow::request& req){
+		crow::json::rvalue x = crow::json::load(req.body);
+		std::string developer_email;
+		std::string developer_password;
+		Developer D;
+
+		try {
+			developer_email = x["developer_email"].s();
+			developer_password = x["developer_password"].s();
+			D = get_developer(developer_email);
+			if(!D.is_valid || D.developer_password != developer_password) {
+				return crow::response(400, "Invalid credentials");
+			}
+			return crow::response(200, "Succesfully logged in");
+		} catch(...) {
+			return crow::response(400, "Invalid request body");
+		}
+	});
+
+	CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)([](const crow::request& req){
+		crow::json::rvalue x = crow::json::load(req.body);
+		Developer D;
+		bool success;
+		try {
+			D.developer_email = x["developer_email"].s();
+			D.developer_password = x["developer_password"].s();
+			success = add_developer(D);
+			if(!success) {
+				return crow::response(400, "Developer already exists");
+			}
+			return crow::response(200, "Succesfully signed up");
+		} catch(...) {
+			return crow::response(400, "Invalid request body");
+		}
+	});
+
+	CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::DELETE)([](const crow::request& req){
+		crow::json::rvalue x = crow::json::load(req.body);
+		std::string developer_email;
+		std::string developer_password;
+		Developer D;
+
+		try {
+			developer_email = x["developer_email"].s();
+			developer_password = x["developer_password"].s();
+			D = get_developer(developer_email);
+			if(!D.is_valid) {
+				return crow::response(400, "User not found");
+			}
+
+			if(D.developer_password != developer_password) {
+				return crow::response(400, "Invalid credentials");
+			}
+
+			D = remove_developer(developer_email);
+			if(!D.is_valid) {
+				return crow::response(500, "Internal Server Error");
+			}
+			return crow::response(200, "Succesfully deleted account");
+		} catch(...) {
+			return crow::response(400, "Invalid request body");
+		}
+	});
+
 	//set the port, set the app to run on multiple threads, and run the app
 	app.port(18080).multithreaded().run();
 	return 0;
