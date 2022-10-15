@@ -107,6 +107,8 @@ struct Player_Game_Ratings {
   }
 };
 
+// This struct represents the join between
+// Player, Game Details, and Player_Game_Ratings
 struct Joined_Player_Game_Ratings {
   std::string player_email;
   int game_id;
@@ -181,6 +183,8 @@ Game_Details get_game_details(int game_id);
 Player_Game_Ratings
 get_player_game_rating(std::string player_email, int game_id);
 
+// Gets rating and game details for a specific player
+// for a specific game
 Joined_Player_Game_Ratings
 get_joined_player_game_rating(std::string player_email, int game_id);
 
