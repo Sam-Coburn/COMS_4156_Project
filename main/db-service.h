@@ -190,10 +190,10 @@ std::vector<Game_Details> get_all_games();
 std::vector<Joined_Player_Game_Ratings>
 get_all_player_game_ratings_for_game(int game_id);
 
-bool add_player(Player P);
-bool add_developer(Developer D);
-bool add_game_details(Game_Details GD);
-bool add_player_rating(Player_Game_Ratings PGR);
+Player add_player(Player P);
+Developer add_developer(Developer D);
+Game_Details add_game_details(Game_Details GD);
+Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
 
 bool update_player(Player P);
 bool update_developer(Developer D);

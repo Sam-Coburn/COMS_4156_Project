@@ -633,9 +633,10 @@ get_all_games_for_developer(std::string developer_email) {
   return GD;
 }
 
-bool add_player(Player P) {
+Player add_player(Player P) {
   std::cout << "Connecting to MYSQL to insert player with email: " +
   P.player_email << std::endl;
+  P.is_valid = false;
 
   try {
     sql::Driver *driver;
@@ -649,16 +650,14 @@ bool add_player(Player P) {
 
     prep_stmt = con->prepareStatement("INSERT INTO Players VALUES(?);");
     prep_stmt->setString(1, P.player_email);
-
     prep_stmt->executeUpdate();
+    P.is_valid = true;
 
     delete prep_stmt;
     delete con;
 
     std::cout <<
     "Successfully created player with email: " + P.player_email << std::endl;
-
-    return true;
   } catch (sql::SQLException &e) {
     std::cout <<
     "Error creating player with email: " + P.player_email << std::endl;
@@ -669,12 +668,13 @@ bool add_player(Player P) {
     std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
-  return false;
+  return P;
 }
 
-bool add_developer(Developer D) {
+Developer add_developer(Developer D) {
   std::cout << "Connecting to MYSQL to insert developer with email: " +
   D.developer_email << std::endl;
+  D.is_valid = false;
 
   try {
     sql::Driver *driver;
@@ -690,16 +690,14 @@ bool add_developer(Developer D) {
 
     prep_stmt->setString(1, D.developer_email);
     prep_stmt->setString(2, D.developer_password);
-
     prep_stmt->executeUpdate();
+    D.is_valid = true;
 
     delete prep_stmt;
     delete con;
 
     std::cout << "Successfully created developer with email: " +
     D.developer_email << std::endl;
-
-    return true;
   } catch (sql::SQLException &e) {
     std::cout <<
     "Error creating developer with email: " + D.developer_email << std::endl;
@@ -709,21 +707,25 @@ bool add_developer(Developer D) {
     std::cout << " (MySQL error code: " << e.getErrorCode();
     std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
-  return false;
+  return D;
 }
 
-bool add_game_details(Game_Details GD) {
+Game_Details add_game_details(Game_Details GD) {
   std::cout << "Connecting to MYSQL to insert new game" << std::endl;
+  GD.is_valid = false;
 
   try {
     sql::Driver *driver;
     sql::Connection *con;
+    sql::Statement *stmt;
     sql::PreparedStatement  *prep_stmt;
+    sql::ResultSet *res;
 
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
 
     con->setSchema(database);
+    con->setAutoCommit(false);
 
     prep_stmt = con->prepareStatement("INSERT INTO Game_Details "
     "(game_name, developer_email, "
@@ -731,7 +733,7 @@ bool add_game_details(Game_Details GD) {
     "game_parameter2_name, game_parameter2_weight, "
     "game_parameter3_name, game_parameter3_weight, "
     "game_parameter4_name, game_parameter4_weight, "
-    "category, players_per_team, teams_per_match)"
+    "category, players_per_team, teams_per_match) "
     "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
     prep_stmt->setString(1, GD.game_name);
@@ -747,15 +749,25 @@ bool add_game_details(Game_Details GD) {
     prep_stmt->setString(11, GD.category);
     prep_stmt->setInt(12, GD.players_per_team);
     prep_stmt->setInt(13, GD.teams_per_match);
-
     prep_stmt->executeUpdate();
 
+    stmt = con->createStatement();
+    res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
+
+    while (res->next()) {
+      GD.game_id = res->getInt("LAST_INSERT_ID()");
+    }
+
+    GD.is_valid = true;
+    con->commit();
+
     delete prep_stmt;
+    delete stmt;
+    delete res;
     delete con;
 
-    std::cout << "Successfully created game" << std::endl;
-
-    return true;
+    std::cout << "Successfully created game with game_id: " +
+    std::to_string(GD.game_id) << std::endl;
   } catch (sql::SQLException &e) {
     std::cout << "Error creating game" << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -765,13 +777,15 @@ bool add_game_details(Game_Details GD) {
     std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
-  return false;
+  return GD;
 }
 
-bool add_player_rating(Player_Game_Ratings PGR) {
+Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR) {
   std::cout << "Connecting to MYSQL to create rating in game with game_id: " +
   std::to_string(PGR.game_id) + " for player with email: " +
   PGR.player_email << std::endl;
+
+  PGR.is_valid = false;
 
   try {
     sql::Driver *driver;
@@ -792,8 +806,9 @@ bool add_player_rating(Player_Game_Ratings PGR) {
     prep_stmt->setInt(4, PGR.game_parameter2_value);
     prep_stmt->setInt(5, PGR.game_parameter3_value);
     prep_stmt->setInt(6, PGR.game_parameter4_value);
-
     prep_stmt->executeUpdate();
+
+    PGR.is_valid = true;
 
     delete prep_stmt;
     delete con;
@@ -801,8 +816,6 @@ bool add_player_rating(Player_Game_Ratings PGR) {
     std::cout << "Successfully created rating in game with game_id: " +
     std::to_string(PGR.game_id) +" for player with email: " +
     PGR.player_email<< std::endl;
-
-    return true;
   } catch (sql::SQLException &e) {
     std::cout << "Error creating rating in game with game_id: " +
     std::to_string(PGR.game_id) + " for player with email: " +
@@ -815,7 +828,7 @@ bool add_player_rating(Player_Game_Ratings PGR) {
     std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
-  return false;
+  return PGR;
 }
 
 Player remove_player(std::string player_email) {
@@ -928,7 +941,7 @@ Game_Details remove_game_details(int game_id) {
 
     GD = get_game_details(game_id);
     if (!GD.is_valid)
-        return GD;
+      return GD;
 
     prep_stmt = con->prepareStatement("DELETE FROM Game_Details GD "
     "WHERE GD.game_id = ?;");
