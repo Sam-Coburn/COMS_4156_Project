@@ -7,10 +7,11 @@ cc_library(
     visibility = [
         "//main:__pkg__", 
         "//api-endpoints:__pkg__", 
-        "//testing:__pkg__"
+        "//testing:__pkg__",
     ],
     deps = [
         "@jsoncpp//:jsoncpp",
+        "//crow:crow_all",
     ],
 )
 

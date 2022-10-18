@@ -3,9 +3,36 @@
 
 #endif
 
+#include <jsoncpp/json/json.h>
+#include <cstdlib>      // EXIT_FAILURE
+#include <string>
+// #include <jsoncpp/json/json.h>
 #include <iostream>
-#include <fstream>
-#include <jsoncpp/json/json.h> // including JsonCpp header file
+#include <fstream>      // JsonCpp header file
+#include <utility>      // std::pair, std::make_pair
+#include "crow/crow_all.h"
+
+
+// Description: get all of my games
+// takes in a crow request from route GET /games
+// On success, returns a pair of (200, reponseBody),
+// On failure, returns a pair of (400 or 401, emptyResponseBody)
+//    where responseBody = string in json format
+//          emptyResponseBody = empty string ""
+// returns success/failure status and response body(in json format) as a pair
+std::pair <int, std::string> getGames(const crow::request& req) {
+    return std::make_pair(400, std::string(""));
+}
+
+// Description: add a new game
+// takes in a crow request from route POST /games/
+// On success, returns a pair of (200, emptyResponseBody),
+// On failure, returns a pair of (400 or 401, emptyResponseBody)
+//    where emptyResponseBody = empty string ""
+std::pair <int, std::string> postGames(const crow::request& req) {
+    return std::make_pair(400, std::string(""));
+    //  std::string myauth = req.get_header_value("Authorization");
+}
 
 /*
 GET /games
@@ -25,8 +52,9 @@ game.weights [Array<Float>]
 game.teamsPerMatch [Integer]
 game.minPlayersPerTeam [Integer]
 game.maxPlayersPerTeam [Integer]
-
+std::string myauth = req.get_header_value("Authorization");
 */
+
 
 
 
