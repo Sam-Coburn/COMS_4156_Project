@@ -6,6 +6,11 @@ cc_library(
     hdrs = ["db-service.h"],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
     linkopts = ["-lpthread", "-lmysqlcppconn"],
+    visibility = [
+        "//main:__pkg__", 
+        "//api-endpoints:__pkg__", 
+        "//testing:__pkg__",
+    ],
 )
 
 cc_binary(
@@ -14,6 +19,7 @@ cc_binary(
     deps = [
         "//crow:crow_all",
         ":db-service",
+        "//api-endpoints:api-endpoints",
     ],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
     linkopts = ["-lpthread", "-lmysqlcppconn"],

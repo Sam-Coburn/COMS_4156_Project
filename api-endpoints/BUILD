@@ -12,6 +12,7 @@ cc_library(
     deps = [
         "@jsoncpp//:jsoncpp",
         "//crow:crow_all",
+        "//main:db-service",
     ],
 )
 

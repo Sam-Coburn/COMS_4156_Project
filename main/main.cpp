@@ -2,6 +2,7 @@
 
 #include "crow/crow_all.h"
 #include "main/db-service.h"
+#include "api-endpoints/api-endpoints-lib.h"
 
 int main(void) {
   get_player("apex_player@gmail.com");
@@ -52,9 +53,7 @@ int main(void) {
   if (PGR.is_valid)
     remove_player_rating(PGR.player_email, PGR.game_id);
 
-
   crow::SimpleApp app;  // define your crow application
-
   // define your endpoint at the root directory
   CROW_ROUTE(app, "/")([](){
     return "Hello world";
@@ -126,6 +125,18 @@ int main(void) {
     } catch(...) {
       return crow::response(400, "Invalid request body");
     }
+  });
+
+  CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)
+  ([](const crow::request& req){
+    std::pair<int, std::string> rsp = getGames(req);
+    return crow::response(rsp.first, rsp.second);
+  });
+
+  CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
+  ([](const crow::request& req){
+    std::pair<int, std::string> rsp = postGames(req);
+    return crow::response(rsp.first, rsp.second);
   });
 
   // set the port, set the app to run on multiple threads, and run the app
