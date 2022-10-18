@@ -128,6 +128,85 @@ int main(void) {
     }
   });
 
+  // Get all players in a certain game
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::GET) 
+  ([](int game_id){
+    std::vector<Joined_Player_Game_Ratings> joined_players;
+
+    try {
+      joined_players = get_all_player_game_ratings_for_game(game_id);
+      
+      // Converting vector of players to json object
+      crow::json::wvalue players;
+      for (Joined_Player_Game_Ratings p : joined_players) {
+        if (p.is_valid) {
+          players[p.player_email]["game_id"] = p.game_id;
+          players[p.player_email][p.game_parameter1_name] = p.game_parameter1_value;
+          players[p.player_email][p.game_parameter2_name] = p.game_parameter2_value;
+          players[p.player_email][p.game_parameter3_name] = p.game_parameter3_value;
+          players[p.player_email][p.game_parameter4_name] = p.game_parameter4_value;
+        }
+      }
+
+      return crow::response(200, players);
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
+
+  // Add given player stats for a certain game
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST) 
+  ([](const crow::request& req, int game_id){
+    try {
+      crow::json::rvalue players_adding = crow::json::load(req.body);
+
+      for (std::string p : players_adding.keys()) {
+        Player_Game_Ratings pgr;
+        pgr.player_email = p;
+        pgr.game_id = game_id;
+        pgr.game_parameter1_value = players_adding[p]["game_parameter1_value"].i();
+        pgr.game_parameter2_value = players_adding[p]["game_parameter2_value"].i();
+        pgr.game_parameter3_value = players_adding[p]["game_parameter3_value"].i();
+        pgr.game_parameter4_value = players_adding[p]["game_parameter4_value"].i();
+        
+        pgr = add_player_rating(pgr);
+        if (!pgr.is_valid) {
+          return crow::response(400, "Invalid request due to player " + p);
+        }
+      }
+
+      return crow::response(200, "Player stats were added");
+    } catch (...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
+
+  // Get a specific player's stats for a specific game
+  CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET) 
+  ([](int game_id, std::string player_email){
+    Player_Game_Ratings pgr;
+
+    try {
+      pgr = get_player_game_rating(player_email, game_id);
+      
+      // Converting players' stats to json object
+      crow::json::wvalue stats;
+      if (pgr.is_valid) {
+        stats["player_email"] = pgr.player_email;
+        stats["game_parameter1_value"] = pgr.game_parameter1_value;
+        stats["game_parameter2_value"] = pgr.game_parameter2_value;
+        stats["game_parameter3_value"] = pgr.game_parameter3_value;
+        stats["game_parameter4_value"] = pgr.game_parameter4_value;
+      } else {
+        return crow::response(400, "Invalid request body");
+      }
+
+      return crow::response(200, stats);
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
+
   // set the port, set the app to run on multiple threads, and run the app
   app.port(18080).multithreaded().run();
   return 0;
