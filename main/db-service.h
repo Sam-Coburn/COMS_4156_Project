@@ -176,40 +176,54 @@ struct Joined_Player_Game_Ratings {
   }
 };
 
-Player get_player(std::string player_email);
-Developer get_developer(std::string developer_email);
-Game_Details get_game_details(int game_id);
+class DBService {
+  std::string hostname;
+  std::string username;
+  std::string password;
+  std::string database;
 
-Player_Game_Ratings
-get_player_game_rating(std::string player_email, int game_id);
+ public:
+    DBService(std::string host = "tcp://127.0.0.1:3306",
+    std::string user = "dbuser",
+    std::string pass = "123",
+    std::string db = "matchmaking_api_db");
 
-// Gets rating and game details for a specific player
-// for a specific game
-Joined_Player_Game_Ratings
-get_joined_player_game_rating(std::string player_email, int game_id);
+    Player get_player(std::string player_email);
+    Developer get_developer(std::string developer_email);
+    Game_Details get_game_details(int game_id);
 
-std::vector<Player> get_all_players();
-std::vector<Developer> get_all_developers();
-std::vector<Game_Details> get_all_games();
-std::vector<Joined_Player_Game_Ratings>
-get_all_player_game_ratings_for_game(int game_id);
+    Player_Game_Ratings
+    get_player_game_rating(std::string player_email, int game_id);
 
-Player add_player(Player P);
-Developer add_developer(Developer D);
-Game_Details add_game_details(Game_Details GD);
-Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
+    // Gets rating and game details for a specific player
+    // for a specific game
+    Joined_Player_Game_Ratings
+    get_joined_player_game_rating(std::string player_email, int game_id);
 
-bool update_player(Player P);
-bool update_developer(Developer D);
-bool update_game_details(Game_Details GD);
-bool update_player_rating(Player_Game_Ratings PGR);
+    std::vector<Player> get_all_players();
+    std::vector<Developer> get_all_developers();
+    std::vector<Game_Details> get_all_games();
+    std::vector<Joined_Player_Game_Ratings>
+    get_all_player_game_ratings_for_game(int game_id);
 
-Player remove_player(std::string player_email);
-Developer remove_developer(std::string developer_email);
-Game_Details remove_game_details(int game_id);
-Player_Game_Ratings remove_player_rating(std::string player_email, int game_id);
+    Player add_player(Player P);
+    Developer add_developer(Developer D);
+    Game_Details add_game_details(Game_Details GD);
+    Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
 
-std::vector<Game_Details>
-get_all_games_for_developer(std::string developer_email);
+    bool update_player(Player P);
+    bool update_developer(Developer D);
+    bool update_game_details(Game_Details GD);
+    bool update_player_rating(Player_Game_Ratings PGR);
+
+    Player remove_player(std::string player_email);
+    Developer remove_developer(std::string developer_email);
+    Game_Details remove_game_details(int game_id);
+    Player_Game_Ratings
+    remove_player_rating(std::string player_email, int game_id);
+
+    std::vector<Game_Details>
+    get_all_games_for_developer(std::string developer_email);
+};
 
 #endif  // MAIN_DB_SERVICE_H_
