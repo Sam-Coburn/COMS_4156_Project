@@ -13,7 +13,7 @@ Build command is of the form
 
 For example,
 
-    bazel build //hello-world-pkg:hello-world
+    bazel build //main:main
 ### Running
 Executable files are located in bazel-bin like so
 
@@ -21,7 +21,7 @@ Executable files are located in bazel-bin like so
 
 For example, to run hello world, do
 
-    bazel-bin/hello-world-pkg/hello-world
+    bazel-bin/main/main
 ### Testing
 Test command is of the form
 
@@ -29,7 +29,7 @@ Test command is of the form
 
 For example,
 
-    bazel test --test_output=all //testing:hello_test
+    bazel test --test_output=all //testing:test
 
 ## Repo Structure
 
