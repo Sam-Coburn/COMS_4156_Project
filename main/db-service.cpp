@@ -12,12 +12,15 @@
 #include "main/db-service.h"
 #include "mysql_connection.h"
 
-#define hostname "tcp://127.0.0.1:3306"
-#define username "dbuser"
-#define password "123"
-#define database "matchmaking_api_db"
+DBService::DBService
+(std::string host, std::string user, std::string pass, std::string db) {
+  hostname = host;
+  username = user;
+  password = pass;
+  database = db;
+}
 
-Player get_player(std::string player_email) {
+Player DBService::get_player(std::string player_email) {
   std::cout << "Connecting to MYSQL to get player with email: "
   + player_email << std::endl;
   Player P;
@@ -64,7 +67,7 @@ Player get_player(std::string player_email) {
   return P;
 }
 
-Developer get_developer(std::string developer_email) {
+Developer DBService::get_developer(std::string developer_email) {
   std::cout << "Connecting to MYSQL to get developer with email: " +
   developer_email << std::endl;
 
@@ -113,7 +116,7 @@ Developer get_developer(std::string developer_email) {
   return D;
 }
 
-Game_Details get_game_details(int game_id) {
+Game_Details DBService::get_game_details(int game_id) {
   std::cout << "Connecting to MYSQL to get game with game_id: " +
   std::to_string(game_id) << std::endl;
 
@@ -184,7 +187,7 @@ Game_Details get_game_details(int game_id) {
 }
 
 Player_Game_Ratings
-get_player_game_rating(std::string player_email, int game_id) {
+DBService::get_player_game_rating(std::string player_email, int game_id) {
   std::cout << "Connecting to MYSQL to get rating in game with game_id: " +
   std::to_string(game_id) + " for player with email: " +
   player_email<< std::endl;
@@ -248,6 +251,7 @@ get_player_game_rating(std::string player_email, int game_id) {
 }
 
 Joined_Player_Game_Ratings
+DBService::
 get_joined_player_game_rating(std::string player_email, int game_id) {
   std::cout << "Connecting to MYSQL to get rating in game with game_id: " +
   std::to_string(game_id) + " for player with email: " + player_email
@@ -334,7 +338,7 @@ get_joined_player_game_rating(std::string player_email, int game_id) {
   return JPGR;
 }
 
-std::vector<Player> get_all_players() {
+std::vector<Player> DBService::get_all_players() {
   std::cout << "Connecting to MYSQL to get all players" << std::endl;
   std::vector<Player> players;
 
@@ -376,7 +380,7 @@ std::vector<Player> get_all_players() {
   return players;
 }
 
-std::vector<Developer> get_all_developers() {
+std::vector<Developer> DBService::get_all_developers() {
   std::cout << "Connecting to MYSQL to get all developers" << std::endl;
   std::vector<Developer> developers;
 
@@ -418,7 +422,7 @@ std::vector<Developer> get_all_developers() {
   return developers;
 }
 
-std::vector<Game_Details> get_all_games() {
+std::vector<Game_Details> DBService::get_all_games() {
   std::cout << "Connecting to MYSQL to get all game details" << std::endl;
   std::vector<Game_Details> game_details;
 
@@ -483,7 +487,7 @@ std::vector<Game_Details> get_all_games() {
 
 
 std::vector<Joined_Player_Game_Ratings>
-get_all_player_game_ratings_for_game(int game_id) {
+DBService::get_all_player_game_ratings_for_game(int game_id) {
   std::cout <<
   "Connecting to MYSQL to get all player ratings for a game" << std::endl;
   std::vector<Joined_Player_Game_Ratings> JPGR;
@@ -562,7 +566,7 @@ get_all_player_game_ratings_for_game(int game_id) {
 }
 
 std::vector<Game_Details>
-get_all_games_for_developer(std::string developer_email) {
+DBService::get_all_games_for_developer(std::string developer_email) {
   std::cout << "Connecting to MYSQL to get games for developer with email: " +
   developer_email << std::endl;
 
@@ -633,7 +637,7 @@ get_all_games_for_developer(std::string developer_email) {
   return GD;
 }
 
-Player add_player(Player P) {
+Player DBService::add_player(Player P) {
   std::cout << "Connecting to MYSQL to insert player with email: " +
   P.player_email << std::endl;
   P.is_valid = false;
@@ -671,7 +675,7 @@ Player add_player(Player P) {
   return P;
 }
 
-Developer add_developer(Developer D) {
+Developer DBService::add_developer(Developer D) {
   std::cout << "Connecting to MYSQL to insert developer with email: " +
   D.developer_email << std::endl;
   D.is_valid = false;
@@ -710,7 +714,7 @@ Developer add_developer(Developer D) {
   return D;
 }
 
-Game_Details add_game_details(Game_Details GD) {
+Game_Details DBService::add_game_details(Game_Details GD) {
   std::cout << "Connecting to MYSQL to insert new game" << std::endl;
   GD.is_valid = false;
 
@@ -780,7 +784,7 @@ Game_Details add_game_details(Game_Details GD) {
   return GD;
 }
 
-Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR) {
+Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {
   std::cout << "Connecting to MYSQL to create rating in game with game_id: " +
   std::to_string(PGR.game_id) + " for player with email: " +
   PGR.player_email << std::endl;
@@ -831,7 +835,7 @@ Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR) {
   return PGR;
 }
 
-Player remove_player(std::string player_email) {
+Player DBService::remove_player(std::string player_email) {
   std::cout << "Connecting to MYSQL to delete player with email: " +
   player_email << std::endl;
 
@@ -876,7 +880,7 @@ Player remove_player(std::string player_email) {
   return p;
 }
 
-Developer remove_developer(std::string developer_email) {
+Developer DBService::remove_developer(std::string developer_email) {
   std::cout << "Connecting to MYSQL to delete developer with email: " +
   developer_email << std::endl;
 
@@ -922,7 +926,7 @@ Developer remove_developer(std::string developer_email) {
   return d;
 }
 
-Game_Details remove_game_details(int game_id) {
+Game_Details DBService::remove_game_details(int game_id) {
   std::cout << "Connecting to MYSQL to delete game with game_id: " +
   std::to_string(game_id) << std::endl;
 
@@ -971,7 +975,7 @@ Game_Details remove_game_details(int game_id) {
 }
 
 Player_Game_Ratings
-remove_player_rating(std::string player_email, int game_id) {
+DBService::remove_player_rating(std::string player_email, int game_id) {
   std::cout << "Connecting to MYSQL to delete rating for player with email: " +
   player_email + " for game with game_id: " +
   std::to_string(game_id) << std::endl;
@@ -1020,8 +1024,3 @@ remove_player_rating(std::string player_email, int game_id) {
 
   return PGR;
 }
-
-bool update_player(Player P);
-bool update_developer(Developer D);
-bool update_game_details(Game_Details GD);
-bool update_player_rating(Player_Game_Ratings PGR);
