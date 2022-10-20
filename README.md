@@ -1,5 +1,11 @@
 # Matchmaking API
-## Build and Run
+## Build + Run
+Inside top-level project directory, do
+```
+bazel build //main:main
+bazel-bin/main/main
+```
+## Build + Run + Test
 ### Building
 Build command is of the form
 
@@ -7,7 +13,7 @@ Build command is of the form
 
 For example,
 
-    bazel build //hello-world-pkg:hello-world
+    bazel build //main:main
 ### Running
 Executable files are located in bazel-bin like so
 
@@ -15,7 +21,7 @@ Executable files are located in bazel-bin like so
 
 For example, to run hello world, do
 
-    bazel-bin/hello-world-pkg/hello-world
+    bazel-bin/main/main
 ### Testing
 Test command is of the form
 
@@ -23,7 +29,7 @@ Test command is of the form
 
 For example,
 
-    bazel test --test_output=all //testing:hello_test
+    bazel test --test_output=all //testing:test
 
 ## Repo Structure
 
@@ -51,32 +57,8 @@ For example,
        └── WORKSPACE
 
 ## Install Bazel
-**Installing Bazel on Ubuntu 22.04 (what worked for me)**
-
-    sudo apt install npm
-    sudo npm install -g @bazel/bazelisk
-
-General Install Instructions:
-https://bazel.build/install
-
-## Extra Notes
-Tutorials I read to make this repo:
-https://bazel.build/start/cpp
-http://google.github.io/googletest/quickstart-bazel.html
-
-Extra Resources I skimmed or thought might be helpful later:
-https://bazel.build/build/style-guide
-https://bazel.build/tutorials/cpp-use-cases
-http://google.github.io/googletest/primer.html
-http://google.github.io/googletest/gmock_for_dummies.html
-https://qiangbo-workspace.oss-cn-shanghai.aliyuncs.com/2018-12-05-gtest-and-coverage/PlainGoogleQuickTestReferenceGuide1.pdf
-
-
-# Matchmaking API
-
-### How to Run the Project
 **Platform: Debian 11**
-1. Install Bazel: https://bazel.build/install/ubuntu
+Reference instructions: https://bazel.build/install/ubuntu
 ```
 	sudo apt install apt-transport-https curl gnupg
 	curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
@@ -86,8 +68,17 @@ https://qiangbo-workspace.oss-cn-shanghai.aliyuncs.com/2018-12-05-gtest-and-cove
 	sudo apt update && sudo apt install bazel
 	sudo apt update && sudo apt full-upgrade
 ```
+**Platform: Ubuntu 22.04**
 
-2. Install MySQL: https://computingforgeeks.com/how-to-install-mysql-8-0-on-debian/
+    sudo apt install npm
+    sudo npm install -g @bazel/bazelisk
+
+General Install Instructions:
+https://bazel.build/install
+
+## Install MySql + Set Up Database
+**Platform: Debian 11**
+1. Install MySQL: https://computingforgeeks.com/how-to-install-mysql-8-0-on-debian/
     ```
 	sudo apt update && sudo apt -y  install wget
 	wget https://repo.mysql.com//mysql-apt-config_0.8.22-1_all.deb
@@ -124,13 +115,49 @@ https://qiangbo-workspace.oss-cn-shanghai.aliyuncs.com/2018-12-05-gtest-and-cove
 
 6. Restart the VM
 
-7. Run Project\
-	Navigate to Project Directory\
-	Run:
-	```
-	bazel build //main:main
-	bazel-bin/main/main
-	```
+**Platform: Ubuntu 22.04**
+Instructions based on this tutorial: https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04
+^^Do NOT run the security script `mysql_secure_installation`, as this prevents our dbuser's password from being "123".
+
+1. Install mysql: 
+```
+sudo apt update
+sudo apt install mysql-server
+sudo systemctl start mysql.service
+```
+Check status with: ```systemctl status mysql```
+
+2. Set up users and permissions:
+```
+sudo mysql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+ALTER USER 'dbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY '123';
+GRANT ALL ON *.* TO 'dbuser'@'localhost';
+SELECT user,host, authentication_string FROM mysql.user;
+exit
+```
+3. Install C++ Connector for MySQL
+
+	```sudo apt install libmysqlcppconn-dev```
+
+4. Install Boost for Crow\
+	```sudo apt-get install libboost-all-dev```
+
+5. Set up the DB:
+When prompted for a password, enter "password"
+```
+mysql -u root -p
+source /home/spinel/COMS_4156_Project/matchmaking_api_db_sql.sql;
+SHOW DATABASES;
+exit
+```
+## Example Run of Project
+Navigate to Project Directory\
+Run:
+
+    bazel build //main:main
+    bazel-bin/main/main
+
 
 The project does some simple SQL queries and then starts the server
 So you should see something like the following:
@@ -227,6 +254,14 @@ Successfully retrieved all player game ratings
 (2022-10-10 15:01:13) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
 
 ```
+## Extra Notes
+Tutorials I read to make this set up bazel + test:
+https://bazel.build/start/cpp
+http://google.github.io/googletest/quickstart-bazel.html
 
-
-	
+Extra Resources I skimmed or thought might be helpful later:
+https://bazel.build/build/style-guide
+https://bazel.build/tutorials/cpp-use-cases
+http://google.github.io/googletest/primer.html
+http://google.github.io/googletest/gmock_for_dummies.html
+https://qiangbo-workspace.oss-cn-shanghai.aliyuncs.com/2018-12-05-gtest-and-coverage/PlainGoogleQuickTestReferenceGuide1.pdf

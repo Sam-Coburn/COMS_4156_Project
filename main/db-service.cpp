@@ -34,7 +34,7 @@ Player DBService::get_player(std::string player_email) {
 
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
+    
     con->setSchema(database);
 
     prep_stmt = con->prepareStatement("SELECT * FROM Players P "
