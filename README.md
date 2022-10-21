@@ -42,18 +42,9 @@ For example,
        │   ├── db-service.cpp
        │   ├── db-service.h
        │   └── main.cpp
-       ├── hello-world-pkg
-       │   ├── BUILD
-       │   ├── hello-world.cc
-       │   ├── hello-greet.cc
-       │   └── hello-greet.h
-       ├── hello-world-lib-pkg
-       │   ├── BUILD
-       │   ├── hello-time.cc
-       │   └── hello-time.h
        ├── testing
        │   ├── BUILD
-       │   └── hello_test.cc
+       │   └── test.ccp
        └── WORKSPACE
 
 ## Install Bazel
