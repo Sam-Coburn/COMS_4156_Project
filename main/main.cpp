@@ -26,34 +26,6 @@ int main(void) {
   DB.get_all_games_for_developer("developer@chess.com");
   std::cout << "\n";
 
-  Player P;
-  P.player_email = "fake_player@gmail.com";
-  P = DB.add_player(P);
-  if (P.is_valid)
-    DB.remove_player("fake_player@gmail.com");
-
-  Developer D;
-  D.developer_email = "fake_developer@dev.com";
-  D.developer_password = "some_password";
-  D = DB.add_developer(D);
-  if (D.is_valid)
-    DB.remove_developer("fake_developer@dev.com");
-
-  Game_Details GD;
-  GD.game_name = "fake game";
-  GD.developer_email = "developer@chess.com";
-  GD = DB.add_game_details(GD);
-  if (GD.is_valid)
-    DB.remove_game_details(GD.game_id);
-
-  Player_Game_Ratings PGR;
-  PGR.player_email = "apex_player@gmail.com";
-  PGR.game_id = 2;
-  PGR = DB.add_player_rating(PGR);
-  if (PGR.is_valid)
-    DB.remove_player_rating(PGR.player_email, PGR.game_id);
-
-
   crow::SimpleApp app;  // define your crow application
 
   // define your endpoint at the root directory

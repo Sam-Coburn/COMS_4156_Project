@@ -729,7 +729,6 @@ Game_Details DBService::add_game_details(Game_Details GD) {
     con = driver->connect(hostname, username, password);
 
     con->setSchema(database);
-    con->setAutoCommit(false);
 
     prep_stmt = con->prepareStatement("INSERT INTO Game_Details "
     "(game_name, developer_email, "
@@ -763,7 +762,6 @@ Game_Details DBService::add_game_details(Game_Details GD) {
     }
 
     GD.is_valid = true;
-    con->commit();
 
     delete prep_stmt;
     delete stmt;
