@@ -17,7 +17,7 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
   std::vector<std::tuple<float, std::string> > ranked_players; // vector to which players and their ranks will be added
 
   // Iterate through each passed player and computer their rank
-  for (int i = 0; i < player_emails.size(); i++) {
+  for (long unsigned int i = 0; i < player_emails.size(); i++) {
     Player_Game_Ratings player_metrics = get_player_game_rating(player_emails.at(i), game_id);
     float rating = (details.game_parameter1_weight) * (player_metrics.game_parameter1_value) +
                    (details.game_parameter2_weight) * (player_metrics.game_parameter2_value) +
@@ -34,7 +34,7 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
   sort(ranked_players.begin(), ranked_players.end());
   reverse(ranked_players.begin(), ranked_players.end());
 
-  for (int i = 0; i < ranked_players.size(); i++) {
+  for (long unsigned int i = 0; i < ranked_players.size(); i++) {
     std::cout << "Player " << i + 1 << ": " << std::get<1>(ranked_players.at(i)) << std::endl;
     std::cout << "Rank: " << std::get<0>(ranked_players.at(i)) << std::endl;
   }
@@ -54,7 +54,7 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
 
   // If the number of players given is less than the number of players expected in a game,
   // add them all to overflow and return
-  if (player_emails.size() < num_players_per_game) {
+  if (player_emails.size() < (long unsigned int) num_players_per_game) {
     std::vector<std::vector<std::vector<std::string> > > games;
     std::vector<std::vector<std::string> > teams;
 
@@ -99,7 +99,7 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
   // Populate Overflow with Remaining Players
   std::vector<std::string> overflow;
   if (num_overflow > 0) {
-    for (int i = player_iter; i < ranked_players.size(); i++)
+    for (long unsigned int i = player_iter; i < ranked_players.size(); i++)
       overflow.push_back(std::get<1>(ranked_players.at(i)));
 
     std::vector<std::vector<std::string> > overflow_team;
@@ -107,8 +107,6 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
 
     games.push_back(overflow_team);
   }
-
-
 
   // Printout of Matchmaking Results
   std::cout << "MATCHMAKING OVERVIEW" << std::endl;
@@ -133,7 +131,7 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
   if (overflow.size() > 0) {
     std::cout << "OVERFLOW" << std::endl;
 
-    for (int i = 0; i < overflow.size(); i++) {
+    for (long unsigned int i = 0; i < overflow.size(); i++) {
       std::cout << overflow.at(i) << std::endl;
     }
   }
@@ -265,34 +263,40 @@ int main(void) {
     }
   });
 
+  CROW_ROUTE(app, "/test").methods(crow::HTTPMethod::POST)
+  ([](const crow::request& req) {
+    crow::json::rvalue request_body = crow::json::load(req.body);
+    int game_id;
+    crow::json::rvalue input_player_emails_rvalue;
+    std::vector<crow::json::rvalue> input_player_emails;
+    std::vector<std::string> player_emails;
+
+    try {
+      game_id = request_body["game_id"].i();
+      input_player_emails_rvalue = request_body["player_emails"];
+      input_player_emails = input_player_emails_rvalue.lo();
+
+      for (crow::json::rvalue email : input_player_emails) {
+        player_emails.push_back(email.s());
+      }
+
+      std::vector<std::vector<std::vector<std::string> > > result = matchmaking(game_id, player_emails);
+
+      crow::json::wvalue json_result;
+      json_result["json"] = result;
+
+      return json_result;
+    }
+    catch(...) {
+      // Return a response to indicate an invalid request body
+      // Empty JSON == invalid request
+      crow::json::wvalue json_result;
+      return json_result;
+    }
+  });
+
   // set the port, set the app to run on multiple threads, and run the app
   app.port(18080).multithreaded().run();
-
-  // Chess Matchmaking Testing
-  std::vector<std::string> players_to_match;
-  players_to_match.push_back("chess_player@gmail.com");
-  players_to_match.push_back("apex_and_chess_player@gmail.com");
-  players_to_match.push_back("magnus_carlsen@gmail.com");
-  players_to_match.push_back("chess_newb@gmail.com");
-  // players_to_match.push_back("chess_player_extraordinaire@gmail.com");
-
-  matchmaking(2, players_to_match);
-
-  // Overwatch Matchmaking Testing
-  std::vector<std::string> players_to_match2;
-  players_to_match2.push_back("overwatch_player_1@gmail.com");
-  players_to_match2.push_back("overwatch_player_2@gmail.com");
-  players_to_match2.push_back("overwatch_player_3@gmail.com");
-  players_to_match2.push_back("overwatch_player_4@gmail.com");
-  players_to_match2.push_back("overwatch_player_5@gmail.com");
-  players_to_match2.push_back("overwatch_player_6@gmail.com");
-  players_to_match2.push_back("overwatch_player_7@gmail.com");
-  players_to_match2.push_back("overwatch_player_8@gmail.com");
-  players_to_match2.push_back("overwatch_player_9@gmail.com");
-  players_to_match2.push_back("overwatch_player_10@gmail.com");
-  players_to_match2.push_back("overwatch_player_11@gmail.com");
-
-  matchmaking(3, players_to_match2);
 
   return 0;
 }
