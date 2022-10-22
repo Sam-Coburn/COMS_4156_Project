@@ -56,6 +56,10 @@ For example,
 
     bazel test --test_output=all //testing:test
 
+### Style Checker
+Once cpplint is installed run:
+`cpplint ./main/* ./testing/* &> style-check.txt`
+
 ## Repo Structure
 
     └── COMS_4156_Project
@@ -118,7 +122,7 @@ https://bazel.build/install
 	Enter Root Password when prompted
 
 	Run the provided SQL File (replace path with path to sql file):\
-	```source /home/deb/Desktop/matchmaking_api_db_sql.sql;```
+	```source /home/deb/Desktop/COMS_4156_Project/matchmaking_api_db_sql.sql```
 
 	Exit Console: ```quit```
 
