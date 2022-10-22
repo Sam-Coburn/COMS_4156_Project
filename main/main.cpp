@@ -273,7 +273,8 @@ int main(void) {
     std::vector<Joined_Player_Game_Ratings> joined_players;
 
     try {
-      joined_players = get_all_player_game_ratings_for_game(game_id);
+      DBService DB = DBService();
+      joined_players = DB.get_all_player_game_ratings_for_game(game_id);
 
       if (joined_players.empty()) {
         return crow::response(204, "No players found for game_id " + std::to_string(game_id));
@@ -294,6 +295,10 @@ int main(void) {
       }
 
       return crow::response(200, players);
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
 
 //return everything about the game details to the user except game_id and developer_email
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::GET)
@@ -332,6 +337,7 @@ int main(void) {
   CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST) 
   ([](const crow::request& req, int game_id){
     try {
+      DBService DB = DBService();
       crow::json::rvalue players_adding = crow::json::load(req.body);
 
       for (std::string p : players_adding.keys()) {
@@ -343,14 +349,17 @@ int main(void) {
         pgr.game_parameter3_value = players_adding[p]["game_parameter3_value"].i();
         pgr.game_parameter4_value = players_adding[p]["game_parameter4_value"].i();
         
-        pgr = add_player_rating(pgr);
+        pgr = DB.add_player_rating(pgr);
         if (!pgr.is_valid) {
           return crow::response(500, "Internal Server Error due to player " + p);
         }
       }
 
       return crow::response(200, "Player stats were added");
-    } catch (...) {
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
     
   //create set for PUT request to not reset all elements and to catch errors
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::PUT)
@@ -423,14 +432,15 @@ int main(void) {
   });
 
   // Get a specific player's stats for a specific game
-  CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET) 
-  ([](int game_id, std::string player_email){
+  CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET)
+  ([](int game_id, std::string player_email) {
     Player_Game_Ratings pgr;
 
     try {
-      pgr = get_player_game_rating(player_email, game_id);
+      DBService DB = DBService();
+      pgr = DB.get_player_game_rating(player_email, game_id);
 
-      if (&pgr == NULL) {
+      if (!pgr.is_valid) {
         return crow::response(204, "Player " + player_email + " not found for game_id " + std::to_string(game_id));
       }
       
@@ -447,6 +457,11 @@ int main(void) {
       }
 
       return crow::response(200, stats);
+    }
+  catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
 
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
@@ -470,11 +485,12 @@ int main(void) {
   CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE) 
   ([](const crow::request& req, int game_id){
     try {
+      DBService DB = DBService();
       crow::json::rvalue players_adding = crow::json::load(req.body);
 
       for (std::string p : players_adding.keys()) {
         Player_Game_Ratings pgr;
-        pgr = remove_player_rating(p, game_id);
+        pgr = DB.remove_player_rating(p, game_id);
         if (!pgr.is_valid) {
           return crow::response(500, "Internal Server Error due to player " + p);
         }
@@ -492,6 +508,7 @@ int main(void) {
   CROW_ROUTE(app, "/test").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
     crow::json::rvalue request_body = crow::json::load(req.body);
+
     int game_id;
     crow::json::rvalue input_player_emails_rvalue;
     std::vector<crow::json::rvalue> input_player_emails;
