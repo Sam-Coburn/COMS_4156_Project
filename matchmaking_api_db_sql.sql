@@ -1,6 +1,8 @@
 CREATE USER 'dbuser' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON *.* TO 'dbuser';
-	
+
+CREATE SCHEMA test_matchmaking_api_db;
+
 CREATE SCHEMA matchmaking_api_db;
 USE matchmaking_api_db;
 
@@ -49,6 +51,7 @@ CREATE TABLE Player_Game_Ratings (
 INSERT INTO Developers VALUES('developer@chess.com', 'super_secret_password');
 INSERT INTO Developers VALUES('techlead@apex.com', 'another_password');
 INSERT INTO Developers VALUES('admin@overwatch.com', 'password123');
+INSERT INTO Developers VALUES('admin@temp.com', 'password123');
 
 INSERT INTO Game_Details (game_name, developer_email, game_parameter1_name, game_parameter1_weight, game_parameter2_name,
                         game_parameter2_weight, game_parameter3_name, game_parameter3_weight,
@@ -70,9 +73,45 @@ VALUES('Overwatch','admin@overwatch.com', 'kills', 1, 'deaths', -1, 'assists', .
 
 INSERT INTO Players VALUES('apex_player@gmail.com');
 INSERT INTO Players VALUES('apex_and_chess_player@gmail.com');
+
+-- Added for Chess Matchmaking Testing
 INSERT INTO Players VALUES('chess_player@gmail.com');
+INSERT INTO Players VALUES('magnus_carlsen@gmail.com');
+INSERT INTO Players VALUES('chess_newb@gmail.com');
+INSERT INTO Players VALUES('chess_player_extraordinaire@gmail.com');
+
+-- Added for Overwatch Matchmaking Testing
+INSERT INTO Players VALUES('overwatch_player_1@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_2@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_3@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_4@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_5@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_6@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_7@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_8@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_9@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_10@gmail.com');
+INSERT INTO Players VALUES('overwatch_player_11@gmail.com');
 
 INSERT INTO Player_Game_Ratings VALUES('apex_player@gmail.com', 1, 100, 50, 25, 10);
 INSERT INTO Player_Game_Ratings VALUES('chess_player@gmail.com', 2, 1236, 0, 0, 0);
 INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 1, 500, 343, 37, 82);
 INSERT INTO Player_Game_Ratings VALUES('apex_and_chess_player@gmail.com', 2, 1321, 0, 0, 0);
+
+-- Added for Chess Matchmaking Testing
+INSERT INTO Player_Game_Ratings VALUES('chess_newb@gmail.com', 2, 1, 0, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('magnus_carlsen@gmail.com', 2, 2856, 0, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('chess_player_extraordinaire@gmail.com', 2, 1000, 0, 0, 0);
+
+-- Added for Overwatch Matchmaking Testing
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_1@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_2@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_3@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_4@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_5@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_6@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_7@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_8@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_9@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_10@gmail.com', 3, 15, 4, 0, 0);
+INSERT INTO Player_Game_Ratings VALUES('overwatch_player_11@gmail.com', 3, 15, 4, 0, 0);

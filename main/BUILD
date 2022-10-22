@@ -22,6 +22,6 @@ cc_binary(
         "//api-endpoints:api-endpoints",
     ],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
-    linkopts = ["-lpthread", "-lmysqlcppconn"],
+    linkopts = ["-lpthread", "-lmysqlcppconn", "-lboost_system"],
     visibility = ["//testing:__pkg__"],
 )

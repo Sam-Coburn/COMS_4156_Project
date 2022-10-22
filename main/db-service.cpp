@@ -32,16 +32,17 @@ Player DBService::get_player(std::string player_email) {
     sql::PreparedStatement  *prep_stmt;
     sql::ResultSet *res;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-    
     con->setSchema(database);
 
+    // Create statement and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT * FROM Players P "
     "WHERE P.player_email = ?;");
-
     prep_stmt->setString(1, player_email);
 
+    // Execute query and get results
     res = prep_stmt->executeQuery();
     while (res->next()) {
       P.player_email = res->getString("player_email");
@@ -80,16 +81,17 @@ Developer DBService::get_developer(std::string developer_email) {
     sql::PreparedStatement  *prep_stmt;
     sql::ResultSet *res;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create statement and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT * FROM Developers D "
     "WHERE D.developer_email = ?;");
-
     prep_stmt->setString(1, developer_email);
 
+    // Execute query and get results
     res = prep_stmt->executeQuery();
     while (res->next()) {
         D.developer_email = res->getString("developer_email");
@@ -129,16 +131,17 @@ Game_Details DBService::get_game_details(int game_id) {
     sql::PreparedStatement  *prep_stmt;
     sql::ResultSet *res;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT * FROM Game_Details GD "
     "WHERE GD.game_id = ?;");
-
     prep_stmt->setInt(1, game_id);
 
+    // Execute query and get results
     res = prep_stmt->executeQuery();
     while (res->next()) {
       GD.game_id = std::stoi(res->getString("game_id"));
@@ -201,17 +204,18 @@ DBService::get_player_game_rating(std::string player_email, int game_id) {
     sql::PreparedStatement  *prep_stmt;
     sql::ResultSet *res;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT * FROM Player_Game_Ratings PGR "
     "WHERE PGR.player_email = ? AND PGR.game_id = ?;");
-
     prep_stmt->setString(1, player_email);
     prep_stmt->setInt(2, game_id);
 
+    // Execute query and get results
     res = prep_stmt->executeQuery();
     while (res->next()) {
       PGR.player_email = res->getString("player_email");
@@ -266,19 +270,20 @@ get_joined_player_game_rating(std::string player_email, int game_id) {
     sql::PreparedStatement  *prep_stmt;
     sql::ResultSet *res;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT PGR.*, GD.* FROM Players P "
     "JOIN Player_Game_Ratings PGR ON P.player_email = PGR.player_email "
     "JOIN Game_Details GD ON PGR.game_id = GD.game_id "
     "WHERE P.player_email = ? AND GD.game_id = ?;");
-
     prep_stmt->setString(1, player_email);
     prep_stmt->setInt(2, game_id);
 
+    // Execute query and retrieve results
     res = prep_stmt->executeQuery();
     while (res->next()) {
       JPGR.player_email = res->getString("player_email");
@@ -349,11 +354,12 @@ std::vector<Player> DBService::get_all_players() {
     sql::ResultSet *res;
     Player p;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query, execute it, and get results
     stmt = con->createStatement();
     res = stmt->executeQuery("SELECT * FROM Players");
     while (res->next()) {
@@ -391,11 +397,12 @@ std::vector<Developer> DBService::get_all_developers() {
     sql::ResultSet *res;
     Developer d;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query, execute it, and get results
     stmt = con->createStatement();
     res = stmt->executeQuery("SELECT * FROM Developers");
     while (res->next()) {
@@ -433,11 +440,12 @@ std::vector<Game_Details> DBService::get_all_games() {
     sql::ResultSet *res;
     Game_Details gd;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query, execute it and get results
     stmt = con->createStatement();
     res = stmt->executeQuery("SELECT * FROM Game_Details");
     while (res->next()) {
@@ -499,17 +507,18 @@ DBService::get_all_player_game_ratings_for_game(int game_id) {
     sql::ResultSet *res;
     Joined_Player_Game_Ratings jpgr;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT PGR.*, GD.* FROM Players P "
     "JOIN Player_Game_Ratings PGR ON P.player_email = PGR.player_email "
     "JOIN Game_Details GD ON PGR.game_id = GD.game_id WHERE GD.game_id = ?;");
-
     prep_stmt->setInt(1, game_id);
 
+    // Execute query and get results
     res = prep_stmt->executeQuery();
     while (res->next()) {
       jpgr.player_email = res->getString("player_email");
@@ -579,16 +588,17 @@ DBService::get_all_games_for_developer(std::string developer_email) {
     sql::ResultSet *res;
     Game_Details gd;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create query and fill in relevant variables
     prep_stmt = con->prepareStatement("SELECT * FROM Game_Details GD "
     "WHERE GD.developer_email = ?;");
-
     prep_stmt->setString(1, developer_email);
 
+    // Execute query and get results
     res = prep_stmt->executeQuery();
     while (res->next()) {
       gd.game_id = std::stoi(res->getString("game_id"));
@@ -647,13 +657,16 @@ Player DBService::add_player(Player P) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create statement and fill in relevant variables
     prep_stmt = con->prepareStatement("INSERT INTO Players VALUES(?);");
     prep_stmt->setString(1, P.player_email);
+
+    // Execute statament and set flag
     prep_stmt->executeUpdate();
     P.is_valid = true;
 
@@ -685,15 +698,17 @@ Developer DBService::add_developer(Developer D) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create statement and fill in relevant variables
     prep_stmt = con->prepareStatement("INSERT INTO Developers VALUES(?,?);");
-
     prep_stmt->setString(1, D.developer_email);
     prep_stmt->setString(2, D.developer_password);
+
+    // Execute statement and set flag
     prep_stmt->executeUpdate();
     D.is_valid = true;
 
@@ -725,11 +740,12 @@ Game_Details DBService::add_game_details(Game_Details GD) {
     sql::PreparedStatement  *prep_stmt;
     sql::ResultSet *res;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create SQL statement
     prep_stmt = con->prepareStatement("INSERT INTO Game_Details "
     "(game_name, developer_email, "
     "game_parameter1_name, game_parameter1_weight, "
@@ -739,6 +755,7 @@ Game_Details DBService::add_game_details(Game_Details GD) {
     "category, players_per_team, teams_per_match) "
     "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
+    // Fill in relevant variables in statement and execute
     prep_stmt->setString(1, GD.game_name);
     prep_stmt->setString(2, GD.developer_email);
     prep_stmt->setString(3, GD.game_parameter1_name);
@@ -754,9 +771,9 @@ Game_Details DBService::add_game_details(Game_Details GD) {
     prep_stmt->setInt(13, GD.teams_per_match);
     prep_stmt->executeUpdate();
 
+    // Create and execute a second statement to get id of object just created
     stmt = con->createStatement();
     res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
-
     while (res->next()) {
       GD.game_id = res->getInt("LAST_INSERT_ID()");
     }
@@ -794,14 +811,16 @@ Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Create SQL statement
     prep_stmt = con->prepareStatement("INSERT INTO Player_Game_Ratings "
     "VALUES(?, ?, ?, ?, ?, ?);");
 
+    // Fill in relevant variables in statement and execute
     prep_stmt->setString(1, PGR.player_email);
     prep_stmt->setInt(2, PGR.game_id);
     prep_stmt->setInt(3, PGR.game_parameter1_value);
@@ -845,15 +864,17 @@ Player DBService::remove_player(std::string player_email) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Retrieve player to delete and return p if player does not exist
     p = get_player(player_email);
     if (!p.is_valid)
       return p;
 
+    // Create statement to delete player and fill in relevant variables
     prep_stmt = con->prepareStatement("DELETE FROM Players P "
     "WHERE P.player_email = ?;");
     prep_stmt->setString(1, player_email);
@@ -890,19 +911,20 @@ Developer DBService::remove_developer(std::string developer_email) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Check if developer exists, return d if not
     d = get_developer(developer_email);
     if (!d.is_valid)
       return d;
 
+    // Create statement, fill in relevant variables then execute
     prep_stmt = con->prepareStatement("DELETE FROM Developers D "
     "WHERE D.developer_email = ?;");
     prep_stmt->setString(1, developer_email);
-
     prep_stmt->executeUpdate();
 
     delete prep_stmt;
@@ -936,19 +958,20 @@ Game_Details DBService::remove_game_details(int game_id) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Check if object exists, return if it does not
     GD = get_game_details(game_id);
     if (!GD.is_valid)
       return GD;
 
+    // Create statement, fill in relevant variables, and execute
     prep_stmt = con->prepareStatement("DELETE FROM Game_Details GD "
     "WHERE GD.game_id = ?;");
     prep_stmt->setInt(1, game_id);
-
     prep_stmt->executeUpdate();
 
     delete prep_stmt;
@@ -986,20 +1009,21 @@ DBService::remove_player_rating(std::string player_email, int game_id) {
     sql::Connection *con;
     sql::PreparedStatement  *prep_stmt;
 
+    // Connect to database
     driver = get_driver_instance();
     con = driver->connect(hostname, username, password);
-
     con->setSchema(database);
 
+    // Check if object exists, return otherwise
     PGR = get_player_game_rating(player_email, game_id);
     if (!PGR.is_valid)
       return PGR;
 
+    // Create statement, fill in relevant variables, and execute
     prep_stmt = con->prepareStatement("DELETE FROM Player_Game_Ratings PGR "
     "WHERE PGR.player_email = ? AND PGR.game_id = ?;");
     prep_stmt->setString(1, player_email);
     prep_stmt->setInt(2, game_id);
-
     prep_stmt->executeUpdate();
 
     delete prep_stmt;

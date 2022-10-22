@@ -1,4 +1,29 @@
 # Matchmaking API
+## Endpoints
+- `POST /login`
+    - Description:
+      Due to the nature of our authentication this endpoint
+      essentially just verifies credentials are correct
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      
+- `DELETE /login`
+    - Description
+      Deletes a devloper from database provided the
+      credentials match developer trying to be deleted
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+    
+- `POST /signup`
+    - Description:
+      Adds a developer to the database with the
+      specified credentials
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+
 ## Build + Run
 Inside top-level project directory, do
 ```
@@ -30,6 +55,10 @@ Test command is of the form
 For example,
 
     bazel test --test_output=all //testing:test
+
+### Style Checker
+Once cpplint is installed run:
+`cpplint ./main/* ./testing/* &> style-check.txt`
 
 ## Repo Structure
 
@@ -93,7 +122,7 @@ https://bazel.build/install
 	Enter Root Password when prompted
 
 	Run the provided SQL File (replace path with path to sql file):\
-	```source /home/deb/Desktop/matchmaking_api_db_sql.sql;```
+	```source /home/deb/Desktop/COMS_4156_Project/matchmaking_api_db_sql.sql```
 
 	Exit Console: ```quit```
 
@@ -150,97 +179,8 @@ Run:
     bazel-bin/main/main
 
 
-The project does some simple SQL queries and then starts the server
-So you should see something like the following:
-
+When you start the project you should see something like the following:
 ```
-Connecting to MYSQL to get player with email: apex_player@gmail.com
-Player: player_email = apex_player@gmail.com
-Successfully retrieved player with email: apex_player@gmail.com
-
-Connecting to MYSQL to get developer with email: developer@chess.com
-Developer: developer_email = developer@chess.com, developer_password = super_secret_password
-Successfully retrieved developer with email: developer@chess.com
-
-Connecting to MYSQL to get game with with: 2
-GameDetails:
-game_id = 2, developer_email = developer@chess.com, game_name = Chess
-game_parameter1_name = rating, game_parameter1_weight = 1.000000
-category = Strategy, players_per_team = 1, teams_per_match = 2
-Successfully retrieved game with game_id: 2
-
-Connecting to MYSQL to get rating in game with game_id: 1 for player with email: apex_player@gmail.com
-Player Game Ratings:
-player_email = apex_player@gmail.comgame_id = 1
-game_parameter1_value = 100
-game_parameter2_value = 50
-game_parameter3_value = 25
-game_parameter4_value = 10
-Successfully retrieved rating in game with game_id: 1 for player with email: apex_player@gmail.com
-
-Connecting to MYSQL to get rating in game with game_id: 1 for player with email: apex_player@gmail.com
-Joined Player Game Ratings:
-game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
-player_email = apex_player@gmail.com
-game_parameter1_name = kills, game_parameter1_weight = 1.000000, game_parameter1_value = 100
-game_parameter2_name = deaths, game_parameter2_weight = -0.800000, game_parameter2_value = 50
-game_parameter3_name = assists, game_parameter3_weight = 0.500000, game_parameter3_value = 25
-game_parameter4_name = heals, game_parameter4_weight = 0.500000, game_parameter4_value = 10
-category = Battle Royale, players_per_team = 3, teams_per_match = 20
-Successfully retrieved rating in game with game_id: 1 for player with email: apex_player@gmail.com
-
-Connecting to MYSQL to get all players
-Player: player_email = apex_and_chess_player@gmail.com
-Player: player_email = apex_player@gmail.com
-Player: player_email = chess_player@gmail.com
-Successfully retrieved all players
-
-Connecting to MYSQL to get all developers
-Developer: developer_email = admin@overwatch.com, developer_password = password123
-Developer: developer_email = developer@chess.com, developer_password = super_secret_password
-Developer: developer_email = techlead@apex.com, developer_password = another_password
-Successfully retrieved all developers
-
-Connecting to MYSQL to get all game details
-GameDetails:
-game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
-game_parameter1_name = kills, game_parameter1_weight = 1.000000
-game_parameter2_name = deaths, game_parameter2_weight = -0.800000
-game_parameter3_name = assists, game_parameter3_weight = 0.500000
-game_parameter4_name = heals, game_parameter4_weight = 0.500000
-category = Battle Royale, players_per_team = 3, teams_per_match = 20
-GameDetails:
-game_id = 2, developer_email = developer@chess.com, game_name = Chess
-game_parameter1_name = rating, game_parameter1_weight = 1.000000
-category = Strategy, players_per_team = 1, teams_per_match = 2
-GameDetails:
-game_id = 3, developer_email = admin@overwatch.com, game_name = Overwatch
-game_parameter1_name = kills, game_parameter1_weight = 1.000000
-game_parameter2_name = deaths, game_parameter2_weight = -1.000000
-game_parameter3_name = assists, game_parameter3_weight = 0.500000
-game_parameter4_name = heals, game_parameter4_weight = 0.800000
-category = FPS, players_per_team = 5, teams_per_match = 2
-Successfully retrieved all game details
-
-Connecting to MYSQL to get all player ratings for a game
-Joined Player Game Ratings:
-game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
-player_email = apex_and_chess_player@gmail.com
-game_parameter1_name = kills, game_parameter1_weight = 1.000000, game_parameter1_value = 500
-game_parameter2_name = deaths, game_parameter2_weight = -0.800000, game_parameter2_value = 343
-game_parameter3_name = assists, game_parameter3_weight = 0.500000, game_parameter3_value = 37
-game_parameter4_name = heals, game_parameter4_weight = 0.500000, game_parameter4_value = 82
-category = Battle Royale, players_per_team = 3, teams_per_match = 20
-Joined Player Game Ratings:
-game_id = 1, developer_email = techlead@apex.com, game_name = Apex Legends
-player_email = apex_player@gmail.com
-game_parameter1_name = kills, game_parameter1_weight = 1.000000, game_parameter1_value = 100
-game_parameter2_name = deaths, game_parameter2_weight = -0.800000, game_parameter2_value = 50
-game_parameter3_name = assists, game_parameter3_weight = 0.500000, game_parameter3_value = 25
-game_parameter4_name = heals, game_parameter4_weight = 0.500000, game_parameter4_value = 10
-category = Battle Royale, players_per_team = 3, teams_per_match = 20
-Successfully retrieved all player game ratings
-
 (2022-10-10 15:01:13) [INFO    ] Crow/1.0 server is running at http://0.0.0.0:18080 using 2 threads
 (2022-10-10 15:01:13) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
 
