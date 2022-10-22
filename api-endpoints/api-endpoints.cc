@@ -37,7 +37,7 @@ std::pair <int, std::string> getGames(const crow::request& req) {
     if (!tokenCheck.first) {
         return std::make_pair(401, std::string("Bad token"));
     }
-    games = get_all_games_for_developer(tokenCheck.second);
+    //games = get_all_games_for_developer(tokenCheck.second);
     std::string forNow = "someday I'll return a jason list of games info.";
     return std::make_pair(200, forNow);
 }

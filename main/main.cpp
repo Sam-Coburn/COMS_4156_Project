@@ -5,53 +5,54 @@
 #include "api-endpoints/api-endpoints-lib.h"
 
 int main(void) {
-  get_player("apex_player@gmail.com");
+  DBService DB = DBService();
+  DB.get_player("apex_player@gmail.com");
   std::cout << "\n";
-  get_developer("developer@chess.com");
+  DB.get_developer("developer@chess.com");
   std::cout << "\n";
-  get_game_details(2);
+  DB.get_game_details(2);
   std::cout << "\n";
-  get_player_game_rating("apex_player@gmail.com", 1);
+  DB.get_player_game_rating("apex_player@gmail.com", 1);
   std::cout << "\n";
-  get_joined_player_game_rating("apex_player@gmail.com", 1);
+  DB.get_joined_player_game_rating("apex_player@gmail.com", 1);
   std::cout << "\n";
-  get_all_players();
+  DB.get_all_players();
   std::cout << "\n";
-  get_all_developers();
+  DB.get_all_developers();
   std::cout << "\n";
-  get_all_games();
+  DB.get_all_games();
   std::cout << "\n";
-  get_all_player_game_ratings_for_game(1);
+  DB.get_all_player_game_ratings_for_game(1);
   std::cout << "\n";
-  get_all_games_for_developer("developer@chess.com");
+  DB.get_all_games_for_developer("developer@chess.com");
   std::cout << "\n";
 
   Player P;
   P.player_email = "fake_player@gmail.com";
-  P = add_player(P);
+  P = DB.add_player(P);
   if (P.is_valid)
-    remove_player("fake_player@gmail.com");
+    DB.remove_player("fake_player@gmail.com");
 
   Developer D;
   D.developer_email = "fake_developer@dev.com";
   D.developer_password = "some_password";
-  D = add_developer(D);
+  D = DB.add_developer(D);
   if (D.is_valid)
-    remove_developer("fake_developer@dev.com");
+    DB.remove_developer("fake_developer@dev.com");
 
   Game_Details GD;
   GD.game_name = "fake game";
   GD.developer_email = "developer@chess.com";
-  GD = add_game_details(GD);
+  GD = DB.add_game_details(GD);
   if (GD.is_valid)
-    remove_game_details(GD.game_id);
+    DB.remove_game_details(GD.game_id);
 
   Player_Game_Ratings PGR;
   PGR.player_email = "apex_player@gmail.com";
   PGR.game_id = 2;
-  PGR = add_player_rating(PGR);
+  PGR = DB.add_player_rating(PGR);
   if (PGR.is_valid)
-    remove_player_rating(PGR.player_email, PGR.game_id);
+    DB.remove_player_rating(PGR.player_email, PGR.game_id);
 
   crow::SimpleApp app;  // define your crow application
   // define your endpoint at the root directory
@@ -71,7 +72,8 @@ int main(void) {
     try {
       developer_email = x["developer_email"].s();
       developer_password = x["developer_password"].s();
-      D = get_developer(developer_email);
+      DBService DB = DBService();
+      D = DB.get_developer(developer_email);
       if (!D.is_valid || D.developer_password != developer_password) {
         return crow::response(400, "Invalid credentials");
       }
@@ -88,7 +90,8 @@ int main(void) {
     try {
       D.developer_email = x["developer_email"].s();
       D.developer_password = x["developer_password"].s();
-      D = add_developer(D);
+      DBService DB = DBService();
+      D = DB.add_developer(D);
       if (!D.is_valid) {
         return crow::response(400, "Developer already exists");
       }
@@ -108,7 +111,8 @@ int main(void) {
     try {
       developer_email = x["developer_email"].s();
       developer_password = x["developer_password"].s();
-      D = get_developer(developer_email);
+      DBService DB = DBService();
+      D = DB.get_developer(developer_email);
       if (!D.is_valid) {
         return crow::response(400, "User not found");
       }
@@ -117,7 +121,7 @@ int main(void) {
         return crow::response(400, "Invalid credentials");
       }
 
-      D = remove_developer(developer_email);
+      D = DB.remove_developer(developer_email);
       if (!D.is_valid) {
         return crow::response(500, "Internal Server Error");
       }
