@@ -133,13 +133,15 @@ int main(void) {
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req){
-    std::pair<int, std::string> rsp = getGames(req);
+    APIEndPoints api = APIEndPoints();
+    std::pair<int, std::string> rsp = api.getGames(req);
     return crow::response(rsp.first, rsp.second);
   });
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
-    std::pair<int, std::string> rsp = postGames(req);
+    APIEndPoints api = APIEndPoints();
+    std::pair<int, std::string> rsp = api.postGames(req);
     return crow::response(rsp.first, rsp.second);
   });
 
