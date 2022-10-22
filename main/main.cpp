@@ -10,15 +10,16 @@
 
 std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, std::vector<std::string> player_emails)
 {
+  DBService DB = DBService();
   // Step 0: Retrieve Game Details by Game ID
-  Game_Details details = get_game_details(game_id);
+  Game_Details details = DB.get_game_details(game_id);
 
   // Step 1: Compute Holistic Ranking for Each Player using their Metrics
   std::vector<std::tuple<float, std::string> > ranked_players; // vector to which players and their ranks will be added
 
   // Iterate through each passed player and computer their rank
   for (long unsigned int i = 0; i < player_emails.size(); i++) {
-    Player_Game_Ratings player_metrics = get_player_game_rating(player_emails.at(i), game_id);
+    Player_Game_Ratings player_metrics = DB.get_player_game_rating(player_emails.at(i), game_id);
     float rating = (details.game_parameter1_weight) * (player_metrics.game_parameter1_value) +
                    (details.game_parameter2_weight) * (player_metrics.game_parameter2_value) +
                    (details.game_parameter3_weight) * (player_metrics.game_parameter3_value) +
@@ -164,30 +165,30 @@ int main(void) {
 
   Player P;
   P.player_email = "fake_player@gmail.com";
-  P = add_player(P);
+  P = DB.add_player(P);
   if (P.is_valid)
-    remove_player("fake_player@gmail.com");
+    DB.remove_player("fake_player@gmail.com");
 
   Developer D;
   D.developer_email = "fake_developer@dev.com";
   D.developer_password = "some_password";
-  D = add_developer(D);
+  D = DB.add_developer(D);
   if (D.is_valid)
-    remove_developer("fake_developer@dev.com");
+    DB.remove_developer("fake_developer@dev.com");
 
   Game_Details GD;
   GD.game_name = "fake game";
   GD.developer_email = "developer@chess.com";
-  GD = add_game_details(GD);
+  GD = DB.add_game_details(GD);
   if (GD.is_valid)
-    remove_game_details(GD.game_id);
+    DB.remove_game_details(GD.game_id);
 
   Player_Game_Ratings PGR;
   PGR.player_email = "apex_player@gmail.com";
   PGR.game_id = 2;
-  PGR = add_player_rating(PGR);
+  PGR = DB.add_player_rating(PGR);
   if (PGR.is_valid)
-    remove_player_rating(PGR.player_email, PGR.game_id);
+    DB.remove_player_rating(PGR.player_email, PGR.game_id);
 
   crow::SimpleApp app;  // define your crow application
 
@@ -271,7 +272,8 @@ int main(void) {
   ([](int game_id){
     Game_Details game_details;
     try {
-      game_details = get_game_details(game_id);
+      DBService DB = DBService();
+      game_details = DB.get_game_details(game_id);
       crow::json::wvalue game_json;
       if (game_details.is_valid) {
         game_json["game_id"] = game_details.game_id;
@@ -373,11 +375,11 @@ int main(void) {
     crow::json::rvalue x = crow::json::load(req.body);
     Game_Details game_details;
     try {
-      game_details = get_game_details(game_id);
+      DBService DB = DBService();
+      game_details = DB.get_game_details(game_id);
       if (game_details.is_valid) {
-        remove_game_details(game_details.game_id);
-      }
-      else {
+        DB.remove_game_details(game_details.game_id);
+      } else {
         return crow::response(400, "Invalid request body");
       }
       return crow::response(200, "Succesfully deleted game details");
@@ -419,7 +421,8 @@ int main(void) {
       // Empty JSON == invalid request
       crow::json::wvalue json_result;
       return crow::response(400, json_result);
-
+    }
+  });
   // set the port, set the app to run on multiple threads, and run the app
   app.port(18080).multithreaded().run();
 
