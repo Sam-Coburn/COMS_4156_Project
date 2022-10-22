@@ -6,6 +6,7 @@ cc_library(
     hdrs = ["db-service.h"],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
     linkopts = ["-lpthread", "-lmysqlcppconn"],
+    visibility = ["//testing:__pkg__"],
 )
 
 cc_binary(
@@ -17,4 +18,5 @@ cc_binary(
     ],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
     linkopts = ["-lpthread", "-lmysqlcppconn"],
+    visibility = ["//testing:__pkg__"],
 )

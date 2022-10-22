@@ -1,8 +1,9 @@
 cc_test(
-  name = "hello_test",
+  name = "test",
   size = "small",
-  srcs = ["hello_test.cc"],
+  srcs = ["test.cpp"],
   deps = [
-    "//hello-world-pkg:hello-greet",
+    "//main:main",
+    "//main:db-service",
     "@com_google_googletest//:gtest_main"],
 )

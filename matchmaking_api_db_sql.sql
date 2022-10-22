@@ -1,6 +1,8 @@
 CREATE USER 'dbuser' IDENTIFIED BY '123';
 GRANT ALL PRIVILEGES ON *.* TO 'dbuser';
-	
+
+CREATE SCHEMA test_matchmaking_api_db;
+
 CREATE SCHEMA matchmaking_api_db;
 USE matchmaking_api_db;
 
