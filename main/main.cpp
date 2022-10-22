@@ -4,51 +4,43 @@
 #include "main/db-service.h"
 
 int main(void) {
-  DBService DB = DBService();
-  DB.get_player("apex_player@gmail.com");
-  std::cout << "\n";
-  DB.get_developer("developer@chess.com");
-  std::cout << "\n";
-  DB.get_game_details(2);
-  std::cout << "\n";
-  DB.get_player_game_rating("apex_player@gmail.com", 1);
-  std::cout << "\n";
-  DB.get_joined_player_game_rating("apex_player@gmail.com", 1);
-  std::cout << "\n";
-  DB.get_all_players();
-  std::cout << "\n";
-  DB.get_all_developers();
-  std::cout << "\n";
-  DB.get_all_games();
-  std::cout << "\n";
-  DB.get_all_player_game_ratings_for_game(1);
-  std::cout << "\n";
-  DB.get_all_games_for_developer("developer@chess.com");
-  std::cout << "\n";
+  // Crow application definition
+  crow::SimpleApp app;
 
-  crow::SimpleApp app;  // define your crow application
-
-  // define your endpoint at the root directory
+  // GET /
   CROW_ROUTE(app, "/")([](){
-    return "Hello world";
+    return "Welcome to Matchmaking API";
   });
 
-  // Login doesn't do much since we are always expecting to get the
-  // email and password with every request
+  /*
+    POST /login
+    Description:
+      Due to the nature of our authentication this endpoint
+      essentially just verifies credentials are correct
+
+    Request Body:
+      developer_email:string,
+      developer_password:string
+    
+    Response:
+      - Status Code 200 for successful login
+      - Status Code 400 for invalid request body
+      - Status Code 401 for invalid credentials
+  */
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
-    crow::json::rvalue x = crow::json::load(req.body);
+    crow::json::rvalue body = crow::json::load(req.body);
     std::string developer_email;
     std::string developer_password;
     Developer D;
 
     try {
-      developer_email = x["developer_email"].s();
-      developer_password = x["developer_password"].s();
+      developer_email = body["developer_email"].s();
+      developer_password = body["developer_password"].s();
       DBService DB = DBService();
       D = DB.get_developer(developer_email);
       if (!D.is_valid || D.developer_password != developer_password) {
-        return crow::response(400, "Invalid credentials");
+        return crow::response(401, "Invalid credentials");
       }
       return crow::response(200, "Succesfully logged in");
     } catch(...) {
@@ -56,17 +48,32 @@ int main(void) {
     }
   });
 
+  /*
+    POST /signup
+    Description:
+      Adds a developer to the database with the
+      specified credentials
+      
+    Request Body:
+      developer_email:string,
+      developer_password:string
+    
+    Response:
+      - Status Code 200 for successful signup
+      - Status Code 400 for invalid request body
+      - Status Code 409 for developer already exists
+  */
   CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
-    crow::json::rvalue x = crow::json::load(req.body);
+    crow::json::rvalue body = crow::json::load(req.body);
     Developer D;
     try {
-      D.developer_email = x["developer_email"].s();
-      D.developer_password = x["developer_password"].s();
+      D.developer_email = body["developer_email"].s();
+      D.developer_password = body["developer_password"].s();
       DBService DB = DBService();
       D = DB.add_developer(D);
       if (!D.is_valid) {
-        return crow::response(400, "Developer already exists");
+        return crow::response(409, "Developer already exists");
       }
       return crow::response(200, "Succesfully signed up");
     } catch(...) {
@@ -74,24 +81,41 @@ int main(void) {
     }
   });
 
+  /*
+    DELETE /login
+    Description:
+      Deletes a devloper from database provided the
+      credentials match developer trying to be deleted
+      
+    Request Body:
+      developer_email:string,
+      developer_password:string
+    
+    Response:
+      - Status Code 200 for successful deletion
+      - Status Code 400 for invalid request body
+      - Status Code 401 for invalid credentials
+      - Status Code 404 for developer not found
+      - Status Code 500 for internal server error
+  */
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req){
-    crow::json::rvalue x = crow::json::load(req.body);
+    crow::json::rvalue body = crow::json::load(req.body);
     std::string developer_email;
     std::string developer_password;
     Developer D;
 
     try {
-      developer_email = x["developer_email"].s();
-      developer_password = x["developer_password"].s();
+      developer_email = body["developer_email"].s();
+      developer_password = body["developer_password"].s();
       DBService DB = DBService();
       D = DB.get_developer(developer_email);
       if (!D.is_valid) {
-        return crow::response(400, "User not found");
+        return crow::response(404, "Developer not found");
       }
 
       if (D.developer_password != developer_password) {
-        return crow::response(400, "Invalid credentials");
+        return crow::response(401, "Invalid credentials");
       }
 
       D = DB.remove_developer(developer_email);
