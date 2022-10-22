@@ -263,6 +263,8 @@ int main(void) {
     }
   });
 
+  // curl POST Test Example
+  // curl -X POST -H "Content-Type: application/json" http://0.0.0.0:18080/test -d '{"game_id": "2", "player_emails": ["chess_newb@gmail.com", "magnus_carlsen@gmail.com"]}'
   CROW_ROUTE(app, "/test").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
     crow::json::rvalue request_body = crow::json::load(req.body);
@@ -273,11 +275,13 @@ int main(void) {
 
     try {
       game_id = request_body["game_id"].i();
+
       input_player_emails_rvalue = request_body["player_emails"];
       input_player_emails = input_player_emails_rvalue.lo();
 
       for (crow::json::rvalue email : input_player_emails) {
         player_emails.push_back(email.s());
+        std::cout << email.s() << std::endl;
       }
 
       std::vector<std::vector<std::vector<std::string> > > result = matchmaking(game_id, player_emails);
@@ -285,13 +289,13 @@ int main(void) {
       crow::json::wvalue json_result;
       json_result["json"] = result;
 
-      return json_result;
+      return crow::response(200, json_result);
     }
     catch(...) {
       // Return a response to indicate an invalid request body
       // Empty JSON == invalid request
       crow::json::wvalue json_result;
-      return json_result;
+      return crow::response(400, json_result);
     }
   });
 
