@@ -505,7 +505,7 @@ int main(void) {
   
   // curl POST Test Example
   // curl -X POST -H "Content-Type: application/json" http://0.0.0.0:18080/test -d '{"game_id": "2", "player_emails": ["chess_newb@gmail.com", "magnus_carlsen@gmail.com"]}'
-  CROW_ROUTE(app, "/test").methods(crow::HTTPMethod::POST)
+  CROW_ROUTE(app, "/matchmake").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
