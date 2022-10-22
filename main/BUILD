@@ -17,6 +17,6 @@ cc_binary(
         ":db-service",
     ],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
-    linkopts = ["-lpthread", "-lmysqlcppconn"],
+    linkopts = ["-lpthread", "-lmysqlcppconn", "-lboost_system"],
     visibility = ["//testing:__pkg__"],
 )
