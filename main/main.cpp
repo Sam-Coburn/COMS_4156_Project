@@ -135,6 +135,10 @@ int main(void) {
 
     try {
       joined_players = get_all_player_game_ratings_for_game(game_id);
+
+      if (joined_players.empty()) {
+        return crow::response(204, "No players found for game_id " + std::to_string(game_id));
+      }
       
       // Converting vector of players to json object
       crow::json::wvalue players;
@@ -145,6 +149,8 @@ int main(void) {
           players[p.player_email][p.game_parameter2_name] = p.game_parameter2_value;
           players[p.player_email][p.game_parameter3_name] = p.game_parameter3_value;
           players[p.player_email][p.game_parameter4_name] = p.game_parameter4_value;
+        } else {
+          return crow::response(500, "Internal Server Error due to player " + p.player_email);
         }
       }
 
@@ -171,7 +177,7 @@ int main(void) {
         
         pgr = add_player_rating(pgr);
         if (!pgr.is_valid) {
-          return crow::response(400, "Invalid request due to player " + p);
+          return crow::response(500, "Internal Server Error due to player " + p);
         }
       }
 
@@ -188,6 +194,10 @@ int main(void) {
 
     try {
       pgr = get_player_game_rating(player_email, game_id);
+
+      if (&pgr == NULL) {
+        return crow::response(204, "Player " + player_email + " not found for game_id " + std::to_string(game_id));
+      }
       
       // Converting players' stats to json object
       crow::json::wvalue stats;
@@ -198,11 +208,31 @@ int main(void) {
         stats["game_parameter3_value"] = pgr.game_parameter3_value;
         stats["game_parameter4_value"] = pgr.game_parameter4_value;
       } else {
-        return crow::response(400, "Invalid request body");
+        return crow::response(500, "Internal Server Error");
       }
 
       return crow::response(200, stats);
     } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+  });
+
+  // Remove given player stats for a certain game
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE) 
+  ([](const crow::request& req, int game_id){
+    try {
+      crow::json::rvalue players_adding = crow::json::load(req.body);
+
+      for (std::string p : players_adding.keys()) {
+        Player_Game_Ratings pgr;
+        pgr = remove_player_rating(p, game_id);
+        if (!pgr.is_valid) {
+          return crow::response(500, "Internal Server Error due to player " + p);
+        }
+      }
+
+      return crow::response(200, "Player stats were removed");
+    } catch (...) {
       return crow::response(400, "Invalid request body");
     }
   });
