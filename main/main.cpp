@@ -9,7 +9,9 @@
 #include <string.h>
 #include <tuple>
 
-std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, std::vector<std::string> player_emails)
+std::tuple<
+std::vector<std::vector<std::vector<std::string> > >,
+std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> player_emails)
 {
   DBService DB = DBService();
   // Step 0: Retrieve Game Details by Game ID
@@ -36,34 +38,17 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
   sort(ranked_players.begin(), ranked_players.end());
   reverse(ranked_players.begin(), ranked_players.end());
 
-  for (long unsigned int i = 0; i < ranked_players.size(); i++) {
-    std::cout << "Player " << i + 1 << ": " << std::get<1>(ranked_players.at(i)) << std::endl;
-    std::cout << "Rank: " << std::get<0>(ranked_players.at(i)) << std::endl;
-  }
-  std::cout << std::endl;
-
   // Step 2: Populate Games w/ Players
   int num_players_per_game = details.players_per_team * details.teams_per_match;
   int num_games = floor(player_emails.size() / num_players_per_game);
   int num_overflow = player_emails.size() % num_players_per_game;
 
-  std::cout << "# of Players Inputted: " << player_emails.size() << std::endl;
-
-  std::cout << "# Players per Game: " << num_players_per_game << std::endl;
-  std::cout << "# Games: " << num_games << std::endl;
-  std::cout << "# Players in Overflow: " << num_overflow << std::endl;
-  std::cout << std::endl;
-
   // If the number of players given is less than the number of players expected in a game,
   // add them all to overflow and return
   if (player_emails.size() < (long unsigned int) num_players_per_game) {
     std::vector<std::vector<std::vector<std::string> > > games;
-    std::vector<std::vector<std::string> > teams;
 
-    teams.push_back(player_emails);
-    games.push_back(teams);
-
-    return games;
+    return make_tuple(games, player_emails);
   }
 
   // Populate the teams
@@ -96,49 +81,14 @@ std::vector<std::vector<std::vector<std::string> > > matchmaking(int game_id, st
     games.push_back(teams);
   }
 
-  std::cout << player_iter << std::endl;
-
   // Populate Overflow with Remaining Players
   std::vector<std::string> overflow;
   if (num_overflow > 0) {
     for (long unsigned int i = player_iter; i < ranked_players.size(); i++)
       overflow.push_back(std::get<1>(ranked_players.at(i)));
-
-    std::vector<std::vector<std::string> > overflow_team;
-    overflow_team.push_back(overflow);
-
-    games.push_back(overflow_team);
   }
 
-  // Printout of Matchmaking Results
-  std::cout << "MATCHMAKING OVERVIEW" << std::endl;
-  std::cout << "Num Games: " << games.size() << std::endl;
-  std::cout << "Num Teams: " << games.at(0).size() << std::endl;
-  std::cout << "Teams Size: " << games.at(0).at(0).size() << std::endl;
-  std::cout << std::endl;
-
-  std::cout << "GAMES" << std::endl;
-  for (int i = 0; i < num_games; i++) {
-    std::cout << "Game " << i + 1 << std::endl;
-    for (int j = 0; j < details.teams_per_match; j++) {
-      std::cout << "Team " << j + 1 << std::endl;
-      for (int k = 0; k < details.players_per_team; k++) {
-        std::cout << "Player: " << games.at(i).at(j).at(k) << std::endl;
-      }
-      std::cout << std::endl;
-    }
-    std::cout << std::endl;
-  }
-
-  if (overflow.size() > 0) {
-    std::cout << "OVERFLOW" << std::endl;
-
-    for (long unsigned int i = 0; i < overflow.size(); i++) {
-      std::cout << overflow.at(i) << std::endl;
-    }
-  }
-
-  return games;
+  return make_tuple(games, overflow);
 }
 
 int main(void) {
@@ -575,21 +525,27 @@ int main(void) {
         std::cout << email.s() << std::endl;
       }
 
-      std::vector<std::vector<std::vector<std::string> > > result = matchmaking(game_id, player_emails);
-      // json_result["json"] = result;
+      std::tuple<
+      std::vector<std::vector<std::vector<std::string> > >,
+      std::vector<std::string> > result = matchmaking(game_id, player_emails);
 
-      for (long unsigned int i = 0; i < result.size(); i++) {
+      std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
+      std::vector<std::string> overflow = std::get<1>(result);
+
+      for (long unsigned int i = 0; i < games.size(); i++) {
         json_result["Game_" + std::to_string(i + 1)];
-        for (long unsigned int j = 0; j < result.at(i).size(); j++) {
+        for (long unsigned int j = 0; j < games.at(i).size(); j++) {
           std::vector<std::string> player_names;
 
-          for (long unsigned int k = 0; k < result.at(i).at(j).size(); k++) {
-            player_names.push_back(result.at(i).at(j).at(k));
+          for (long unsigned int k = 0; k < games.at(i).at(j).size(); k++) {
+            player_names.push_back(games.at(i).at(j).at(k));
           }
 
           json_result["Game_" + std::to_string(i + 1)]["Team_" + std::to_string(j + 1)] = player_names;
         }
       }
+
+      json_result["overflow"] = overflow;
 
       return crow::response(200, json_result);
     }
