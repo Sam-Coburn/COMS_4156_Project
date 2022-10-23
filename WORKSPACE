@@ -6,9 +6,8 @@ http_archive(
   strip_prefix = "googletest-609281088cfefc76f9d0ce82e1ff6c30cc3591e5",
 )
 
-
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-# ...
+
 git_repository(
     name = "jsoncpp",
     branch = "master",

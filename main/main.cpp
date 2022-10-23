@@ -276,20 +276,22 @@ int main(void) {
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req){
-    APIEndPoints api = APIEndPoints();
-    std::pair<int, std::string> rsp = api.getGames(req);
-    return crow::response(rsp.first, rsp.second);
+    // APIEndPoints api = APIEndPoints();
+    // std::pair<int, std::string> rsp = api.getGames(req);
+    // return crow::response(rsp.first, rsp.second);
+       return crow::response(400, "Emily needs to use crow jsons.");
   });
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
-    APIEndPoints api = APIEndPoints();
-    std::pair<int, std::string> rsp = api.postGames(req);
-    return crow::response(rsp.first, rsp.second);
+    // APIEndPoints api = APIEndPoints();
+    // std::pair<int, std::string> rsp = api.postGames(req);
+    // return crow::response(rsp.first, rsp.second);
+    return crow::response(400, "Emily needs to use crow jsons.");
   });
 
   // Get all players in a certain game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::GET) 
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::GET)
   ([](int game_id){
     std::vector<Joined_Player_Game_Ratings> joined_players;
 
