@@ -525,18 +525,45 @@ int main(void) {
 
   
   // curl POST Test Example
-  // curl -X POST -H "Content-Type: application/json" http://0.0.0.0:18080/test -d '{"game_id": "2", "player_emails": ["chess_newb@gmail.com", "magnus_carlsen@gmail.com"]}'
+  // curl -X POST -H "Content-Type: application/json" http://0.0.0.0:18080/matchmake -d '{"game_id": "2", "player_emails": ["chess_newb@gmail.com", "magnus_carlsen@gmail.com"]}'
   CROW_ROUTE(app, "/matchmake").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
+    std::string developer_email;
+    std::string developer_password;
     int game_id;
     crow::json::rvalue input_player_emails_rvalue;
     std::vector<crow::json::rvalue> input_player_emails;
     std::vector<std::string> player_emails;
 
     try {
+      DBService DB = DBService();
+      crow::json::wvalue json_result;
+
+      // Authentication
+      developer_email = request_body["developer_email"];
+      developer_password = request_body["developer_password"];
+
+      Developer d = DB.get_developer(developer_email);
+
+      // Check given password against password in DB
+      if (d.developer_password != developer_password)
+        return crow::response(400, json_result);
+
       game_id = request_body["game_id"].i();
+      std::vector<Game_Details> developer_games = DB.get_all_games_for_developer(developer_email);
+      bool game_found = false;
+
+      // Check to ensure that the developer "owns" the given game
+      for (int i = 0; i < developer_games.size(); i++) {
+        int g_id = developer_games.at(i).game_id;
+        if (game_id == g_id)
+          game_found = true;
+      }
+
+      if (game_found == false)
+        return crow::response(400, json_result);
 
       input_player_emails_rvalue = request_body["player_emails"];
       input_player_emails = input_player_emails_rvalue.lo();
@@ -547,9 +574,19 @@ int main(void) {
       }
 
       std::vector<std::vector<std::vector<std::string> > > result = matchmaking(game_id, player_emails);
+      // json_result["json"] = result;
 
-      crow::json::wvalue json_result;
-      json_result["json"] = result;
+      for (int i = 0; i < matchmaking.size(); i++) {
+        std::vector<std::vector<std::string> > game;
+        json_result["Game" + std::to_string(i + 1)] = game;
+        for (int j = 0; j < matchmaking.at(i).size(); j++) {
+          std::vector<std::string> team;
+          json_result["Game" + std::to_string(i + 1)].push_back(team);
+          for (int k = 0; k < matchmaking.at(i).at(j).size(); k++) {
+            json_result["Game" + std::to_string(i + 1)]["Team" + std::to_string(j + 1)].push_back(matchmaking.at(i).at(j).at(k))
+          }
+        }
+      }
 
       return crow::response(200, json_result);
     }
