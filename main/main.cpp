@@ -544,8 +544,8 @@ int main(void) {
       crow::json::wvalue json_result;
 
       // Authentication
-      developer_email = request_body["developer_email"];
-      developer_password = request_body["developer_password"];
+      developer_email = request_body["developer_email"].s();
+      developer_password = request_body["developer_password"].s();
 
       Developer d = DB.get_developer(developer_email);
 
@@ -558,7 +558,7 @@ int main(void) {
       bool game_found = false;
 
       // Check to ensure that the developer "owns" the given game
-      for (int i = 0; i < developer_games.size(); i++) {
+      for (long unsigned int i = 0; i < developer_games.size(); i++) {
         int g_id = developer_games.at(i).game_id;
         if (game_id == g_id)
           game_found = true;
@@ -578,15 +578,16 @@ int main(void) {
       std::vector<std::vector<std::vector<std::string> > > result = matchmaking(game_id, player_emails);
       // json_result["json"] = result;
 
-      for (int i = 0; i < matchmaking.size(); i++) {
-        std::vector<std::vector<std::string> > game;
-        json_result["Game" + std::to_string(i + 1)] = game;
-        for (int j = 0; j < matchmaking.at(i).size(); j++) {
-          std::vector<std::string> team;
-          json_result["Game" + std::to_string(i + 1)].push_back(team);
-          for (int k = 0; k < matchmaking.at(i).at(j).size(); k++) {
-            json_result["Game" + std::to_string(i + 1)]["Team" + std::to_string(j + 1)].push_back(matchmaking.at(i).at(j).at(k))
+      for (long unsigned int i = 0; i < result.size(); i++) {
+        json_result["Game_" + std::to_string(i + 1)];
+        for (long unsigned int j = 0; j < result.at(i).size(); j++) {
+          std::vector<std::string> player_names;
+
+          for (long unsigned int k = 0; k < result.at(i).at(j).size(); k++) {
+            player_names.push_back(result.at(i).at(j).at(k));
           }
+
+          json_result["Game_" + std::to_string(i + 1)]["Team_" + std::to_string(j + 1)] = player_names;
         }
       }
 
