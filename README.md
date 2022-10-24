@@ -24,6 +24,28 @@
       - `developer_email:string`
       - `developer_password:string`
 
+- `POST /game`
+    - Description:
+      Add a game to developer's account
+      specified credentials
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      - `name:string`
+      - `category:string`
+      - `parameters:Array<String>`
+      - `weights:Array<Float>`
+      - `teams_per_match:Integer`
+      - `players_per_team:Integer`
+
+- `GET /games`
+    - Description:
+      Retrieve a list of all games assocaited with developer's account
+      specified credentials
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+
 ## Build + Run
 Inside top-level project directory, do
 ```
@@ -58,7 +80,7 @@ For example,
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint ./main/* ./testing/* &> style-check.txt`
+`cpplint --linelength=100 ./main/* ./testing/* &> style-check.txt`
 
 ## Repo Structure
 
@@ -90,6 +112,7 @@ Reference instructions: https://bazel.build/install/ubuntu
 ```
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
+
 **Platform: Ubuntu 22.04**
 
     sudo apt install npm
