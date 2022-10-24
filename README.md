@@ -73,6 +73,24 @@
     - Request Body:
       - 
 
+- `GET /game/<int>`
+    - Description:
+      Returns game details in JSON format. Details include, but are not limited to, game name, players per team, etc.
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+ 
+ - `DELETE /game/<int>`
+    - Description:
+      Deletes a game (and its details).
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+
 ## Build + Run
 Inside top-level project directory, do
 ```
