@@ -15,7 +15,6 @@
 
 // cpplint --linelength=100 ./main/* ./testing/*
 
-
 class APIEndPoints {
  private:
 DBService DB;  // a DB service to use for api calls

@@ -24,6 +24,28 @@
       - `developer_email:string`
       - `developer_password:string`
 
+- `POST /game`
+    - Description:
+      Add a game to developer's account
+      specified credentials
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      - `name:string`
+      - `category:string`
+      - `parameters:Array<String>`
+      - `weights:Array<Float>`
+      - `teams_per_match:Integer`
+      - `players_per_team:Integer`
+
+- `GET /games`
+    - Description:
+      Retrieve a list of all games assocaited with developer's account
+      specified credentials
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+
 ## Build + Run
 Inside top-level project directory, do
 ```
