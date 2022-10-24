@@ -91,6 +91,23 @@
       - `developer_email:string`
       - `developer_password:string`
 
+- `POST /games/<game_id>/players`
+    - Description: for a given game and list of players, get a list of their details
+    - Request Parameters:
+      - game_id:String
+    - Request Body:
+      - Player [Array<Player>]
+
+- `POST /games/<game_id>/players`
+    - Description:
+    - Request Body:
+      - 
+
+- `POST /games/<game_id>/players`
+    - Description:
+    - Request Body:
+      - 
+
 ## Build + Run
 Inside top-level project directory, do
 ```
