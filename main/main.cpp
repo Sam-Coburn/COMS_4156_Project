@@ -1,27 +1,29 @@
 // "Copyright [2022] <Copyright Owner>"
 
+// Includes
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <cmath>
+#include <tuple>
+
 #include "crow/crow_all.h"
 #include "main/db-service.h"
 #include "api-endpoints/api-endpoints-lib.h"
 
-#include <cmath>
-#include <stdlib.h>
-#include <string.h>
-#include <tuple>
-
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> player_emails)
-{
+std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> player_emails) {
   DBService DB = DBService();
   // Step 0: Retrieve Game Details by Game ID
   Game_Details details = DB.get_game_details(game_id);
 
   // Step 1: Compute Holistic Ranking for Each Player using their Metrics
-  std::vector<std::tuple<float, std::string> > ranked_players; // vector to which players and their ranks will be added
+  std::vector<std::tuple<float, std::string> > ranked_players;  // vector to which players and their ranks will be added
 
   // Iterate through each passed player and computer their rank
-  for (long unsigned int i = 0; i < player_emails.size(); i++) {
+  for (uint64_t i = 0; i < player_emails.size(); i++) {
     Player_Game_Ratings player_metrics = DB.get_player_game_rating(player_emails.at(i), game_id);
     float rating = (details.game_parameter1_weight) * (player_metrics.game_parameter1_value) +
                    (details.game_parameter2_weight) * (player_metrics.game_parameter2_value) +
@@ -45,7 +47,7 @@ std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> pla
 
   // If the number of players given is less than the number of players expected in a game,
   // add them all to overflow and return
-  if (player_emails.size() < (long unsigned int) num_players_per_game) {
+  if (player_emails.size() < (uint64_t) num_players_per_game) {
     std::vector<std::vector<std::vector<std::string> > > games;
 
     return make_tuple(games, player_emails);
@@ -84,7 +86,7 @@ std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> pla
   // Populate Overflow with Remaining Players
   std::vector<std::string> overflow;
   if (num_overflow > 0) {
-    for (long unsigned int i = player_iter; i < ranked_players.size(); i++)
+    for (uint64_t i = player_iter; i < ranked_players.size(); i++)
       overflow.push_back(std::get<1>(ranked_players.at(i)));
   }
 
@@ -252,7 +254,7 @@ int main(void) {
       if (joined_players.empty()) {
         return crow::response(204, "No players found for game_id " + std::to_string(game_id));
       }
-      
+
       // Converting vector of players to json object
       crow::json::wvalue players;
       for (Joined_Player_Game_Ratings p : joined_players) {
@@ -273,7 +275,7 @@ int main(void) {
     }
   });
 
-//return everything about the game details to the user except game_id and developer_email
+// return everything about the game details to the user except game_id and developer_email
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::GET)
   ([](int game_id){
     Game_Details game_details;
@@ -307,7 +309,7 @@ int main(void) {
   });
 
   // Add given player stats for a certain game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST) 
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req, int game_id){
     try {
       DBService DB = DBService();
@@ -321,7 +323,7 @@ int main(void) {
         pgr.game_parameter2_value = players_adding[p]["game_parameter2_value"].i();
         pgr.game_parameter3_value = players_adding[p]["game_parameter3_value"].i();
         pgr.game_parameter4_value = players_adding[p]["game_parameter4_value"].i();
-        
+
         pgr = DB.add_player_rating(pgr);
         if (!pgr.is_valid) {
           return crow::response(500, "Internal Server Error due to player " + p);
@@ -333,14 +335,14 @@ int main(void) {
       return crow::response(400, "Invalid request body");
     }
   });
-    
-  //create set for PUT request to not reset all elements and to catch errors
+
+  // create set for PUT request to not reset all elements and to catch errors
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::PUT)
   ([](const crow::request& req, int game_id){
     try {
       crow::json::rvalue game_body = crow::json::load(req.body);
       std::set<std::string> all_keys = {"game_name", "developer_email"
-      "game_parameter1_name", "game_parameter1_weight", 
+      "game_parameter1_name", "game_parameter1_weight",
       "game_parameter2_name", "game_parameter2_weight",
       "game_parameter3_name", "game_parameter3_weight",
       "game_parameter4_name", "game_parameter4_weight",
@@ -352,44 +354,31 @@ int main(void) {
             game_details.game_id = game_id;
             if (p == "game_name") {
               game_details.game_name = game_body["game_name"].s();
-            }
-            else if (p == "developer_email") {
+            } else if (p == "developer_email") {
               game_details.developer_email = game_body["developer_email"].s();
-            }
-            else if (p == "game_parameter1_name") {
+            } else if (p == "game_parameter1_name") {
               game_details.game_parameter1_name = game_body["game_parameter1_name"].s();
-            }
-            else if (p == "game_parameter1_weight") {
+            } else if (p == "game_parameter1_weight") {
               game_details.game_parameter1_weight = game_body["game_parameter1_weight"].d();
-            }
-            else if (p == "game_parameter2_name") {
+            } else if (p == "game_parameter2_name") {
               game_details.game_parameter2_name = game_body["game_parameter2_name"].s();
-            }
-            else if (p == "game_parameter2_weight") {
+            } else if (p == "game_parameter2_weight") {
               game_details.game_parameter2_weight = game_body["game_parameter2_weight"].d();
-            }
-            else if (p == "game_parameter3_name") {
+            } else if (p == "game_parameter3_name") {
               game_details.game_parameter3_name = game_body["game_parameter3_name"].s();
-            }
-            else if (p == "game_parameter3_weight") {
+            } else if (p == "game_parameter3_weight") {
               game_details.game_parameter3_weight = game_body["game_parameter3_weight"].d();
-            }
-            else if (p == "game_parameter4_name") {
+            } else if (p == "game_parameter4_name") {
               game_details.game_parameter4_name = game_body["game_parameter4_name"].s();
-            }
-            else if (p == "game_parameter4_weight") {
+            } else if (p == "game_parameter4_weight") {
               game_details.game_parameter4_weight = game_body["game_parameter4_weight"].d();
-            }
-            else if (p == "category") {
+            } else if (p == "category") {
               game_details.category = game_body["category"].s();
-            }
-            else if (p == "players_per_team") {
+            } else if (p == "players_per_team") {
               game_details.players_per_team = game_body["players_per_team"].i();
-            }
-            else if (p == "teams_per_match") {
+            } else if (p == "teams_per_match") {
               game_details.teams_per_match = game_body["teams_per_match"].i();
-            }
-            else {
+            } else {
               return crow::response(400, "Invalid request body");
             }
 
@@ -416,7 +405,7 @@ int main(void) {
       if (!pgr.is_valid) {
         return crow::response(204, "Player " + player_email + " not found for game_id " + std::to_string(game_id));
       }
-      
+
       // Converting players' stats to json object
       crow::json::wvalue stats;
       if (pgr.is_valid) {
@@ -455,7 +444,7 @@ int main(void) {
   });
 
   // Remove given player stats for a certain game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE) 
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
     try {
       DBService DB = DBService();
@@ -475,9 +464,6 @@ int main(void) {
     }
   });
 
-  
-  // curl POST Test Example
-  // curl -X POST -H "Content-Type: application/json" http://0.0.0.0:18080/matchmake -d '{"game_id": "2", "player_emails": ["chess_newb@gmail.com", "magnus_carlsen@gmail.com"]}'
   CROW_ROUTE(app, "/matchmake").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
     crow::json::rvalue request_body = crow::json::load(req.body);
@@ -508,7 +494,7 @@ int main(void) {
       bool game_found = false;
 
       // Check to ensure that the developer "owns" the given game
-      for (long unsigned int i = 0; i < developer_games.size(); i++) {
+      for (uint64_t i = 0; i < developer_games.size(); i++) {
         int g_id = developer_games.at(i).game_id;
         if (game_id == g_id)
           game_found = true;
@@ -532,12 +518,12 @@ int main(void) {
       std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
       std::vector<std::string> overflow = std::get<1>(result);
 
-      for (long unsigned int i = 0; i < games.size(); i++) {
+      for (uint64_t i = 0; i < games.size(); i++) {
         json_result["Game_" + std::to_string(i + 1)];
-        for (long unsigned int j = 0; j < games.at(i).size(); j++) {
+        for (uint64_t j = 0; j < games.at(i).size(); j++) {
           std::vector<std::string> player_names;
 
-          for (long unsigned int k = 0; k < games.at(i).at(j).size(); k++) {
+          for (uint64_t k = 0; k < games.at(i).at(j).size(); k++) {
             player_names.push_back(games.at(i).at(j).at(k));
           }
 
