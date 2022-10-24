@@ -85,17 +85,18 @@
 
   - `POST /game/<int>/players`
     - Description:
-      Adds player stats for a game.
+      Adds players' stats for a game.
     - Request Parameters:
       - `game_id:int`
     - Request Body:
       - `developer_email:string`
       - `developer_password:string`
-      - `{player_email}:string`
-      - `	game_parameter1_value:int`
-      - `	game_parameter2_value:int`
-      - `	game_parameter3_value:int`
-      - `	game_parameter4_value:int`
+      - `(player_email:<JsonObject>)+`
+        where `<JsonObject>` is of the form
+        - `game_parameter1_value:int`
+        - `game_parameter2_value:int`
+        - `game_parameter3_value:int`
+        - `game_parameter4_value:int`
 
   - `GET /games/{game-id}/players/{player-id}`
     - Description:
