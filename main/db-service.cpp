@@ -874,9 +874,8 @@ Player DBService::remove_player(std::string player_email) {
     if (!p.is_valid)
       return p;
 
-    // Create statement to delete player and fill in relevant variables
-    prep_stmt = con->prepareStatement("DELETE FROM Players P "
-    "WHERE P.player_email = ?;");
+    prep_stmt = con->prepareStatement("DELETE FROM Players "
+    "WHERE player_email = ?;");
     prep_stmt->setString(1, player_email);
 
     prep_stmt->executeUpdate();
@@ -921,9 +920,8 @@ Developer DBService::remove_developer(std::string developer_email) {
     if (!d.is_valid)
       return d;
 
-    // Create statement, fill in relevant variables then execute
-    prep_stmt = con->prepareStatement("DELETE FROM Developers D "
-    "WHERE D.developer_email = ?;");
+    prep_stmt = con->prepareStatement("DELETE FROM Developers "
+    "WHERE developer_email = ?;");
     prep_stmt->setString(1, developer_email);
     prep_stmt->executeUpdate();
 
@@ -968,9 +966,8 @@ Game_Details DBService::remove_game_details(int game_id) {
     if (!GD.is_valid)
       return GD;
 
-    // Create statement, fill in relevant variables, and execute
-    prep_stmt = con->prepareStatement("DELETE FROM Game_Details GD "
-    "WHERE GD.game_id = ?;");
+    prep_stmt = con->prepareStatement("DELETE FROM Game_Details "
+    "WHERE game_id = ?;");
     prep_stmt->setInt(1, game_id);
     prep_stmt->executeUpdate();
 
@@ -1019,9 +1016,8 @@ DBService::remove_player_rating(std::string player_email, int game_id) {
     if (!PGR.is_valid)
       return PGR;
 
-    // Create statement, fill in relevant variables, and execute
-    prep_stmt = con->prepareStatement("DELETE FROM Player_Game_Ratings PGR "
-    "WHERE PGR.player_email = ? AND PGR.game_id = ?;");
+    prep_stmt = con->prepareStatement("DELETE FROM Player_Game_Ratings "
+    "WHERE player_email = ? AND game_id = ?;");
     prep_stmt->setString(1, player_email);
     prep_stmt->setInt(2, game_id);
     prep_stmt->executeUpdate();

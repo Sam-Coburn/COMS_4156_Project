@@ -93,6 +93,22 @@ std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> pla
   return make_tuple(games, overflow);
 }
 
+bool valid_user(std::string email, std::string password) {
+  DBService DB = DBService();
+  Developer d = DB.get_developer(email);
+  return d.is_valid && d.developer_password == password;
+}
+
+bool valid_user_gameid(std::string email, std::string password, int game_id) {
+  if (!valid_user(email, password)) {
+    return false;
+  }
+
+  DBService DB = DBService();
+  Game_Details gd = DB.get_game_details(game_id);
+  return gd.is_valid && gd.developer_email == email;
+}
+
 int main(void) {
   DBService DB = DBService();
   DB.get_player("apex_player@gmail.com");
@@ -243,28 +259,39 @@ int main(void) {
 
   // Get all players in a certain game
   CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::GET)
-  ([](int game_id){
+  ([](const crow::request& req, int game_id){
+    crow::json::rvalue user_info = crow::json::load(req.body);
     std::vector<Joined_Player_Game_Ratings> joined_players;
 
     try {
+      // Authenticating user
+      std::string dev_email = user_info["developer_email"].s();
+      std::string dev_password = user_info["developer_password"].s();
+      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
+
       DBService DB = DBService();
       joined_players = DB.get_all_player_game_ratings_for_game(game_id);
 
       if (joined_players.empty()) {
-        return crow::response(204, "No players found for game_id " + std::to_string(game_id));
+        return crow::response(204,
+        "No players found for game_id " + std::to_string(game_id));
       }
 
       // Converting vector of players to json object
       crow::json::wvalue players;
       for (Joined_Player_Game_Ratings p : joined_players) {
         if (p.is_valid) {
-          players[p.player_email]["game_id"] = p.game_id;
-          players[p.player_email][p.game_parameter1_name] = p.game_parameter1_value;
-          players[p.player_email][p.game_parameter2_name] = p.game_parameter2_value;
-          players[p.player_email][p.game_parameter3_name] = p.game_parameter3_value;
-          players[p.player_email][p.game_parameter4_name] = p.game_parameter4_value;
+	        std::string e = p.player_email;
+          players[e]["game_id"] = p.game_id;
+          players[e][p.game_parameter1_name] = p.game_parameter1_value;
+          players[e][p.game_parameter2_name] = p.game_parameter2_value;
+          players[e][p.game_parameter3_name] = p.game_parameter3_value;
+          players[e][p.game_parameter4_name] = p.game_parameter4_value;
         } else {
-          return crow::response(500, "Internal Server Error due to player " + p.player_email);
+          return crow::response(500,
+          "Internal Server Error due to player " + p.player_email);
         }
       }
 
@@ -312,24 +339,55 @@ int main(void) {
   ([](const crow::request& req, int game_id){
     try {
       DBService DB = DBService();
-      crow::json::rvalue players_adding = crow::json::load(req.body);
+      crow::json::rvalue user_req = crow::json::load(req.body);
 
-      for (std::string p : players_adding.keys()) {
-        Player_Game_Ratings pgr;
-        pgr.player_email = p;
-        pgr.game_id = game_id;
-        pgr.game_parameter1_value = players_adding[p]["game_parameter1_value"].i();
-        pgr.game_parameter2_value = players_adding[p]["game_parameter2_value"].i();
-        pgr.game_parameter3_value = players_adding[p]["game_parameter3_value"].i();
-        pgr.game_parameter4_value = players_adding[p]["game_parameter4_value"].i();
+      // Authenticating user
+      std::string dev_email = user_req["developer_email"].s();
+      std::string dev_password = user_req["developer_password"].s();
+      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
 
-        pgr = DB.add_player_rating(pgr);
-        if (!pgr.is_valid) {
-          return crow::response(500, "Internal Server Error due to player " + p);
+      crow::json::rvalue player_info;
+      bool added = false;
+      for (std::string pemail : user_req.keys()) {
+        if (pemail != "developer_email" && pemail != "developer_password") {
+          // If player does not already exist, add player to database
+          Player p = DB.get_player(pemail);
+          p.player_email = pemail;
+          if (!p.is_valid) {
+            p = DB.add_player(p);
+            if (!p.is_valid) {
+              return crow::response(500,
+              "Internal Server Error due to player " + pemail);
+            }
+          }
+
+          player_info = user_req[pemail];
+          Player_Game_Ratings pgr;
+          pgr.player_email = pemail;
+          pgr.game_id = game_id;
+          pgr.game_parameter1_value = player_info["game_parameter1_value"].i();
+          pgr.game_parameter2_value = player_info["game_parameter2_value"].i();
+          pgr.game_parameter3_value = player_info["game_parameter3_value"].i();
+          pgr.game_parameter4_value = player_info["game_parameter4_value"].i();
+
+          pgr = DB.add_player_rating(pgr);
+          if (!pgr.is_valid) {
+            return crow::response(500,
+            "Internal Server Error due to player " + pemail);
+          } else {
+            added = true;
+          }
         }
       }
 
-      return crow::response(200, "Player stats were added");
+      if (added) {
+        return crow::response(200, "Player stats were added");
+      } else {
+        return crow::response(200,
+        "No player stats added due to empty request");
+      }
     } catch(...) {
       return crow::response(400, "Invalid request body");
     }
@@ -394,15 +452,25 @@ int main(void) {
 
   // Get a specific player's stats for a specific game
   CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET)
-  ([](int game_id, std::string player_email) {
+  ([](const crow::request& req, int game_id, std::string player_email) {
+    crow::json::rvalue user_req = crow::json::load(req.body);
     Player_Game_Ratings pgr;
 
     try {
+      // Authenticating user
+      std::string dev_email = user_req["developer_email"].s();
+      std::string dev_password = user_req["developer_password"].s();
+      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
+
       DBService DB = DBService();
       pgr = DB.get_player_game_rating(player_email, game_id);
 
       if (!pgr.is_valid) {
-        return crow::response(204, "Player " + player_email + " not found for game_id " + std::to_string(game_id));
+        return crow::response(204,
+        "Player " + player_email + " not found for game_id " +
+        std::to_string(game_id));
       }
 
       // Converting players' stats to json object
@@ -445,15 +513,27 @@ int main(void) {
   // Remove given player stats for a certain game
   CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
+    crow::json::rvalue user_req = crow::json::load(req.body);
+    crow::json::rvalue player_emails_rvalue;
+    std::vector<crow::json::rvalue> player_emails;
     try {
-      DBService DB = DBService();
-      crow::json::rvalue players_adding = crow::json::load(req.body);
+      // Authenticating user
+      std::string dev_email = user_req["developer_email"].s();
+      std::string dev_password = user_req["developer_password"].s();
+      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
 
-      for (std::string p : players_adding.keys()) {
+      DBService DB = DBService();
+      player_emails_rvalue = user_req["player_emails"];
+      player_emails = player_emails_rvalue.lo();
+      for (crow::json::rvalue email_rvalue : player_emails) {
+        std::string email = email_rvalue.s();
         Player_Game_Ratings pgr;
-        pgr = DB.remove_player_rating(p, game_id);
+        pgr = DB.remove_player_rating(email, game_id);
         if (!pgr.is_valid) {
-          return crow::response(500, "Internal Server Error due to player " + p);
+          return crow::response(500,
+          "Internal Server Error due to player " + email);
         }
       }
 
@@ -543,7 +623,7 @@ int main(void) {
   });
 
   // set the port, set the app to run on multiple threads, and run the app
-  app.port(18080).multithreaded().run();
+  app.port(8080).multithreaded().run();
 
   return 0;
 }
