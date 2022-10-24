@@ -46,6 +46,16 @@
       - `developer_email:string`
       - `developer_password:string`
 
+- `POST /matchmake`
+    - Description:
+      Use the given list of player emails to sort players into game lobbies
+      using the given game's parameters.
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      - `game_id:int`
+      - `player_emails:vector<string>`
+
 ## Build + Run
 Inside top-level project directory, do
 ```
