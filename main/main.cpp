@@ -250,7 +250,7 @@ int main(void) {
        return crow::response(400, "Emily needs to use crow jsons.");
   });
 
-  CROW_ROUTE(app, "/game").methods(crow::HTTPMethod::POST)
+  CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
     std::pair<int, std::string> rsp = api.postGame(req);
@@ -644,7 +644,7 @@ int main(void) {
   });
 
   // set the port, set the app to run on multiple threads, and run the app
-  app.port(8080).multithreaded().run();
+  app.port(18080).multithreaded().run();
 
   return 0;
 }
