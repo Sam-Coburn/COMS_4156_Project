@@ -58,7 +58,7 @@ For example,
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint ./main/* ./testing/* &> style-check.txt`
+`cpplint --linelength=100 ./main/* ./testing/* &> style-check.txt`
 
 ## Repo Structure
 
@@ -90,6 +90,7 @@ Reference instructions: https://bazel.build/install/ubuntu
 ```
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
+
 **Platform: Ubuntu 22.04**
 
     sudo apt install npm
