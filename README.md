@@ -24,7 +24,7 @@
       - `developer_email:string`
       - `developer_password:string`
 
-- `POST /game`
+- `POST /games`
     - Description:
       Add a game to developer's account
       specified credentials
