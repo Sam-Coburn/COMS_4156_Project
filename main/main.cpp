@@ -247,9 +247,10 @@ int main(void) {
     APIEndPoints api = APIEndPoints();
     std::pair<int, std::string> rsp = api.getGames(req);
     return crow::response(rsp.first, rsp.second);
+       return crow::response(400, "Emily needs to use crow jsons.");
   });
 
-  CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
+  CROW_ROUTE(app, "/game").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
     std::pair<int, std::string> rsp = api.postGame(req);
@@ -302,9 +303,17 @@ int main(void) {
 
 // return everything about the game details to the user except game_id and developer_email
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::GET)
-  ([](int game_id){
+  ([](const crow::request& req, int game_id){
     Game_Details game_details;
     try {
+      // Authentication
+      crow::json::rvalue user = crow::json::load(req.body);
+      std::string email = user["developer_email"].s();
+      std::string password = user["developer_password"].s();
+      if (!valid_user_gameid(email, password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
+
       DBService DB = DBService();
       game_details = DB.get_game_details(game_id);
       crow::json::wvalue game_json;
@@ -397,12 +406,19 @@ int main(void) {
   ([](const crow::request& req, int game_id){
     try {
       crow::json::rvalue game_body = crow::json::load(req.body);
+      // Authentication
+      std::string email = game_body["developer_email"].s();
+      std::string password = game_body["developer_password"].s();
+      if (!valid_user_gameid(email, password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
       std::set<std::string> all_keys = {"game_name", "developer_email"
       "game_parameter1_name", "game_parameter1_weight",
       "game_parameter2_name", "game_parameter2_weight",
       "game_parameter3_name", "game_parameter3_weight",
       "game_parameter4_name", "game_parameter4_weight",
-      "category", "players_per_team", "teams_per_match"};
+      "category", "players_per_team", "teams_per_match", 
+      "developer_email", "developer_password"};
 
       Game_Details game_details;
       for (std::string p : game_body.keys()) {
@@ -493,9 +509,15 @@ int main(void) {
 
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
-    crow::json::rvalue x = crow::json::load(req.body);
     Game_Details game_details;
     try {
+      // Authentication
+      crow::json::rvalue x = crow::json::load(req.body);
+      std::string email = x["developer_email"].s();
+      std::string password = x["developer_password"].s();
+      if (!valid_user_gameid(email, password, game_id)) {
+        return crow::response(401, "Invalid authentication");
+      }
       DBService DB = DBService();
       game_details = DB.get_game_details(game_id);
       if (game_details.is_valid) {
@@ -622,7 +644,7 @@ int main(void) {
   });
 
   // set the port, set the app to run on multiple threads, and run the app
-  app.port(18080).multithreaded().run();
+  app.port(8080).multithreaded().run();
 
   return 0;
 }
