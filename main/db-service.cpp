@@ -1,5 +1,6 @@
 /*Copyright [year] <Copyright Owner>*/
 
+#include <mysql_connection.h>
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
@@ -10,7 +11,6 @@
 #include <iostream>
 
 #include "main/db-service.h"
-#include "mysql_connection.h"
 
 DBService::DBService
 (std::string host, std::string user, std::string pass, std::string db) {

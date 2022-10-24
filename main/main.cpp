@@ -283,7 +283,7 @@ int main(void) {
       crow::json::wvalue players;
       for (Joined_Player_Game_Ratings p : joined_players) {
         if (p.is_valid) {
-	        std::string e = p.player_email;
+          std::string e = p.player_email;
           players[e]["game_id"] = p.game_id;
           players[e][p.game_parameter1_name] = p.game_parameter1_value;
           players[e][p.game_parameter2_name] = p.game_parameter2_value;
@@ -417,7 +417,7 @@ int main(void) {
       "game_parameter2_name", "game_parameter2_weight",
       "game_parameter3_name", "game_parameter3_weight",
       "game_parameter4_name", "game_parameter4_weight",
-      "category", "players_per_team", "teams_per_match", 
+      "category", "players_per_team", "teams_per_match",
       "developer_email", "developer_password"};
 
       Game_Details game_details;

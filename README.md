@@ -90,7 +90,7 @@ For example,
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint --linelength=100 ./main/* ./testing/* &> style-check.txt`
+`cpplint --linelength=120 ./main/* ./api-endpoints/* ./testing/* &> style-check.txt`
 
 ## Repo Structure
 
