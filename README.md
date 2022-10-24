@@ -92,10 +92,10 @@
       - `developer_email:string`
       - `developer_password:string`
       - `{player_email}:string`
-      		- `game_parameter1_value:int`
-      		- `game_parameter2_value:int`
-      		- `game_parameter3_value:int`
-      		- `game_parameter4_value:int`
+      - `	game_parameter1_value:int`
+      - `	game_parameter2_value:int`
+      - `	game_parameter3_value:int`
+      - `	game_parameter4_value:int`
       
 ## Build + Run
 Inside top-level project directory, do
