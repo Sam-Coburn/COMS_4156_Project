@@ -107,6 +107,16 @@
     - Request Body:
       - `developer_email:string`
       - `developer_password:string`
+
+  - `DELETE /game/<int>/players`
+    - Description:
+      Removes players' stats for a game.
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      - `player_emails:vector<string>`
       
 ## Build + Run
 Inside top-level project directory, do
