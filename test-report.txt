@@ -1,0 +1,160 @@
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //testing:test (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //testing:test (0 packages loaded, 0 targets configured).
+INFO: Found 1 test target...
+[0 / 1] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+Target //testing:test up-to-date:
+  bazel-bin/testing/test
+INFO: Elapsed time: 0.539s, Critical Path: 0.00s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+PASSED: //testing:test (see /home/deb/.cache/bazel/_bazel_deb/75707dc4912220a42e70d1c2e7c7bc92/execroot/__main__/bazel-out/k8-fastbuild/testlogs/testing/test/test.log)
+INFO: From Testing //testing:test
+==================== Test output for //testing:test:
+Running main() from gmock_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from DBServiceTest
+[ RUN      ] DBServiceTest.Player_Tests
+Connecting to MYSQL to insert player with email: fake_player@gmail.com
+Successfully created player with email: fake_player@gmail.com
+Connecting to MYSQL to insert player with email: fake_player@gmail.com
+Error creating player with email: fake_player@gmail.com
+# ERR: SQLException in main/db-service.cpp(add_player) on line 682
+# ERR: Duplicate entry 'fake_player@gmail.com' for key 'Players.PRIMARY' (MySQL error code: 1062, SQLState: 23000 )
+Connecting to MYSQL to get player with email: fake_player@gmail.com
+Player: player_email = fake_player@gmail.com
+Successfully retrieved player with email: fake_player@gmail.com
+Connecting to MYSQL to delete player with email: fake_player@gmail.com
+Connecting to MYSQL to get player with email: fake_player@gmail.com
+Player: player_email = fake_player@gmail.com
+Successfully retrieved player with email: fake_player@gmail.com
+Successfully deleted player with email: fake_player@gmail.com
+Connecting to MYSQL to delete player with email: fake_player@gmail.com
+Connecting to MYSQL to get player with email: fake_player@gmail.com
+Successfully retrieved player with email: fake_player@gmail.com
+Connecting to MYSQL to get player with email: fake_player@gmail.com
+Successfully retrieved player with email: fake_player@gmail.com
+[       OK ] DBServiceTest.Player_Tests (54 ms)
+[ RUN      ] DBServiceTest.Developer_Tests
+Connecting to MYSQL to insert developer with email: fake_developer@dev.com
+Successfully created developer with email: fake_developer@dev.com
+Connecting to MYSQL to insert developer with email: fake_developer@dev.com
+Error creating developer with email: fake_developer@dev.com
+# ERR: SQLException in main/db-service.cpp(add_developer) on line 724
+# ERR: Duplicate entry 'fake_developer@dev.com' for key 'Developers.PRIMARY' (MySQL error code: 1062, SQLState: 23000 )
+Connecting to MYSQL to get developer with email: fake_developer@dev.com
+Developer: developer_email = fake_developer@dev.com, developer_password = some_password
+Successfully retrieved developer with email: fake_developer@dev.com
+Connecting to MYSQL to delete developer with email: fake_developer@dev.com
+Connecting to MYSQL to get developer with email: fake_developer@dev.com
+Developer: developer_email = fake_developer@dev.com, developer_password = some_password
+Successfully retrieved developer with email: fake_developer@dev.com
+Successfully deleted developer with email: fake_developer@dev.com
+Connecting to MYSQL to delete developer with email: fake_developer@dev.com
+Connecting to MYSQL to get developer with email: fake_developer@dev.com
+Successfully retrieved developer with email: fake_developer@dev.com
+Connecting to MYSQL to get developer with email: fake_developer@dev.com
+Successfully retrieved developer with email: fake_developer@dev.com
+[       OK ] DBServiceTest.Developer_Tests (38 ms)
+[ RUN      ] DBServiceTest.Game_Details_Tests
+Connecting to MYSQL to insert new game
+Error creating game
+# ERR: SQLException in main/db-service.cpp(add_game_details) on line 793
+# ERR: Cannot add or update a child row: a foreign key constraint fails (`matchmaking_api_db`.`Game_Details`, CONSTRAINT `Game_Details_ibfk_1` FOREIGN KEY (`developer_email`) REFERENCES `Developers` (`developer_email`) ON DELETE CASCADE) (MySQL error code: 1452, SQLState: 23000 )
+Connecting to MYSQL to insert developer with email: fake_developer@dev.com
+Successfully created developer with email: fake_developer@dev.com
+Connecting to MYSQL to insert new game
+Successfully created game with game_id: 19
+Connecting to MYSQL to get game with game_id: 19
+GameDetails:
+game_id = 19, developer_email = fake_developer@dev.com, game_name = fake game
+category = , players_per_team = -201178871, teams_per_match = 32515
+Successfully retrieved game with game_id: 19
+Connecting to MYSQL to delete game with game_id: 19
+Connecting to MYSQL to get game with game_id: 19
+GameDetails:
+game_id = 19, developer_email = fake_developer@dev.com, game_name = fake game
+category = , players_per_team = -201178871, teams_per_match = 32515
+Successfully retrieved game with game_id: 19
+Successfully deleted game with game_id: 19
+Connecting to MYSQL to get game with game_id: -1
+Successfully retrieved game with game_id: -1
+Connecting to MYSQL to delete game with game_id: -1
+Connecting to MYSQL to get game with game_id: -1
+Successfully retrieved game with game_id: -1
+Connecting to MYSQL to delete developer with email: fake_developer@dev.com
+Connecting to MYSQL to get developer with email: fake_developer@dev.com
+Developer: developer_email = fake_developer@dev.com, developer_password = some_password
+Successfully retrieved developer with email: fake_developer@dev.com
+Successfully deleted developer with email: fake_developer@dev.com
+[       OK ] DBServiceTest.Game_Details_Tests (48 ms)
+[ RUN      ] DBServiceTest.Player_Game_Ratings_Tests
+Connecting to MYSQL to create rating in game with game_id: -1 for player with email: fake_player@gmail.com
+Error creating rating in game with game_id: -1 for player with email: fake_player@gmail.com
+# ERR: SQLException in main/db-service.cpp(add_player_rating) on line 846
+# ERR: Cannot add or update a child row: a foreign key constraint fails (`matchmaking_api_db`.`Player_Game_Ratings`, CONSTRAINT `Player_Game_Ratings_ibfk_1` FOREIGN KEY (`player_email`) REFERENCES `Players` (`player_email`) ON DELETE CASCADE) (MySQL error code: 1452, SQLState: 23000 )
+Connecting to MYSQL to insert player with email: fake_player@gmail.com
+Successfully created player with email: fake_player@gmail.com
+Connecting to MYSQL to create rating in game with game_id: -1 for player with email: fake_player@gmail.com
+Error creating rating in game with game_id: -1 for player with email: fake_player@gmail.com
+# ERR: SQLException in main/db-service.cpp(add_player_rating) on line 846
+# ERR: Cannot add or update a child row: a foreign key constraint fails (`matchmaking_api_db`.`Player_Game_Ratings`, CONSTRAINT `Player_Game_Ratings_ibfk_2` FOREIGN KEY (`game_id`) REFERENCES `Game_Details` (`game_id`) ON DELETE CASCADE) (MySQL error code: 1452, SQLState: 23000 )
+Connecting to MYSQL to insert developer with email: fake_developer@dev.com
+Successfully created developer with email: fake_developer@dev.com
+Connecting to MYSQL to insert new game
+Successfully created game with game_id: 20
+Connecting to MYSQL to create rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Successfully created rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Connecting to MYSQL to get rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Player Game Ratings:
+player_email = fake_player@gmail.comgame_id = 20
+game_parameter1_value = 0
+game_parameter2_value = 30
+game_parameter3_value = 0
+game_parameter4_value = 543519605
+Successfully retrieved rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Connecting to MYSQL to delete rating for player with email: fake_player@gmail.com for game with game_id: 20
+Connecting to MYSQL to get rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Player Game Ratings:
+player_email = fake_player@gmail.comgame_id = 20
+game_parameter1_value = 0
+game_parameter2_value = 30
+game_parameter3_value = 0
+game_parameter4_value = 543519605
+Successfully retrieved rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Successfully deleted rating for player with email: fake_player@gmail.com for game with game_id: 20
+Connecting to MYSQL to delete rating for player with email: fake_player@gmail.com for game with game_id: 20
+Connecting to MYSQL to get rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Successfully retrieved rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Connecting to MYSQL to get rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Successfully retrieved rating in game with game_id: 20 for player with email: fake_player@gmail.com
+Connecting to MYSQL to delete player with email: fake_player@gmail.com
+Connecting to MYSQL to get player with email: fake_player@gmail.com
+Player: player_email = fake_player@gmail.com
+Successfully retrieved player with email: fake_player@gmail.com
+Successfully deleted player with email: fake_player@gmail.com
+Connecting to MYSQL to delete game with game_id: 20
+Connecting to MYSQL to get game with game_id: 20
+GameDetails:
+game_id = 20, developer_email = fake_developer@dev.com, game_name = fake game
+category = , players_per_team = -201178871, teams_per_match = 32515
+Successfully retrieved game with game_id: 20
+Successfully deleted game with game_id: 20
+Connecting to MYSQL to delete developer with email: fake_developer@dev.com
+Connecting to MYSQL to get developer with email: fake_developer@dev.com
+Developer: developer_email = fake_developer@dev.com, developer_password = some_password
+Successfully retrieved developer with email: fake_developer@dev.com
+Successfully deleted developer with email: fake_developer@dev.com
+[       OK ] DBServiceTest.Player_Game_Ratings_Tests (64 ms)
+[----------] 4 tests from DBServiceTest (204 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (204 ms total)
+[  PASSED  ] 4 tests.
+================================================================================
+//testing:test                                                  (cached) PASSED in 0.3s
+
+Executed 0 out of 1 test: 1 test passes.
+INFO: Build completed successfully, 1 total action
