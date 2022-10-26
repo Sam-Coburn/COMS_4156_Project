@@ -39,7 +39,12 @@ Due to the nature of our authentication this endpoint essentially just verifies 
 Deletes a developer from database provided the credentials match developer trying to be deleted
 - Route: `http://localhost:18080/login`
 - Request Body:
-- Output:
+```
+{
+    "developer_email": "emily",
+    "developer_password" : "emily_fake_password"
+}
+```
  **4. Add Game -** `POST /games`
 Add a game to developer's account with specified credentials
 - Route:
