@@ -47,13 +47,32 @@ Deletes a developer from database provided the credentials match developer tryin
 ```
  **4. Add Game -** `POST /games`
 Add a game to developer's account with specified credentials
-- Route:
+- Route: `http://localhost:18080/games`
 - Request Body:
 ```
 {
-    "developer_email": "emily",
-    "developer_password" : "emily_fake_password"
-}
+    "developer_email":"emily",
+    "developer_password":"emily_fake_password",
+
+			"category" : "casual",
+			"name" : "uno",
+			"parameters" : 
+			[
+				"wins",
+				"loses",
+				"nope",
+				""
+			],
+			"players_per_team" : 1,
+			"teams_per_match" : 4,
+			"weights" : 
+			[
+				1.0,
+				1.0,
+				1.0,
+				0.0
+			]
+		}
 ```
  **5. Get All Games -** `GET /games`
 Retrieve a list of all games associated with developer's account with the 
