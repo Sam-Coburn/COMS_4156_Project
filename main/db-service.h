@@ -236,11 +236,10 @@ class DBService {
     Player_Game_Ratings
     remove_player_rating(std::string player_email, int game_id);
 
-
-    bool update_player(Player P);
-    bool update_developer(Developer D);
-    bool update_game_details(Game_Details GD);
-    bool update_player_rating(Player_Game_Ratings PGR);
+    Player update_player(std::string player_email, Player P);
+    Developer update_developer(std::string developer_email, Developer D);
+    Game_Details update_game_details(int game_id, Game_Details GD);
+    Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);
 };
 
 #endif  // MAIN_DB_SERVICE_H_

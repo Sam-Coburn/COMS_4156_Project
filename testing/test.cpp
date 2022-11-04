@@ -4,9 +4,18 @@
 #include "main/db-service.h"
 
 TEST(DBServiceTest, Player_Tests) {
-  DBService DB = DBService();
+  DBService DB = DBService("tcp://127.0.0.1:3306", "dbuser", "123", "test_matchmaking_api_db");
   Player P;
   P.player_email = "fake_player@gmail.com";
+
+  Player update_details;
+  update_details.player_email = "updated_email@gmail.com";
+
+  Player updated_player;
+
+  // Invalid Update, player doesn't exist
+  updated_player = DB.update_player(P.player_email, update_details);
+  EXPECT_EQ(updated_player.is_valid, false);
 
   P = DB.add_player(P);  // Valid create
   EXPECT_EQ(P.is_valid, true);
@@ -18,18 +27,26 @@ TEST(DBServiceTest, Player_Tests) {
   EXPECT_EQ(P.is_valid, true);
   EXPECT_EQ(P.player_email, "fake_player@gmail.com");
 
-  P = DB.remove_player("fake_player@gmail.com");  // Valid delete
+  // Valid Update
+  updated_player = DB.update_player(P.player_email, update_details);
+  EXPECT_EQ(updated_player.is_valid, true);
+
+  P = DB.get_player("updated_email@gmail.com");  // Valid read
+  EXPECT_EQ(P.is_valid, true);
+  EXPECT_EQ(P.player_email, "updated_email@gmail.com");
+
+  P = DB.remove_player("updated_email@gmail.com");  // Valid delete
   EXPECT_EQ(P.is_valid, true);
 
-  P = DB.remove_player("fake_player@gmail.com");  // Invalid delete
+  P = DB.remove_player("updated_email@gmail.com");  // Invalid delete
   EXPECT_EQ(P.is_valid, false);
 
-  P = DB.get_player("fake_player@gmail.com");  // Invalid read
+  P = DB.get_player("updated_email@gmail.com");  // Invalid read
   EXPECT_EQ(P.is_valid, false);
 }
 
 TEST(DBServiceTest, Developer_Tests) {
-  DBService DB = DBService();
+  DBService DB = DBService("tcp://127.0.0.1:3306", "dbuser", "123", "test_matchmaking_api_db");
   Developer D;
   D.developer_email = "fake_developer@dev.com";
   D.developer_password = "some_password";
@@ -56,7 +73,7 @@ TEST(DBServiceTest, Developer_Tests) {
 }
 
 TEST(DBServiceTest, Game_Details_Tests) {
-  DBService DB = DBService();
+  DBService DB = DBService("tcp://127.0.0.1:3306", "dbuser", "123", "test_matchmaking_api_db");
   Game_Details GD;
   GD.game_name = "fake game";
   GD.developer_email = "fake_developer@dev.com";
@@ -96,7 +113,7 @@ TEST(DBServiceTest, Game_Details_Tests) {
 }
 
 TEST(DBServiceTest, Player_Game_Ratings_Tests) {
-  DBService DB = DBService();
+  DBService DB = DBService("tcp://127.0.0.1:3306", "dbuser", "123", "test_matchmaking_api_db");
 
   Player_Game_Ratings PGR;
   PGR.player_email = "fake_player@gmail.com";
