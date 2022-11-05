@@ -191,6 +191,11 @@ class DBService {
     std::string pass = "123",
     std::string db = "matchmaking_api_db");
 
+
+    // These functions are mainly for testing
+    bool setUpDatabase(); // Setup database if not setup
+    bool tearDownDatabase(); // Drop all tables in database
+
     // All the get functions take in the primary key(s) for the relevant
     // object and returns the relevant instance of said object.
     // The get can only be considered succesful if the

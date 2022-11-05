@@ -20,6 +20,118 @@ DBService::DBService
   database = db;
 }
 
+bool DBService::setUpDatabase() {
+  std::cout << "Connecting to MYSQL to set up database"<< std::endl;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::Statement *stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Create tables
+    stmt = con->createStatement();
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Developers ("
+    "developer_email varchar(255) NOT NULL, "
+  	"developer_password varchar(255) NOT NULL, "
+  	"PRIMARY KEY (developer_email));");
+
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Players ("
+    "player_email varchar(255) NOT NULL, "
+  	"PRIMARY KEY (player_email));");
+
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Game_Details ("
+    "game_id int NOT NULL auto_increment, "
+	  "developer_email varchar(255) NOT NULL, "
+  	"game_name varchar(255) NOT NULL, "
+  	"game_parameter1_name varchar(255), "
+  	"game_parameter1_weight float, "
+  	"game_parameter2_name varchar(255), "
+  	"game_parameter2_weight float, "
+  	"game_parameter3_name varchar(255), "
+  	"game_parameter3_weight float, "
+  	"game_parameter4_name varchar(255), "
+  	"game_parameter4_weight float, "
+  	"category varchar(255), "
+  	"players_per_team int, "
+  	"teams_per_match int, "
+  	"PRIMARY KEY (game_id), "
+	  "FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) "
+    "ON DELETE CASCADE ON UPDATE CASCADE);");
+
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Player_Game_Ratings ("
+  	"player_email varchar(255) NOT NULL, "
+    "game_id int NOT NULL, "
+  	"game_parameter1_value int, "
+  	"game_parameter2_value int, "
+  	"game_parameter3_value int, "
+  	"game_parameter4_value int, "
+  	"PRIMARY KEY (player_email, game_id), "
+  	"FOREIGN KEY (player_email) REFERENCES Players(player_email) "
+    "ON DELETE CASCADE ON UPDATE CASCADE, "
+  	"FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) "
+    "ON DELETE CASCADE ON UPDATE CASCADE);");
+
+    delete stmt;
+    delete con;
+
+    std::cout << "Successfully set up database"<< std::endl;
+    return true;
+  } catch (sql::SQLException &e) {
+    std::cout << "Error setting up database" << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+  return false;
+}
+
+bool DBService::tearDownDatabase() {
+  std::cout << "Connecting to MYSQL to tear down database"<< std::endl;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::Statement *stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Create tables
+    stmt = con->createStatement();
+    stmt->executeUpdate("DROP TABLE IF EXISTS Player_Game_Ratings");
+    stmt->executeUpdate("DROP TABLE IF EXISTS Game_Details");
+    stmt->executeUpdate("DROP TABLE IF EXISTS Developers");
+    stmt->executeUpdate("DROP TABLE IF EXISTS Players");
+
+    delete stmt;
+    delete con;
+
+    std::cout << "Successfully tore down database"<< std::endl;
+    return true;
+  } catch (sql::SQLException &e) {
+    std::cout << "Error tearing down database" << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+  return false;
+}
+
 Player DBService::get_player(std::string player_email) {
   std::cout << "Connecting to MYSQL to get player with email: "
   + player_email << std::endl;
