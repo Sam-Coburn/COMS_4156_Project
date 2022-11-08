@@ -15,9 +15,10 @@ jobs:
       - name: Setup Bazel
         uses: abhinavsingh/setup-bazel@v3
       - name: Setup MySQL
-        uses: samin/mysql-action@v1
+        uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql root password: 123
+          mysql-version: '8.0'
+          root-password: 123
       - name: Setup Database
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
       - name: Install C++ Connector to MySQL
