@@ -15,20 +15,10 @@ jobs:
       - name: Setup Bazel
         uses: abhinavsingh/setup-bazel@v3
       - name: Setup MySQL
-        run: |
-          sudo apt update
-          sudo apt install mysql-server
-          sudo systemctl start mysql.service
-          sudo mysql
-          ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-          ALTER USER 'dbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY '123';
-          GRANT ALL ON *.* TO 'dbuser'@'localhost';
-          SELECT user,host, authentication_string FROM mysql.user;
-          exit
+        uses: mirromutth/mysql-action@v1.1
       - name: Setup Database
         run: |
-          sudo mysql -u root -p
-          123
+          sudo mysql -u root -p -h 127.0.0.1
           source matchmaking_api_db_sql.sql
           quit
       - name: Install C++ Connector to MySQL
