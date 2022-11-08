@@ -15,9 +15,16 @@ jobs:
       - name: Setup Bazel
         uses: abhinavsingh/setup-bazel@v3
       - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql root password: 123
+        run: |
+          sudo apt update
+          sudo apt install mysql-server
+          sudo systemctl start mysql.service
+          sudo mysql
+          ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+          ALTER USER 'dbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY '123';
+          GRANT ALL ON *.* TO 'dbuser'@'localhost';
+          SELECT user,host, authentication_string FROM mysql.user;
+          exit
       - name: Setup Database
         run: |
           sudo mysql -u root -p
