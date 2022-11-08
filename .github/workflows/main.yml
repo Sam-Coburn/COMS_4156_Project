@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup Bazel
-        uses: abhinavsingh/setup-bazel@v3
+        uses: ngalaiko/bazel-action/1.2.1@master
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
         with:
