@@ -17,9 +17,9 @@ jobs:
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql root password: "123"
+          mysql root password: 123
       - name: Setup Database
-        run: sudo mysql -h 127.0.0.1 -u root -p 123 -e "matchmaking_api_db_sql.sql"
+        run: sudo mysql -h 127.0.0.1 -u root --password=123 -e "matchmaking_api_db_sql.sql"
       - name: Install C++ Connector to MySQL
         run: sudo apt install libmysqlcppconn-dev
       - name: Install Boost for Crow
