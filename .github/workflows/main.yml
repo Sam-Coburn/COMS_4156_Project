@@ -13,24 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup Bazel
-      - uses: abhinavsingh/setup-bazel@v3
+        uses: abhinavsingh/setup-bazel@v3
       - name: Setup MySQL
-      - uses: mirromutth/mysql-action@v1.1
+        uses: mirromutth/mysql-action@v1.1
         with:
           mysql root password: 123
       - name: Setup Database
-      - run: sudo mysql --host=localhost --u=root --password=123  -e "matchmaking_api_db_sql.sql"
+        run: sudo mysql --host=localhost --u=root --password=123  -e "matchmaking_api_db_sql.sql"
       - name: Install C++ Connector to MySQL
-      - run: sudo apt install libmysqlcppconn-dev
+        run: sudo apt install libmysqlcppconn-dev
       - name: Install Boost for Crow
-      - run: sudo apt-get install libboost-all-dev
+        run: sudo apt-get install libboost-all-dev
       - name: Install Git
-      - run: sudo apt-get install git
+        run: sudo apt-get install git
       - name: Install JSONCPP
-      - run: sudo apt-get install libjsoncpp-dev
+        run: sudo apt-get install libjsoncpp-dev
       - name: Build Project
-      - run: bazel build //main:main
+        run: bazel build //main:main
       - name: Test Project
-      - run: bazel test --test_output=all //testing:test
+        run: bazel test --test_output=all //testing:test
       
       
