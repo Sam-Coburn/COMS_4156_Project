@@ -1,7 +1,7 @@
 cc_test(
   name = "test",
   size = "small",
-  srcs = ["test.cpp"],
+  srcs = ["test.cpp", "test2.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
