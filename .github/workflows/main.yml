@@ -19,11 +19,7 @@ jobs:
         with:
           mysql root password: 123
       - name: Setup Database
-        run: |
-          sudo mysql -u root -p -h 127.0.0.1
-          123
-          source matchmaking_api_db_sql.sql
-          quit
+        run: sudo mysql -h 127.0.0.1 -u root -p 123 -e "matchmaking_api_db_sql.sql"
       - name: Install C++ Connector to MySQL
         run: sudo apt install libmysqlcppconn-dev
       - name: Install Boost for Crow
