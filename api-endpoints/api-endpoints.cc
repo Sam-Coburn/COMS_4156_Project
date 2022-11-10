@@ -212,3 +212,66 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     // return response body as string
     return std::make_pair(200, std::to_string(addedGame.game_id));
 }
+
+crow::response APIEndPoints::postSignUp(const crow::request& req, DBService DB) {
+    crow::json::rvalue x = crow::json::load(req.body);
+    Developer D;
+    try {
+      D.developer_email = x["developer_email"].s();
+      D.developer_password = x["developer_password"].s();
+      D = DB.add_developer(D);
+      if (!D.is_valid) {
+        return crow::response(400, "Developer already exists");
+      }
+      return crow::response(200, "Succesfully signed up");
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+}
+
+crow::response APIEndPoints::postLogin(const crow::request& req, DBService DB) {
+    crow::json::rvalue x = crow::json::load(req.body);
+    std::string developer_email;
+    std::string developer_password;
+    Developer D;
+
+    try {
+      developer_email = x["developer_email"].s();
+      developer_password = x["developer_password"].s();
+      D = DB.get_developer(developer_email);
+      if (!D.is_valid || D.developer_password != developer_password) {
+        return crow::response(400, "Invalid credentials");
+      }
+      return crow::response(200, "Succesfully logged in");
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+}
+
+crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService DB) {
+    crow::json::rvalue x = crow::json::load(req.body);
+    std::string developer_email;
+    std::string developer_password;
+    Developer D;
+
+    try {
+      developer_email = x["developer_email"].s();
+      developer_password = x["developer_password"].s();
+      D = DB.get_developer(developer_email);
+      if (!D.is_valid) {
+        return crow::response(400, "User not found");
+      }
+
+      if (D.developer_password != developer_password) {
+        return crow::response(400, "Invalid credentials");
+      }
+
+      D = DB.remove_developer(developer_email);
+      if (!D.is_valid) {
+        return crow::response(500, "Internal Server Error");
+      }
+      return crow::response(200, "Succesfully deleted account");
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+}
