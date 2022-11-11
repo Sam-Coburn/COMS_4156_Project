@@ -241,6 +241,13 @@ class DBService {
     Player_Game_Ratings
     remove_player_rating(std::string player_email, int game_id);
 
+
+    // The delete functions take the primary key(s) of the
+    // relevant object to be updated and returns an instance
+    // of the updated object i.e after being updated. The update of
+    // the object in the database can only be considered
+    // successful if the is_valid flag of the returned object
+    // is true.
     Player update_player(std::string player_email, Player P);
     Developer update_developer(std::string developer_email, Developer D);
     Game_Details update_game_details(int game_id, Game_Details GD);

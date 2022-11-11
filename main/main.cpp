@@ -110,60 +110,6 @@ bool valid_user_gameid(std::string email, std::string password, int game_id) {
 }
 
 int main(void) {
-  DBService DB = DBService();
-  DB.get_player("apex_player@gmail.com");
-  std::cout << "\n";
-  DB.get_developer("developer@chess.com");
-  std::cout << "\n";
-  DB.get_game_details(2);
-  std::cout << "\n";
-  DB.get_player_game_rating("apex_player@gmail.com", 1);
-  std::cout << "\n";
-  DB.get_joined_player_game_rating("apex_player@gmail.com", 1);
-  std::cout << "\n";
-  DB.get_all_players();
-  std::cout << "\n";
-  DB.get_all_developers();
-  std::cout << "\n";
-  DB.get_all_games();
-  std::cout << "\n";
-  DB.get_all_player_game_ratings_for_game(1);
-  std::cout << "\n";
-  DB.get_all_games_for_developer("developer@chess.com");
-  std::cout << "\n";
-
-  Player P;
-  P.player_email = "fake_player@gmail.com";
-  P = DB.add_player(P);
-  if (P.is_valid)
-    DB.remove_player("fake_player@gmail.com");
-
-  Developer D;
-  D.developer_email = "fake_developer@dev.com";
-  D.developer_password = "some_password";
-  D = DB.add_developer(D);
-  if (D.is_valid)
-    DB.remove_developer("fake_developer@dev.com");
-
-  Game_Details GD;
-  GD.game_name = "fake game";
-  GD.developer_email = "developer@chess.com";
-  GD = DB.add_game_details(GD);
-  if (GD.is_valid)
-    DB.remove_game_details(GD.game_id);
-
-  Player_Game_Ratings PGR;
-  PGR.player_email = "apex_player@gmail.com";
-  PGR.game_id = 2;
-  PGR = DB.add_player_rating(PGR);
-  if (PGR.is_valid)
-    DB.remove_player_rating(PGR.player_email, PGR.game_id);
-
-  D.developer_email = "fake_developer@dev.com";
-  D.developer_password = "some_password";
-  D = DB.add_developer(D);
-  if (D.is_valid)
-    DB.remove_developer("fake_developer@dev.com");
 
   crow::SimpleApp app;  // define your crow application
   // define your endpoint at the root directory
@@ -171,75 +117,27 @@ int main(void) {
     return "Hello world";
   });
 
+  CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)
+  ([](const crow::request& req){
+    APIEndPoints api = APIEndPoints();
+    DBService DB = DBService();
+    return api.postSignUp(req, DB);
+  });
+
   // Login doesn't do much since we are always expecting to get the
   // email and password with every request
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
-    crow::json::rvalue x = crow::json::load(req.body);
-    std::string developer_email;
-    std::string developer_password;
-    Developer D;
-
-    try {
-      developer_email = x["developer_email"].s();
-      developer_password = x["developer_password"].s();
-      DBService DB = DBService();
-      D = DB.get_developer(developer_email);
-      if (!D.is_valid || D.developer_password != developer_password) {
-        return crow::response(400, "Invalid credentials");
-      }
-      return crow::response(200, "Succesfully logged in");
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
-  });
-
-  CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)
-  ([](const crow::request& req){
-    crow::json::rvalue x = crow::json::load(req.body);
-    Developer D;
-    try {
-      D.developer_email = x["developer_email"].s();
-      D.developer_password = x["developer_password"].s();
-      DBService DB = DBService();
-      D = DB.add_developer(D);
-      if (!D.is_valid) {
-        return crow::response(400, "Developer already exists");
-      }
-      return crow::response(200, "Succesfully signed up");
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
+    APIEndPoints api = APIEndPoints();
+    DBService DB = DBService();
+    return api.postLogin(req, DB);
   });
 
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req){
-    crow::json::rvalue x = crow::json::load(req.body);
-    std::string developer_email;
-    std::string developer_password;
-    Developer D;
-
-    try {
-      developer_email = x["developer_email"].s();
-      developer_password = x["developer_password"].s();
-      DBService DB = DBService();
-      D = DB.get_developer(developer_email);
-      if (!D.is_valid) {
-        return crow::response(400, "User not found");
-      }
-
-      if (D.developer_password != developer_password) {
-        return crow::response(400, "Invalid credentials");
-      }
-
-      D = DB.remove_developer(developer_email);
-      if (!D.is_valid) {
-        return crow::response(500, "Internal Server Error");
-      }
-      return crow::response(200, "Succesfully deleted account");
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
+    APIEndPoints api = APIEndPoints();
+    DBService DB = DBService();
+    return api.deleteLogin(req, DB);
   });
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)

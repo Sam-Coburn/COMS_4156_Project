@@ -998,6 +998,7 @@ Player DBService::remove_player(std::string player_email) {
     std::cout <<
     "Successfully deleted player with email: " + player_email << std::endl;
   } catch (sql::SQLException &e) {
+    p.is_valid = false;
     std::cout <<
     "Error deleting player with email: " + player_email << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -1044,6 +1045,7 @@ Developer DBService::remove_developer(std::string developer_email) {
     "Successfully deleted developer with email: " + developer_email
     << std::endl;
   } catch (sql::SQLException &e) {
+    d.is_valid = false;
     std::cout <<
     "Error deleting developer with email: " + developer_email << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -1090,6 +1092,7 @@ Game_Details DBService::remove_game_details(int game_id) {
     "Successfully deleted game with game_id: " + std::to_string(game_id)
     << std::endl;
   } catch (sql::SQLException &e) {
+    GD.is_valid = false;
     std::cout <<
     "Error deleting game with game_id: " + std::to_string(game_id)
     << std::endl;
@@ -1141,6 +1144,7 @@ DBService::remove_player_rating(std::string player_email, int game_id) {
     player_email + " for game with game_id: "+
     std::to_string(game_id) << std::endl;
   } catch (sql::SQLException &e) {
+    PGR.is_valid = false;
     std::cout << "Error deleting rating for player with email: " +
     player_email + " for game with game_id: " +
     std::to_string(game_id) << std::endl;
@@ -1185,7 +1189,7 @@ Player DBService::update_player(std::string player_email, Player P) {
 
     // Execute statament and set flag
     prep_stmt->executeUpdate();
-    p.is_valid = true;
+    p = get_player(P.player_email);
 
     delete prep_stmt;
     delete con;
@@ -1193,6 +1197,7 @@ Player DBService::update_player(std::string player_email, Player P) {
     std::cout <<
     "Successfully updated player with email: " + player_email << std::endl;
   } catch (sql::SQLException &e) {
+    p.is_valid = false;
     std::cout <<
     "Error updating player with email: " + player_email << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -1236,7 +1241,7 @@ Developer DBService::update_developer(std::string developer_email, Developer D) 
 
     // Execute statement and set flag
     prep_stmt->executeUpdate();
-    d.is_valid = true;
+    d = get_developer(D.developer_email);
 
     delete prep_stmt;
     delete con;
@@ -1244,6 +1249,7 @@ Developer DBService::update_developer(std::string developer_email, Developer D) 
     std::cout << "Successfully updated developer with email: " +
     developer_email << std::endl;
   } catch (sql::SQLException &e) {
+    d.is_valid = false;
     std::cout <<
     "Error updating developer with email: " + developer_email << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -1305,7 +1311,7 @@ Game_Details DBService::update_game_details(int game_id, Game_Details GD) {
     prep_stmt->setInt(15, game_id);
     prep_stmt->executeUpdate();
 
-    gd.is_valid = true;
+    gd = get_game_details(GD.game_id);
 
     delete prep_stmt;
     delete con;
@@ -1313,6 +1319,7 @@ Game_Details DBService::update_game_details(int game_id, Game_Details GD) {
     std::cout << "Successfully updated game with game_id: " +
     std::to_string(game_id) << std::endl;
   } catch (sql::SQLException &e) {
+    gd.is_valid = false;
     std::cout << "Error updating game" << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
     std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
@@ -1320,7 +1327,6 @@ Game_Details DBService::update_game_details(int game_id, Game_Details GD) {
     std::cout << " (MySQL error code: " << e.getErrorCode();
     std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
-
   return gd;
 }
 
@@ -1365,7 +1371,7 @@ Player_Game_Ratings DBService::update_player_rating(std::string player_email, in
     prep_stmt->setString(7, player_email);
     prep_stmt->setInt(8, game_id);
     prep_stmt->executeUpdate();
-    pgr.is_valid = true;
+    pgr = get_player_game_rating(PGR.player_email, PGR.game_id);
 
     delete prep_stmt;
     delete con;
@@ -1374,6 +1380,7 @@ Player_Game_Ratings DBService::update_player_rating(std::string player_email, in
     std::to_string(game_id) +" for player with email: " +
     player_email<< std::endl;
   } catch (sql::SQLException &e) {
+    pgr.is_valid = false;
     std::cout << "Error updating rating in game with game_id: " +
     std::to_string(game_id) + " for player with email: " +
     player_email<< std::endl;
