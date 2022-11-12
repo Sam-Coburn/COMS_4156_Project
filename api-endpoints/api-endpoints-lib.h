@@ -4,10 +4,13 @@
 #define API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 
 #include <jsoncpp/json/json.h>  // JsonCpp header file
+#include <cmath>
 #include <cstdlib>              // EXIT_FAILURE
 #include <string>
 #include <iostream>
 #include <sstream>              // std::stringstream
+#include <tuple>
+#include <vector>
 #include <fstream>
 #include <utility>              // std::pair, std::make_pair
 #include "crow/crow_all.h"
@@ -27,6 +30,10 @@ std::pair<int, std::string> authenticateBadly(const crow::request& req);
 // helper for all API calls (other than login)
 // that require authentication of a token before proceeding
 std::pair<int, std::string> authenticateToken(const crow::request& req);
+
+std::tuple<
+std::vector<std::vector<std::vector<std::string> > >,
+std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails);
 
  public:
 APIEndPoints() : DB(DBService()) {};  // default constructor
@@ -69,6 +76,7 @@ std::pair <int, std::string> postGame(const crow::request& req);
 crow::response postSignUp(const crow::request& req, DBService DB);
 crow::response postLogin(const crow::request& req, DBService DB);
 crow::response deleteLogin(const crow::request& req, DBService DB);
+crow::response matchmake(const crow::request& req, DBService DB);
 
 };
 #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_
