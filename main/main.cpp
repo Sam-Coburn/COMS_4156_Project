@@ -377,6 +377,13 @@ int main(void) {
     }
   });
 
+  CROW_ROUTE(app, "/matchmake").methods(crow::HTTPMethod::POST)
+  ([](const crow::request& req) {
+    APIEndPoints api = APIEndPoints();
+    DBService DB = DBService();
+    return api.matchmake(req, DB);
+  });
+
   // set the port, set the app to run on multiple threads, and run the app
   app.port(18080).multithreaded().run();
 
