@@ -1,0 +1,388 @@
+{
+	"info": {
+		"_postman_id": "8c7e371d-26f3-4edb-9efe-ebac92582e05",
+		"name": "Matchmaking API Test Requests Deployed Version",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19807680"
+	},
+	"item": [
+		{
+			"name": "sign up test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "log in test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add game to dev account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "test-token",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\":\"emily\",\n    \"developer_password\":\"emily_fake_password\",\n\n\t\t\t\"category\" : \"casual\",\n\t\t\t\"name\" : \"poker\",\n\t\t\t\"parameters\" : \n\t\t\t[\n\t\t\t\t\"wins\",\n\t\t\t\t\"loses\",\n\t\t\t\t\"money_won\",\n\t\t\t\t\"money_lost\"\n\t\t\t],\n\t\t\t\"players_per_team\" : 1,\n\t\t\t\"teams_per_match\" : 4,\n\t\t\t\"weights\" : \n\t\t\t[\n\t\t\t\t1.0,\n\t\t\t\t1.0,\n\t\t\t\t1.0,\n\t\t\t\t0.0\n\t\t\t]\n\t\t}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/games",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add another game",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "test-token",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\":\"emily\",\n    \"developer_password\":\"emily_fake_password\",\n\n\t\t\t\"category\" : \"casual\",\n\t\t\t\"name\" : \"uno\",\n\t\t\t\"parameters\" : \n\t\t\t[\n\t\t\t\t\"wins\",\n\t\t\t\t\"loses\",\n\t\t\t\t\"nope\",\n\t\t\t\t\"\"\n\t\t\t],\n\t\t\t\"players_per_team\" : 1,\n\t\t\t\"teams_per_match\" : 4,\n\t\t\t\"weights\" : \n\t\t\t[\n\t\t\t\t1.0,\n\t\t\t\t1.0,\n\t\t\t\t1.0,\n\t\t\t\t0.0\n\t\t\t]\n\t\t}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/games",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"games"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all dev's games",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "test-token",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/games?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"games"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get game test",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"developer_email\": \"emily\",\r\n    \"developer_password\" : \"emily_fake_password\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/game/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Adding player stats for game",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\":\"emily\",\n    \"developer_password\":\"emily_fake_password\",\n    \"poker_player@gmail.com\": { \"game_parameter1_value\" : 1, \"game_parameter2_value\" : 5, \"game_parameter3_value\" : 4, \"game_parameter4_value\" :0 }, \n    \"poker_player2@gmail.com\": { \"game_parameter1_value\" : 2, \"game_parameter2_value\" : 2, \"game_parameter3_value\" : 2, \"game_parameter4_value\" :0 },\n    \"poker_player3@gmail.com\": { \"game_parameter1_value\" : 1, \"game_parameter2_value\" : 3, \"game_parameter3_value\" : 9, \"game_parameter4_value\" :0 },\n    \"poker_player4@gmail.com\": { \"game_parameter1_value\" : 1, \"game_parameter2_value\" : 3, \"game_parameter3_value\" : 9, \"game_parameter4_value\" :0 },\n    \"poker_player5@gmail.com\": { \"game_parameter1_value\" : 1, \"game_parameter2_value\" : 3, \"game_parameter3_value\" : 9, \"game_parameter4_value\" :0 },\n    \"poker_player6@gmail.com\": { \"game_parameter1_value\" : 1, \"game_parameter2_value\" : 3, \"game_parameter3_value\" : 9, \"game_parameter4_value\" :0 }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:18080/game/16/players",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"16",
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "matchmaking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\",\n    \"game_id\":16,\n    \"player_emails\": [\"poker_player@gmail.com\", \"poker_player2@gmail.com\", \"poker_player3@gmail.com\", \"poker_player4@gmail.com\", \"poker_player5@gmail.com\", \"poker_player6@gmail.com\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/matchmake",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"matchmake"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getting specific player stats from game - valid user Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:18080/game/16/players/poker_player@gmail.com",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"16",
+						"players",
+						"poker_player@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Removing player stats for a game",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\",\n    \"player_emails\": [\"poker_player@gmail.com\", \"poker_player2@gmail.com\", \"poker_player3@gmail.com\", \"poker_player4@gmail.com\", \"poker_player5@gmail.com\", \"poker_player6@gmail.com\"]\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:18080/game/16/players",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"16",
+						"players"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete game",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/game/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete game again",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"developer_email\": \"emily\",\n    \"developer_password\" : \"emily_fake_password\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/game/17",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"17"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get game test",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"developer_email\": \"emily\",\r\n    \"developer_password\" : \"emily_fake_password\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/game/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"game",
+						"16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete developer test",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"developer_email\": \"emily\",\r\n    \"developer_password\" : \"emily_fake_password\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:18080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

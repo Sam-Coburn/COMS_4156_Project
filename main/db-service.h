@@ -191,6 +191,11 @@ class DBService {
     std::string pass = "123",
     std::string db = "matchmaking_api_db");
 
+
+    // These functions are mainly for testing
+    bool setUpDatabase(); // Setup database if not setup
+    bool tearDownDatabase(); // Drop all tables in database
+
     // All the get functions take in the primary key(s) for the relevant
     // object and returns the relevant instance of said object.
     // The get can only be considered succesful if the
@@ -237,10 +242,16 @@ class DBService {
     remove_player_rating(std::string player_email, int game_id);
 
 
-    bool update_player(Player P);
-    bool update_developer(Developer D);
-    bool update_game_details(Game_Details GD);
-    bool update_player_rating(Player_Game_Ratings PGR);
+    // The delete functions take the primary key(s) of the
+    // relevant object to be updated and returns an instance
+    // of the updated object i.e after being updated. The update of
+    // the object in the database can only be considered
+    // successful if the is_valid flag of the returned object
+    // is true.
+    Player update_player(std::string player_email, Player P);
+    Developer update_developer(std::string developer_email, Developer D);
+    Game_Details update_game_details(int game_id, Game_Details GD);
+    Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);
 };
 
 #endif  // MAIN_DB_SERVICE_H_

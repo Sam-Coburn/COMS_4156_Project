@@ -55,7 +55,69 @@
       - `developer_password:string`
       - `game_id:int`
       - `player_emails:vector<string>`
+      
+- `GET /game/<int>`
+    - Description:
+      Returns game details in JSON format. Details include, but are not limited to, game name, players per team, etc.
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+ 
+ - `DELETE /game/<int>`
+    - Description:
+      Deletes a game (and its details).
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+ 
+  - `GET /games/{game-id}/players`
+    - Description:
+      Gets a list of players and player details for a game.
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
 
+  - `POST /game/<int>/players`
+    - Description:
+      Adds players' stats for a game.
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      - `(player_email:<JsonObject>)+`
+        where `<JsonObject>` is of the form
+        - `game_parameter1_value:int`
+        - `game_parameter2_value:int`
+        - `game_parameter3_value:int`
+        - `game_parameter4_value:int`
+
+  - `GET /games/{game-id}/players/{player-id}`
+    - Description:
+      Gets player stats for a game.
+    - Request Parameters:
+      - `game_id:int`
+      - `player_email:string`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+
+  - `DELETE /game/<int>/players`
+    - Description:
+      Removes players' stats for a game.
+    - Request Parameters:
+      - `game_id:int`
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+      - `player_emails:vector<string>`
+      
 ## Build + Run
 Inside top-level project directory, do
 ```
@@ -90,7 +152,7 @@ For example,
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint --linelength=100 ./main/* ./testing/* &> style-check.txt`
+`cpplint --linelength=120 ./main/* ./api-endpoints/* ./testing/* &> style-check.txt`
 
 ## Repo Structure
 

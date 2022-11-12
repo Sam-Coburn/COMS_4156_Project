@@ -1,5 +1,6 @@
 /*Copyright [year] <Copyright Owner>*/
 
+#include <mysql_connection.h>
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
@@ -10,7 +11,6 @@
 #include <iostream>
 
 #include "main/db-service.h"
-#include "mysql_connection.h"
 
 DBService::DBService
 (std::string host, std::string user, std::string pass, std::string db) {
@@ -18,6 +18,118 @@ DBService::DBService
   username = user;
   password = pass;
   database = db;
+}
+
+bool DBService::setUpDatabase() {
+  std::cout << "Connecting to MYSQL to set up database"<< std::endl;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::Statement *stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Create tables
+    stmt = con->createStatement();
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Developers ("
+    "developer_email varchar(255) NOT NULL, "
+  	"developer_password varchar(255) NOT NULL, "
+  	"PRIMARY KEY (developer_email));");
+
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Players ("
+    "player_email varchar(255) NOT NULL, "
+  	"PRIMARY KEY (player_email));");
+
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Game_Details ("
+    "game_id int NOT NULL auto_increment, "
+	  "developer_email varchar(255) NOT NULL, "
+  	"game_name varchar(255) NOT NULL, "
+  	"game_parameter1_name varchar(255), "
+  	"game_parameter1_weight float, "
+  	"game_parameter2_name varchar(255), "
+  	"game_parameter2_weight float, "
+  	"game_parameter3_name varchar(255), "
+  	"game_parameter3_weight float, "
+  	"game_parameter4_name varchar(255), "
+  	"game_parameter4_weight float, "
+  	"category varchar(255), "
+  	"players_per_team int, "
+  	"teams_per_match int, "
+  	"PRIMARY KEY (game_id), "
+	  "FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) "
+    "ON DELETE CASCADE ON UPDATE CASCADE);");
+
+    stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
+    "Player_Game_Ratings ("
+  	"player_email varchar(255) NOT NULL, "
+    "game_id int NOT NULL, "
+  	"game_parameter1_value int, "
+  	"game_parameter2_value int, "
+  	"game_parameter3_value int, "
+  	"game_parameter4_value int, "
+  	"PRIMARY KEY (player_email, game_id), "
+  	"FOREIGN KEY (player_email) REFERENCES Players(player_email) "
+    "ON DELETE CASCADE ON UPDATE CASCADE, "
+  	"FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) "
+    "ON DELETE CASCADE ON UPDATE CASCADE);");
+
+    delete stmt;
+    delete con;
+
+    std::cout << "Successfully set up database"<< std::endl;
+    return true;
+  } catch (sql::SQLException &e) {
+    std::cout << "Error setting up database" << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+  return false;
+}
+
+bool DBService::tearDownDatabase() {
+  std::cout << "Connecting to MYSQL to tear down database"<< std::endl;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::Statement *stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Create tables
+    stmt = con->createStatement();
+    stmt->executeUpdate("DROP TABLE IF EXISTS Player_Game_Ratings");
+    stmt->executeUpdate("DROP TABLE IF EXISTS Game_Details");
+    stmt->executeUpdate("DROP TABLE IF EXISTS Developers");
+    stmt->executeUpdate("DROP TABLE IF EXISTS Players");
+
+    delete stmt;
+    delete con;
+
+    std::cout << "Successfully tore down database"<< std::endl;
+    return true;
+  } catch (sql::SQLException &e) {
+    std::cout << "Error tearing down database" << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+  return false;
 }
 
 Player DBService::get_player(std::string player_email) {
@@ -886,6 +998,7 @@ Player DBService::remove_player(std::string player_email) {
     std::cout <<
     "Successfully deleted player with email: " + player_email << std::endl;
   } catch (sql::SQLException &e) {
+    p.is_valid = false;
     std::cout <<
     "Error deleting player with email: " + player_email << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -932,6 +1045,7 @@ Developer DBService::remove_developer(std::string developer_email) {
     "Successfully deleted developer with email: " + developer_email
     << std::endl;
   } catch (sql::SQLException &e) {
+    d.is_valid = false;
     std::cout <<
     "Error deleting developer with email: " + developer_email << std::endl;
     std::cout << "# ERR: SQLException in " << __FILE__;
@@ -978,6 +1092,7 @@ Game_Details DBService::remove_game_details(int game_id) {
     "Successfully deleted game with game_id: " + std::to_string(game_id)
     << std::endl;
   } catch (sql::SQLException &e) {
+    GD.is_valid = false;
     std::cout <<
     "Error deleting game with game_id: " + std::to_string(game_id)
     << std::endl;
@@ -1029,6 +1144,7 @@ DBService::remove_player_rating(std::string player_email, int game_id) {
     player_email + " for game with game_id: "+
     std::to_string(game_id) << std::endl;
   } catch (sql::SQLException &e) {
+    PGR.is_valid = false;
     std::cout << "Error deleting rating for player with email: " +
     player_email + " for game with game_id: " +
     std::to_string(game_id) << std::endl;
@@ -1041,4 +1157,240 @@ DBService::remove_player_rating(std::string player_email, int game_id) {
   }
 
   return PGR;
+}
+
+Player DBService::update_player(std::string player_email, Player P) {
+  std::cout << "Connecting to MYSQL to update player with email: " +
+  player_email << std::endl;
+
+  // Object to store updated player
+  Player p;
+  p.is_valid = false;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement  *prep_stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Retrieve player to update and return p if player does not exist
+    p = get_player(player_email);
+    if (!p.is_valid)
+      return p;
+
+    // Create statement and fill in relevant variables
+    prep_stmt = con->prepareStatement("UPDATE Players SET player_email=? WHERE player_email=?;");
+    prep_stmt->setString(1, P.player_email);
+    prep_stmt->setString(2, player_email);
+
+    // Execute statament and set flag
+    prep_stmt->executeUpdate();
+    p = get_player(P.player_email);
+
+    delete prep_stmt;
+    delete con;
+
+    std::cout <<
+    "Successfully updated player with email: " + player_email << std::endl;
+  } catch (sql::SQLException &e) {
+    p.is_valid = false;
+    std::cout <<
+    "Error updating player with email: " + player_email << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+
+  return p;
+}
+
+Developer DBService::update_developer(std::string developer_email, Developer D) {
+  std::cout << "Connecting to MYSQL to update developer with email: " +
+  developer_email << std::endl;
+
+  // Object to store updated developer
+  Developer d;
+  d.is_valid = false;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement  *prep_stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Check if developer exists, return d if not
+    d = get_developer(developer_email);
+    if (!d.is_valid)
+      return d;
+
+    // Create statement and fill in relevant variables
+    prep_stmt = con->prepareStatement("UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;");
+    prep_stmt->setString(1, D.developer_email);
+    prep_stmt->setString(2, D.developer_password);
+    prep_stmt->setString(3, developer_email);
+
+    // Execute statement and set flag
+    prep_stmt->executeUpdate();
+    d = get_developer(D.developer_email);
+
+    delete prep_stmt;
+    delete con;
+
+    std::cout << "Successfully updated developer with email: " +
+    developer_email << std::endl;
+  } catch (sql::SQLException &e) {
+    d.is_valid = false;
+    std::cout <<
+    "Error updating developer with email: " + developer_email << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+  return d;
+}
+
+Game_Details DBService::update_game_details(int game_id, Game_Details GD) {
+  std::cout << "Connecting to MYSQL to update game" << std::endl;
+
+  // Object to store updated Game_Details object
+  Game_Details gd;
+  gd.is_valid = false;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement  *prep_stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Check if object exists, return if it does not
+    gd = get_game_details(game_id);
+    if (!gd.is_valid)
+      return gd;
+
+    // Create SQL statement
+    prep_stmt = con->prepareStatement("UPDATE Game_Details SET "
+    "game_id=?, game_name=?, developer_email=?, "
+    "game_parameter1_name=?, game_parameter1_weight=?, "
+    "game_parameter2_name=?, game_parameter2_weight=?, "
+    "game_parameter3_name=?, game_parameter3_weight=?, "
+    "game_parameter4_name=?, game_parameter4_weight=?, "
+    "category=?, players_per_team=?, teams_per_match=? "
+    "WHERE game_id=?;");
+
+    // Fill in relevant variables in statement and execute
+    prep_stmt->setInt(1, GD.game_id);
+    prep_stmt->setString(2, GD.game_name);
+    prep_stmt->setString(3, GD.developer_email);
+    prep_stmt->setString(4, GD.game_parameter1_name);
+    prep_stmt->setDouble(5, GD.game_parameter1_weight);
+    prep_stmt->setString(6, GD.game_parameter2_name);
+    prep_stmt->setDouble(7, GD.game_parameter2_weight);
+    prep_stmt->setString(8, GD.game_parameter3_name);
+    prep_stmt->setDouble(9, GD.game_parameter3_weight);
+    prep_stmt->setString(10, GD.game_parameter4_name);
+    prep_stmt->setDouble(11, GD.game_parameter4_weight);
+    prep_stmt->setString(12, GD.category);
+    prep_stmt->setInt(13, GD.players_per_team);
+    prep_stmt->setInt(14, GD.teams_per_match);
+    prep_stmt->setInt(15, game_id);
+    prep_stmt->executeUpdate();
+
+    gd = get_game_details(GD.game_id);
+
+    delete prep_stmt;
+    delete con;
+
+    std::cout << "Successfully updated game with game_id: " +
+    std::to_string(game_id) << std::endl;
+  } catch (sql::SQLException &e) {
+    gd.is_valid = false;
+    std::cout << "Error updating game" << std::endl;
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+  return gd;
+}
+
+Player_Game_Ratings DBService::update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR) {
+  std::cout << "Connecting to MYSQL to update rating in game with game_id: " +
+  std::to_string(game_id) + " for player with email: " +
+  player_email << std::endl;
+
+  // Object to store updated object
+  Player_Game_Ratings pgr;
+  pgr.is_valid = false;
+
+  try {
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement  *prep_stmt;
+
+    // Connect to database
+    driver = get_driver_instance();
+    con = driver->connect(hostname, username, password);
+    con->setSchema(database);
+
+    // Check if object exists, return otherwise
+    pgr = get_player_game_rating(player_email, game_id);
+    if (!pgr.is_valid)
+      return pgr;
+
+    // Create SQL statement
+    prep_stmt = con->prepareStatement("UPDATE Player_Game_Ratings SET "
+    "player_email=?, game_id=?, game_parameter1_value=?, "
+    "game_parameter2_value=?, game_parameter3_value=?, "
+    "game_parameter4_value=? WHERE player_email=? AND "
+    "game_id=?;");
+
+    // Fill in relevant variables in statement and execute
+    prep_stmt->setString(1, PGR.player_email);
+    prep_stmt->setInt(2, PGR.game_id);
+    prep_stmt->setInt(3, PGR.game_parameter1_value);
+    prep_stmt->setInt(4, PGR.game_parameter2_value);
+    prep_stmt->setInt(5, PGR.game_parameter3_value);
+    prep_stmt->setInt(6, PGR.game_parameter4_value);
+    prep_stmt->setString(7, player_email);
+    prep_stmt->setInt(8, game_id);
+    prep_stmt->executeUpdate();
+    pgr = get_player_game_rating(PGR.player_email, PGR.game_id);
+
+    delete prep_stmt;
+    delete con;
+
+    std::cout << "Successfully updated rating in game with game_id: " +
+    std::to_string(game_id) +" for player with email: " +
+    player_email<< std::endl;
+  } catch (sql::SQLException &e) {
+    pgr.is_valid = false;
+    std::cout << "Error updating rating in game with game_id: " +
+    std::to_string(game_id) + " for player with email: " +
+    player_email<< std::endl;
+
+    std::cout << "# ERR: SQLException in " << __FILE__;
+    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    std::cout << "# ERR: " << e.what();
+    std::cout << " (MySQL error code: " << e.getErrorCode();
+    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+  }
+
+  return pgr;
 }

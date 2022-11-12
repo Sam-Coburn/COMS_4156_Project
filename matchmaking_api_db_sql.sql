@@ -33,7 +33,7 @@ CREATE TABLE Game_Details (
   	players_per_team int,
   	teams_per_match int,
   	PRIMARY KEY (game_id),
-	FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) ON DELETE CASCADE
+	FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Player_Game_Ratings (
@@ -44,8 +44,8 @@ CREATE TABLE Player_Game_Ratings (
   	game_parameter3_value int,
   	game_parameter4_value int,
   	PRIMARY KEY (player_email, game_id),
-  	FOREIGN KEY (player_email) REFERENCES Players(player_email) ON DELETE CASCADE,
-  	FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) ON DELETE CASCADE
+  	FOREIGN KEY (player_email) REFERENCES Players(player_email) ON DELETE CASCADE ON UPDATE CASCADE,
+  	FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO Developers VALUES('developer@chess.com', 'super_secret_password');
