@@ -365,7 +365,6 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
     int game_id;
     crow::json::rvalue input_player_emails_rvalue;
     std::vector<crow::json::rvalue> input_player_emails;
-    std::vector<std::string> player_emails;
 
     try {
       DBService DB = DBService();
@@ -379,7 +378,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
 
       // Check given password against password in DB
       if (d.developer_password != developer_password)
-        return crow::response(400, json_result);
+        return crow::response(400, "Incorrect Credentials Given.\n");
 
       game_id = request_body["game_id"].i();
       std::vector<Game_Details> developer_games = DB.get_all_games_for_developer(developer_email);
@@ -393,14 +392,56 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
       }
 
       if (game_found == false)
-        return crow::response(400, json_result);
+        return crow::response(400, "Given Game ID does not belong to the Given Developer.\n");
 
+      // Check the Passed Player Emails for Two Reasons:
+      // 1) All passed players exist with our database
+      // 2) All passed players are unique
+      // 3) All players have stats for the given game
       input_player_emails_rvalue = request_body["player_emails"];
       input_player_emails = input_player_emails_rvalue.lo();
 
+      std::vector<std::string> player_emails;
+      std::vector<std::string> nonexistent_emails;
       for (crow::json::rvalue email : input_player_emails) {
-        player_emails.push_back(email.s());
-        std::cout << email.s() << std::endl;
+        Player input_email = DB.get_player(email.s());
+        if (input_email.is_valid == true)
+            player_emails.push_back(email.s());
+        else
+            nonexistent_emails.push_back(email.s());
+      }
+
+      if (nonexistent_emails.size() > 0) {
+        std::string error_message = "The following player IDs were not found: ";
+        for (uint64_t i = 0; i < nonexistent_emails.size(); i++) {
+            if (i == nonexistent_emails.size() - 1)
+                error_message += nonexistent_emails.at(i) + "\n";
+            else
+                error_message += nonexistent_emails.at(i) + ", ";
+        }
+        return crow::response(400, error_message);
+      }
+      
+      std::set<std::string> duplicate_emails_set;
+      for (uint64_t i = 0; i < player_emails.size(); i++) {
+        for (uint64_t j = 0; j < player_emails.size(); j++) {
+            if ((i != j) && (player_emails.at(i) == player_emails.at(j))) {
+                duplicate_emails_set.insert(player_emails.at(i));
+            }
+        }
+      }
+
+      uint64_t duplicate_iterator = 0;
+      if (duplicate_emails_set.size() > 0) {
+        std::string error_message = "The following player IDs were found multiple times in the input: ";
+        for (std::set<std::string>::iterator i = duplicate_emails_set.begin(); i != duplicate_emails_set.end(); i++) {
+            if ((duplicate_iterator == duplicate_emails_set.size() - 1) || (duplicate_emails_set.size() == 1))
+                error_message += *i + "\n";
+            else
+                error_message += *i + ", ";
+            duplicate_iterator++;
+        }
+        return crow::response(400, error_message);
       }
 
       std::tuple<
@@ -429,8 +470,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
     }
     catch(...) {
       // Return a response to indicate an invalid request body
-      // Empty JSON == invalid request
       crow::json::wvalue json_result;
-      return crow::response(400, json_result);
+      return crow::response(400, "Incorrect Request Format.\n");
     }
 }
