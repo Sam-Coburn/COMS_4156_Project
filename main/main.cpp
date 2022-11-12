@@ -12,10 +12,13 @@
 #include "main/db-service.h"
 #include "api-endpoints/api-endpoints-lib.h"
 
+APIEndPoints api = APIEndPoints();
+DBService DB = DBService();
+
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
 std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> player_emails) {
-  DBService DB = DBService();
+  // DBService DB = DBService();
   // Step 0: Retrieve Game Details by Game ID
   Game_Details details = DB.get_game_details(game_id);
 
@@ -93,24 +96,28 @@ std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> pla
   return make_tuple(games, overflow);
 }
 
+/*
+    Validate user using email and password
+    ** Only for first iteration **
+*/
 bool valid_user(std::string email, std::string password) {
-  DBService DB = DBService();
   Developer d = DB.get_developer(email);
   return d.is_valid && d.developer_password == password;
 }
 
+/*
+    Validate user is authorized to access requested game
+*/
 bool valid_user_gameid(std::string email, std::string password, int game_id) {
   if (!valid_user(email, password)) {
     return false;
   }
 
-  DBService DB = DBService();
   Game_Details gd = DB.get_game_details(game_id);
   return gd.is_valid && gd.developer_email == email;
 }
 
 int main(void) {
-  DBService DB = DBService();
   DB.get_player("apex_player@gmail.com");
   std::cout << "\n";
   DB.get_developer("developer@chess.com");
@@ -183,7 +190,7 @@ int main(void) {
     try {
       developer_email = x["developer_email"].s();
       developer_password = x["developer_password"].s();
-      DBService DB = DBService();
+      // DBService DB = DBService();
       D = DB.get_developer(developer_email);
       if (!D.is_valid || D.developer_password != developer_password) {
         return crow::response(400, "Invalid credentials");
@@ -201,7 +208,7 @@ int main(void) {
     try {
       D.developer_email = x["developer_email"].s();
       D.developer_password = x["developer_password"].s();
-      DBService DB = DBService();
+      // DBService DB = DBService();
       D = DB.add_developer(D);
       if (!D.is_valid) {
         return crow::response(400, "Developer already exists");
@@ -222,7 +229,7 @@ int main(void) {
     try {
       developer_email = x["developer_email"].s();
       developer_password = x["developer_password"].s();
-      DBService DB = DBService();
+      // DBService DB = DBService();
       D = DB.get_developer(developer_email);
       if (!D.is_valid) {
         return crow::response(400, "User not found");
@@ -244,7 +251,6 @@ int main(void) {
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req){
-    APIEndPoints api = APIEndPoints();
     std::pair<int, std::string> rsp = api.getGames(req);
     return crow::response(rsp.first, rsp.second);
        return crow::response(400, "Emily needs to use crow jsons.");
@@ -252,53 +258,48 @@ int main(void) {
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
-    APIEndPoints api = APIEndPoints();
     std::pair<int, std::string> rsp = api.postGame(req);
     return crow::response(rsp.first, rsp.second);
   });
 
-  // Get all players in a certain game
+  /*
+    Get all players for the requested game
+  */
   CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req, int game_id){
-    crow::json::rvalue user_info = crow::json::load(req.body);
-    std::vector<Joined_Player_Game_Ratings> joined_players;
+    return api.getGamePlayers(req, game_id);
+  });
 
-    try {
-      // Authenticating user
-      std::string dev_email = user_info["developer_email"].s();
-      std::string dev_password = user_info["developer_password"].s();
-      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
-        return crow::response(401, "Invalid authentication");
-      }
+  /*
+    Add player stats for a game
+  */
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST)
+  ([](const crow::request& req, int game_id){
+    return api.addPlayersStats(req, game_id);
+  });
 
-      DBService DB = DBService();
-      joined_players = DB.get_all_player_game_ratings_for_game(game_id);
+  /*
+    Get specific players' stats for a game
+  */
+  CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET)
+  ([](const crow::request& req, int game_id, std::string player_email) {
+    return api.getPlayersStats(req, game_id);
+  });
 
-      if (joined_players.empty()) {
-        return crow::response(204,
-        "No players found for game_id " + std::to_string(game_id));
-      }
+  /*
+    Delete requested players' stats for a given game
+  */
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE)
+  ([](const crow::request& req, int game_id){
+    return api.deletePlayersStats(req, game_id);
+  });
 
-      // Converting vector of players to json object
-      crow::json::wvalue players;
-      for (Joined_Player_Game_Ratings p : joined_players) {
-        if (p.is_valid) {
-          std::string e = p.player_email;
-          players[e]["game_id"] = p.game_id;
-          players[e][p.game_parameter1_name] = p.game_parameter1_value;
-          players[e][p.game_parameter2_name] = p.game_parameter2_value;
-          players[e][p.game_parameter3_name] = p.game_parameter3_value;
-          players[e][p.game_parameter4_name] = p.game_parameter4_value;
-        } else {
-          return crow::response(500,
-          "Internal Server Error due to player " + p.player_email);
-        }
-      }
-
-      return crow::response(200, players);
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
+  /*
+    Update requested players' stats for a given game
+  */
+  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::PUT)
+  ([](const crow::request& req, int game_id){
+    return api.updatePlayersStats(req, game_id);
   });
 
 // return everything about the game details to the user except game_id and developer_email
@@ -314,7 +315,7 @@ int main(void) {
         return crow::response(401, "Invalid authentication");
       }
 
-      DBService DB = DBService();
+      // DBService DB = DBService();
       game_details = DB.get_game_details(game_id);
       crow::json::wvalue game_json;
       if (game_details.is_valid) {
@@ -337,65 +338,6 @@ int main(void) {
       }
 
       return crow::response(200, game_json);
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
-  });
-
-  // Add given player stats for a certain game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST)
-  ([](const crow::request& req, int game_id){
-    try {
-      DBService DB = DBService();
-      crow::json::rvalue user_req = crow::json::load(req.body);
-
-      // Authenticating user
-      std::string dev_email = user_req["developer_email"].s();
-      std::string dev_password = user_req["developer_password"].s();
-      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
-        return crow::response(401, "Invalid authentication");
-      }
-
-      crow::json::rvalue player_info;
-      bool added = false;
-      for (std::string pemail : user_req.keys()) {
-        if (pemail != "developer_email" && pemail != "developer_password") {
-          // If player does not already exist, add player to database
-          Player p = DB.get_player(pemail);
-          p.player_email = pemail;
-          if (!p.is_valid) {
-            p = DB.add_player(p);
-            if (!p.is_valid) {
-              return crow::response(500,
-              "Internal Server Error due to player " + pemail);
-            }
-          }
-
-          player_info = user_req[pemail];
-          Player_Game_Ratings pgr;
-          pgr.player_email = pemail;
-          pgr.game_id = game_id;
-          pgr.game_parameter1_value = player_info["game_parameter1_value"].i();
-          pgr.game_parameter2_value = player_info["game_parameter2_value"].i();
-          pgr.game_parameter3_value = player_info["game_parameter3_value"].i();
-          pgr.game_parameter4_value = player_info["game_parameter4_value"].i();
-
-          pgr = DB.add_player_rating(pgr);
-          if (!pgr.is_valid) {
-            return crow::response(500,
-            "Internal Server Error due to player " + pemail);
-          } else {
-            added = true;
-          }
-        }
-      }
-
-      if (added) {
-        return crow::response(200, "Player stats were added");
-      } else {
-        return crow::response(200,
-        "No player stats added due to empty request");
-      }
     } catch(...) {
       return crow::response(400, "Invalid request body");
     }
@@ -465,48 +407,6 @@ int main(void) {
     }
   });
 
-  // Get a specific player's stats for a specific game
-  CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET)
-  ([](const crow::request& req, int game_id, std::string player_email) {
-    crow::json::rvalue user_req = crow::json::load(req.body);
-    Player_Game_Ratings pgr;
-
-    try {
-      // Authenticating user
-      std::string dev_email = user_req["developer_email"].s();
-      std::string dev_password = user_req["developer_password"].s();
-      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
-        return crow::response(401, "Invalid authentication");
-      }
-
-      DBService DB = DBService();
-      pgr = DB.get_player_game_rating(player_email, game_id);
-
-      if (!pgr.is_valid) {
-        return crow::response(204,
-        "Player " + player_email + " not found for game_id " +
-        std::to_string(game_id));
-      }
-
-      // Converting players' stats to json object
-      crow::json::wvalue stats;
-      if (pgr.is_valid) {
-        stats["player_email"] = pgr.player_email;
-        stats["game_parameter1_value"] = pgr.game_parameter1_value;
-        stats["game_parameter2_value"] = pgr.game_parameter2_value;
-        stats["game_parameter3_value"] = pgr.game_parameter3_value;
-        stats["game_parameter4_value"] = pgr.game_parameter4_value;
-      } else {
-        return crow::response(500, "Internal Server Error");
-      }
-
-      return crow::response(200, stats);
-    }
-  catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
-  });
-
   CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
     Game_Details game_details;
@@ -518,7 +418,7 @@ int main(void) {
       if (!valid_user_gameid(email, password, game_id)) {
         return crow::response(401, "Invalid authentication");
       }
-      DBService DB = DBService();
+      // DBService DB = DBService();
       game_details = DB.get_game_details(game_id);
       if (game_details.is_valid) {
         DB.remove_game_details(game_details.game_id);
@@ -527,39 +427,6 @@ int main(void) {
       }
       return crow::response(200, "Succesfully deleted game details");
     } catch(...) {
-      return crow::response(400, "Invalid request body");
-    }
-  });
-
-  // Remove given player stats for a certain game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE)
-  ([](const crow::request& req, int game_id){
-    crow::json::rvalue user_req = crow::json::load(req.body);
-    crow::json::rvalue player_emails_rvalue;
-    std::vector<crow::json::rvalue> player_emails;
-    try {
-      // Authenticating user
-      std::string dev_email = user_req["developer_email"].s();
-      std::string dev_password = user_req["developer_password"].s();
-      if (!valid_user_gameid(dev_email, dev_password, game_id)) {
-        return crow::response(401, "Invalid authentication");
-      }
-
-      DBService DB = DBService();
-      player_emails_rvalue = user_req["player_emails"];
-      player_emails = player_emails_rvalue.lo();
-      for (crow::json::rvalue email_rvalue : player_emails) {
-        std::string email = email_rvalue.s();
-        Player_Game_Ratings pgr;
-        pgr = DB.remove_player_rating(email, game_id);
-        if (!pgr.is_valid) {
-          return crow::response(500,
-          "Internal Server Error due to player " + email);
-        }
-      }
-
-      return crow::response(200, "Player stats were removed");
-    } catch (...) {
       return crow::response(400, "Invalid request body");
     }
   });
@@ -576,7 +443,7 @@ int main(void) {
     std::vector<std::string> player_emails;
 
     try {
-      DBService DB = DBService();
+      // DBService DB = DBService();
       crow::json::wvalue json_result;
 
       // Authentication
@@ -644,7 +511,7 @@ int main(void) {
   });
 
   // set the port, set the app to run on multiple threads, and run the app
-  app.port(18080).multithreaded().run();
+  app.port(8080).multithreaded().run();
 
   return 0;
 }
