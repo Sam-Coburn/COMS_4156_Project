@@ -31,10 +31,6 @@ std::pair<int, std::string> authenticateBadly(const crow::request& req);
 // that require authentication of a token before proceeding
 std::pair<int, std::string> authenticateToken(const crow::request& req);
 
-std::tuple<
-std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails);
-
  public:
 APIEndPoints() : DB(DBService()) {};  // default constructor
 
