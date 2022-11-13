@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-11 11:25:13</td>
+            <td class="headerValue">2022-11-12 19:18:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -82,9 +82,9 @@
 <a name="20"><span class="lineNum">      20 </span>            :   std::string developer_password;</a>
 <a name="21"><span class="lineNum">      21 </span>            :   bool is_valid;</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         14 :   std::string toString() {</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">         14 :     return &quot;Developer: developer_email = &quot; + developer_email +</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         28 :     &quot;, developer_password = &quot; + developer_password;</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          7 :   std::string toString() {</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          7 :     return &quot;Developer: developer_email = &quot; + developer_email +</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         14 :     &quot;, developer_password = &quot; + developer_password;</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :   }</a>
 <a name="27"><span class="lineNum">      27 </span>            : };</a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
@@ -262,61 +262,56 @@
 <a name="200"><span class="lineNum">     200 </span>            :     // object and returns the relevant instance of said object.</a>
 <a name="201"><span class="lineNum">     201 </span>            :     // The get can only be considered succesful if the</a>
 <a name="202"><span class="lineNum">     202 </span>            :     // is_valid flag of the returned object is true.</a>
-<a name="203"><span class="lineNum">     203 </span>            :     Player get_player(std::string player_email);</a>
-<a name="204"><span class="lineNum">     204 </span>            :     Developer get_developer(std::string developer_email);</a>
-<a name="205"><span class="lineNum">     205 </span>            :     Game_Details get_game_details(int game_id);</a>
-<a name="206"><span class="lineNum">     206 </span>            :     Player_Game_Ratings</a>
-<a name="207"><span class="lineNum">     207 </span>            :     get_player_game_rating(std::string player_email, int game_id);</a>
-<a name="208"><span class="lineNum">     208 </span>            :     Joined_Player_Game_Ratings</a>
-<a name="209"><span class="lineNum">     209 </span>            :     get_joined_player_game_rating(std::string player_email, int game_id);</a>
-<a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span>            : </a>
-<a name="212"><span class="lineNum">     212 </span>            :     // The get_all functions return a vector of all instances of the</a>
-<a name="213"><span class="lineNum">     213 </span>            :     // relevant object in the database</a>
-<a name="214"><span class="lineNum">     214 </span>            :     std::vector&lt;Player&gt; get_all_players();</a>
-<a name="215"><span class="lineNum">     215 </span>            :     std::vector&lt;Developer&gt; get_all_developers();</a>
-<a name="216"><span class="lineNum">     216 </span>            :     std::vector&lt;Game_Details&gt; get_all_games();</a>
-<a name="217"><span class="lineNum">     217 </span>            :     std::vector&lt;Joined_Player_Game_Ratings&gt;</a>
-<a name="218"><span class="lineNum">     218 </span>            :     get_all_player_game_ratings_for_game(int game_id);</a>
-<a name="219"><span class="lineNum">     219 </span>            :     std::vector&lt;Game_Details&gt;</a>
-<a name="220"><span class="lineNum">     220 </span>            :     get_all_games_for_developer(std::string developer_email);</a>
-<a name="221"><span class="lineNum">     221 </span>            : </a>
-<a name="222"><span class="lineNum">     222 </span>            :     // The add functions take an instance of the object to</a>
-<a name="223"><span class="lineNum">     223 </span>            :     // add to the database and return an instance of said</a>
-<a name="224"><span class="lineNum">     224 </span>            :     // object. The creation of the object in the database</a>
-<a name="225"><span class="lineNum">     225 </span>            :     // can only be considered successful if the is_valid</a>
-<a name="226"><span class="lineNum">     226 </span>            :     // flag of the returned object is true.</a>
-<a name="227"><span class="lineNum">     227 </span>            :     Player add_player(Player P);</a>
-<a name="228"><span class="lineNum">     228 </span>            :     Developer add_developer(Developer D);</a>
-<a name="229"><span class="lineNum">     229 </span>            :     Game_Details add_game_details(Game_Details GD);</a>
-<a name="230"><span class="lineNum">     230 </span>            :     Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);</a>
-<a name="231"><span class="lineNum">     231 </span>            : </a>
-<a name="232"><span class="lineNum">     232 </span>            :     // The remove functions take the primary key(s) of the</a>
-<a name="233"><span class="lineNum">     233 </span>            :     // relevant object to be removed and returns an instance</a>
-<a name="234"><span class="lineNum">     234 </span>            :     // of the object that was just removed. The deletion of</a>
-<a name="235"><span class="lineNum">     235 </span>            :     // the object in the database can only be considered</a>
-<a name="236"><span class="lineNum">     236 </span>            :     // successful if the is_valid flag of the returned object</a>
-<a name="237"><span class="lineNum">     237 </span>            :     // is true.</a>
-<a name="238"><span class="lineNum">     238 </span>            :     Player remove_player(std::string player_email);</a>
-<a name="239"><span class="lineNum">     239 </span>            :     Developer remove_developer(std::string developer_email);</a>
-<a name="240"><span class="lineNum">     240 </span>            :     Game_Details remove_game_details(int game_id);</a>
-<a name="241"><span class="lineNum">     241 </span>            :     Player_Game_Ratings</a>
-<a name="242"><span class="lineNum">     242 </span>            :     remove_player_rating(std::string player_email, int game_id);</a>
-<a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span>            :     // The delete functions take the primary key(s) of the</a>
-<a name="246"><span class="lineNum">     246 </span>            :     // relevant object to be updated and returns an instance</a>
-<a name="247"><span class="lineNum">     247 </span>            :     // of the updated object i.e after being updated. The update of</a>
-<a name="248"><span class="lineNum">     248 </span>            :     // the object in the database can only be considered</a>
-<a name="249"><span class="lineNum">     249 </span>            :     // successful if the is_valid flag of the returned object</a>
-<a name="250"><span class="lineNum">     250 </span>            :     // is true.</a>
-<a name="251"><span class="lineNum">     251 </span>            :     Player update_player(std::string player_email, Player P);</a>
-<a name="252"><span class="lineNum">     252 </span>            :     Developer update_developer(std::string developer_email, Developer D);</a>
-<a name="253"><span class="lineNum">     253 </span>            :     Game_Details update_game_details(int game_id, Game_Details GD);</a>
-<a name="254"><span class="lineNum">     254 </span>            :     Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);</a>
-<a name="255"><span class="lineNum">     255 </span>            : };</a>
-<a name="256"><span class="lineNum">     256 </span>            : </a>
-<a name="257"><span class="lineNum">     257 </span>            : #endif  // MAIN_DB_SERVICE_H_</a>
+<a name="203"><span class="lineNum">     203 </span>            :     virtual Player get_player(std::string player_email);</a>
+<a name="204"><span class="lineNum">     204 </span>            :     virtual Developer get_developer(std::string developer_email);</a>
+<a name="205"><span class="lineNum">     205 </span>            :     virtual Game_Details get_game_details(int game_id);</a>
+<a name="206"><span class="lineNum">     206 </span>            :     virtual Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id);</a>
+<a name="207"><span class="lineNum">     207 </span>            :     virtual Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_email, int game_id);</a>
+<a name="208"><span class="lineNum">     208 </span>            : </a>
+<a name="209"><span class="lineNum">     209 </span>            : </a>
+<a name="210"><span class="lineNum">     210 </span>            :     // The get_all functions return a vector of all instances of the</a>
+<a name="211"><span class="lineNum">     211 </span>            :     // relevant object in the database</a>
+<a name="212"><span class="lineNum">     212 </span>            :     virtual std::vector&lt;Player&gt; get_all_players();</a>
+<a name="213"><span class="lineNum">     213 </span>            :     virtual std::vector&lt;Developer&gt; get_all_developers();</a>
+<a name="214"><span class="lineNum">     214 </span>            :     virtual std::vector&lt;Game_Details&gt; get_all_games();</a>
+<a name="215"><span class="lineNum">     215 </span>            :     virtual std::vector&lt;Joined_Player_Game_Ratings&gt; get_all_player_game_ratings_for_game(int game_id);</a>
+<a name="216"><span class="lineNum">     216 </span>            :     virtual std::vector&lt;Game_Details&gt; get_all_games_for_developer(std::string developer_email);</a>
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<a name="218"><span class="lineNum">     218 </span>            :     // The add functions take an instance of the object to</a>
+<a name="219"><span class="lineNum">     219 </span>            :     // add to the database and return an instance of said</a>
+<a name="220"><span class="lineNum">     220 </span>            :     // object. The creation of the object in the database</a>
+<a name="221"><span class="lineNum">     221 </span>            :     // can only be considered successful if the is_valid</a>
+<a name="222"><span class="lineNum">     222 </span>            :     // flag of the returned object is true.</a>
+<a name="223"><span class="lineNum">     223 </span>            :     virtual Player add_player(Player P);</a>
+<a name="224"><span class="lineNum">     224 </span>            :     virtual Developer add_developer(Developer D);</a>
+<a name="225"><span class="lineNum">     225 </span>            :     virtual Game_Details add_game_details(Game_Details GD);</a>
+<a name="226"><span class="lineNum">     226 </span>            :     virtual Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);</a>
+<a name="227"><span class="lineNum">     227 </span>            : </a>
+<a name="228"><span class="lineNum">     228 </span>            :     // The remove functions take the primary key(s) of the</a>
+<a name="229"><span class="lineNum">     229 </span>            :     // relevant object to be removed and returns an instance</a>
+<a name="230"><span class="lineNum">     230 </span>            :     // of the object that was just removed. The deletion of</a>
+<a name="231"><span class="lineNum">     231 </span>            :     // the object in the database can only be considered</a>
+<a name="232"><span class="lineNum">     232 </span>            :     // successful if the is_valid flag of the returned object</a>
+<a name="233"><span class="lineNum">     233 </span>            :     // is true.</a>
+<a name="234"><span class="lineNum">     234 </span>            :     virtual Player remove_player(std::string player_email);</a>
+<a name="235"><span class="lineNum">     235 </span>            :     virtual Developer remove_developer(std::string developer_email);</a>
+<a name="236"><span class="lineNum">     236 </span>            :     virtual Game_Details remove_game_details(int game_id);</a>
+<a name="237"><span class="lineNum">     237 </span>            :     virtual Player_Game_Ratings remove_player_rating(std::string player_email, int game_id);</a>
+<a name="238"><span class="lineNum">     238 </span>            : </a>
+<a name="239"><span class="lineNum">     239 </span>            : </a>
+<a name="240"><span class="lineNum">     240 </span>            :     // The delete functions take the primary key(s) of the</a>
+<a name="241"><span class="lineNum">     241 </span>            :     // relevant object to be updated and returns an instance</a>
+<a name="242"><span class="lineNum">     242 </span>            :     // of the updated object i.e after being updated. The update of</a>
+<a name="243"><span class="lineNum">     243 </span>            :     // the object in the database can only be considered</a>
+<a name="244"><span class="lineNum">     244 </span>            :     // successful if the is_valid flag of the returned object</a>
+<a name="245"><span class="lineNum">     245 </span>            :     // is true.</a>
+<a name="246"><span class="lineNum">     246 </span>            :     virtual Player update_player(std::string player_email, Player P);</a>
+<a name="247"><span class="lineNum">     247 </span>            :     virtual Developer update_developer(std::string developer_email, Developer D);</a>
+<a name="248"><span class="lineNum">     248 </span>            :     virtual Game_Details update_game_details(int game_id, Game_Details GD);</a>
+<a name="249"><span class="lineNum">     249 </span>            :     virtual Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);</a>
+<a name="250"><span class="lineNum">     250 </span>            : };</a>
+<a name="251"><span class="lineNum">     251 </span>            : </a>
+<a name="252"><span class="lineNum">     252 </span>            : #endif  // MAIN_DB_SERVICE_H_</a>
 </pre>
       </td>
     </tr>
