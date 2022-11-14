@@ -21,7 +21,7 @@ DBService::DBService
 }
 
 bool DBService::setUpDatabase() {
-  std::cout << "Connecting to MYSQL to set up database"<< std::endl;
+  LOG(INFO) << "Connecting to MYSQL to set up database"<< std::endl;
 
   try {
     sql::Driver *driver;
@@ -83,21 +83,21 @@ bool DBService::setUpDatabase() {
     delete stmt;
     delete con;
 
-    std::cout << "Successfully set up database"<< std::endl;
+    LOG(INFO) << "Successfully set up database"<< std::endl;
     return true;
   } catch (sql::SQLException &e) {
-    std::cout << "Error setting up database" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error setting up database" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return false;
 }
 
 bool DBService::tearDownDatabase() {
-  std::cout << "Connecting to MYSQL to tear down database"<< std::endl;
+  LOG(INFO) << "Connecting to MYSQL to tear down database"<< std::endl;
 
   try {
     sql::Driver *driver;
@@ -119,21 +119,21 @@ bool DBService::tearDownDatabase() {
     delete stmt;
     delete con;
 
-    std::cout << "Successfully tore down database"<< std::endl;
+    LOG(INFO) << "Successfully tore down database"<< std::endl;
     return true;
   } catch (sql::SQLException &e) {
-    std::cout << "Error tearing down database" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error tearing down database" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return false;
 }
 
 Player DBService::get_player(std::string player_email) {
-  std::cout << "Connecting to MYSQL to get player with email: "
+  LOG(INFO) << "Connecting to MYSQL to get player with email: "
   + player_email << std::endl;
   Player P;
   P.is_valid = false;
@@ -159,29 +159,29 @@ Player DBService::get_player(std::string player_email) {
     while (res->next()) {
       P.player_email = res->getString("player_email");
       P.is_valid = true;
-      std::cout << P.toString() << std::endl;
+      LOG(INFO) << P.toString() << std::endl;
     }
 
     delete prep_stmt;
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved player with email: " +
+    LOG(INFO) << "Successfully retrieved player with email: " +
     player_email << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout <<
+    LOG(INFO) <<
     "Error getting player with email: " + player_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return P;
 }
 
 Developer DBService::get_developer(std::string developer_email) {
-  std::cout << "Connecting to MYSQL to get developer with email: " +
+  LOG(INFO) << "Connecting to MYSQL to get developer with email: " +
   developer_email << std::endl;
 
   Developer D;
@@ -209,29 +209,29 @@ Developer DBService::get_developer(std::string developer_email) {
         D.developer_email = res->getString("developer_email");
         D.developer_password = res->getString("developer_password");
         D.is_valid = true;
-        std::cout << D.toString() << std::endl;
+        LOG(INFO) << D.toString() << std::endl;
     }
 
     delete prep_stmt;
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved developer with email: " +
+    LOG(INFO) << "Successfully retrieved developer with email: " +
     developer_email << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout <<
+    LOG(INFO) <<
     "Error getting developer with email: " + developer_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return D;
 }
 
 Game_Details DBService::get_game_details(int game_id) {
-  std::cout << "Connecting to MYSQL to get game with game_id: " +
+  LOG(INFO) << "Connecting to MYSQL to get game with game_id: " +
   std::to_string(game_id) << std::endl;
 
   Game_Details GD;
@@ -279,23 +279,23 @@ Game_Details DBService::get_game_details(int game_id) {
       GD.players_per_team = std::stoi(res->getString("players_per_team"));
       GD.teams_per_match = std::stoi(res->getString("teams_per_match"));
       GD.is_valid = true;
-      std::cout << GD.toString() << std::endl;
+      LOG(INFO) << GD.toString() << std::endl;
     }
 
     delete prep_stmt;
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved game with game_id: " +
+    LOG(INFO) << "Successfully retrieved game with game_id: " +
     std::to_string(game_id) << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout <<
+    LOG(INFO) <<
     "Error getting game with game_id: " + std::to_string(game_id) << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return GD;
@@ -303,7 +303,7 @@ Game_Details DBService::get_game_details(int game_id) {
 
 Player_Game_Ratings
 DBService::get_player_game_rating(std::string player_email, int game_id) {
-  std::cout << "Connecting to MYSQL to get rating in game with game_id: " +
+  LOG(INFO) << "Connecting to MYSQL to get rating in game with game_id: " +
   std::to_string(game_id) + " for player with email: " +
   player_email<< std::endl;
 
@@ -341,26 +341,26 @@ DBService::get_player_game_rating(std::string player_email, int game_id) {
       PGR.game_parameter4_value =
       std::stoi(res->getString("game_parameter4_value"));
       PGR.is_valid = true;
-      std::cout << PGR.toString() << std::endl;
+      LOG(INFO) << PGR.toString() << std::endl;
     }
 
     delete prep_stmt;
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved rating in game with game_id: " +
+    LOG(INFO) << "Successfully retrieved rating in game with game_id: " +
     std::to_string(game_id) + " for player with email: " +
     player_email << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting rating in game with game_id: " +
+    LOG(INFO) << "Error getting rating in game with game_id: " +
     std::to_string(game_id) + " for player with email: " +
     player_email<< std::endl;
 
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return PGR;
@@ -369,7 +369,7 @@ DBService::get_player_game_rating(std::string player_email, int game_id) {
 Joined_Player_Game_Ratings
 DBService::
 get_joined_player_game_rating(std::string player_email, int game_id) {
-  std::cout << "Connecting to MYSQL to get rating in game with game_id: " +
+  LOG(INFO) << "Connecting to MYSQL to get rating in game with game_id: " +
   std::to_string(game_id) + " for player with email: " + player_email
   << std::endl;
 
@@ -430,33 +430,33 @@ get_joined_player_game_rating(std::string player_email, int game_id) {
       JPGR.players_per_team = std::stoi(res->getString("players_per_team"));
       JPGR.teams_per_match = std::stoi(res->getString("teams_per_match"));
       JPGR.is_valid = true;
-      std::cout << JPGR.toString() << std::endl;
+      LOG(INFO) << JPGR.toString() << std::endl;
     }
 
     delete prep_stmt;
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved rating in game with game_id: " +
+    LOG(INFO) << "Successfully retrieved rating in game with game_id: " +
     std::to_string(game_id) + " for player with email: " +
     player_email<< std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting rating in game with game_id: " +
+    LOG(INFO) << "Error getting rating in game with game_id: " +
     std::to_string(game_id) + " for player with email: " +
     player_email<< std::endl;
 
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return JPGR;
 }
 
 std::vector<Player> DBService::get_all_players() {
-  std::cout << "Connecting to MYSQL to get all players" << std::endl;
+  LOG(INFO) << "Connecting to MYSQL to get all players" << std::endl;
   std::vector<Player> players;
 
   try {
@@ -477,7 +477,7 @@ std::vector<Player> DBService::get_all_players() {
     while (res->next()) {
         p.player_email = res->getString("player_email");
         p.is_valid = true;
-        std::cout << p.toString() << std::endl;
+        LOG(INFO) << p.toString() << std::endl;
         players.push_back(p);
     }
 
@@ -485,21 +485,21 @@ std::vector<Player> DBService::get_all_players() {
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved all players" << std::endl;
+    LOG(INFO) << "Successfully retrieved all players" << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting all players" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error getting all players" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return players;
 }
 
 std::vector<Developer> DBService::get_all_developers() {
-  std::cout << "Connecting to MYSQL to get all developers" << std::endl;
+  LOG(INFO) << "Connecting to MYSQL to get all developers" << std::endl;
   std::vector<Developer> developers;
 
   try {
@@ -521,7 +521,7 @@ std::vector<Developer> DBService::get_all_developers() {
         d.developer_email = res->getString("developer_email");
         d.developer_password = res->getString("developer_password");
         d.is_valid = true;
-        std::cout << d.toString() << std::endl;
+        LOG(INFO) << d.toString() << std::endl;
         developers.push_back(d);
     }
 
@@ -529,20 +529,20 @@ std::vector<Developer> DBService::get_all_developers() {
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved all developers" << std::endl;
+    LOG(INFO) << "Successfully retrieved all developers" << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting all developers" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error getting all developers" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return developers;
 }
 
 std::vector<Game_Details> DBService::get_all_games() {
-  std::cout << "Connecting to MYSQL to get all game details" << std::endl;
+  LOG(INFO) << "Connecting to MYSQL to get all game details" << std::endl;
   std::vector<Game_Details> game_details;
 
   try {
@@ -584,7 +584,7 @@ std::vector<Game_Details> DBService::get_all_games() {
       gd.players_per_team = std::stoi(res->getString("players_per_team"));
       gd.teams_per_match = std::stoi(res->getString("teams_per_match"));
       gd.is_valid = true;
-      std::cout << gd.toString() << std::endl;
+      LOG(INFO) << gd.toString() << std::endl;
       game_details.push_back(gd);
     }
 
@@ -592,14 +592,14 @@ std::vector<Game_Details> DBService::get_all_games() {
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved all game details" << std::endl;
+    LOG(INFO) << "Successfully retrieved all game details" << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting all game details" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error getting all game details" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return game_details;
@@ -608,7 +608,7 @@ std::vector<Game_Details> DBService::get_all_games() {
 
 std::vector<Joined_Player_Game_Ratings>
 DBService::get_all_player_game_ratings_for_game(int game_id) {
-  std::cout <<
+  LOG(INFO) <<
   "Connecting to MYSQL to get all player ratings for a game" << std::endl;
   std::vector<Joined_Player_Game_Ratings> JPGR;
 
@@ -665,7 +665,7 @@ DBService::get_all_player_game_ratings_for_game(int game_id) {
       jpgr.players_per_team = std::stoi(res->getString("players_per_team"));
       jpgr.teams_per_match = std::stoi(res->getString("teams_per_match"));
       jpgr.is_valid = true;
-      std::cout << jpgr.toString() << std::endl;
+      LOG(INFO) << jpgr.toString() << std::endl;
       JPGR.push_back(jpgr);
     }
 
@@ -673,14 +673,14 @@ DBService::get_all_player_game_ratings_for_game(int game_id) {
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved all player game ratings" << std::endl;
+    LOG(INFO) << "Successfully retrieved all player game ratings" << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting all player game ratings" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error getting all player game ratings" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return JPGR;
@@ -688,7 +688,7 @@ DBService::get_all_player_game_ratings_for_game(int game_id) {
 
 std::vector<Game_Details>
 DBService::get_all_games_for_developer(std::string developer_email) {
-  std::cout << "Connecting to MYSQL to get games for developer with email: " +
+  LOG(INFO) << "Connecting to MYSQL to get games for developer with email: " +
   developer_email << std::endl;
 
   std::vector<Game_Details> GD;
@@ -736,7 +736,7 @@ DBService::get_all_games_for_developer(std::string developer_email) {
       gd.players_per_team = std::stoi(res->getString("players_per_team"));
       gd.teams_per_match = std::stoi(res->getString("teams_per_match"));
       gd.is_valid = true;
-      std::cout << gd.toString() << std::endl;
+      LOG(INFO) << gd.toString() << std::endl;
       GD.push_back(gd);
     }
 
@@ -744,23 +744,23 @@ DBService::get_all_games_for_developer(std::string developer_email) {
     delete res;
     delete con;
 
-    std::cout << "Successfully retrieved games for developer with email: " +
+    LOG(INFO) << "Successfully retrieved games for developer with email: " +
     developer_email << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error getting games for developer with email: " +
+    LOG(INFO) << "Error getting games for developer with email: " +
     developer_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return GD;
 }
 
 Player DBService::add_player(Player P) {
-  std::cout << "Connecting to MYSQL to insert player with email: " +
+  LOG(INFO) << "Connecting to MYSQL to insert player with email: " +
   P.player_email << std::endl;
   P.is_valid = false;
 
@@ -785,23 +785,23 @@ Player DBService::add_player(Player P) {
     delete prep_stmt;
     delete con;
 
-    std::cout <<
+    LOG(INFO) <<
     "Successfully created player with email: " + P.player_email << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout <<
+    LOG(INFO) <<
     "Error creating player with email: " + P.player_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return P;
 }
 
 Developer DBService::add_developer(Developer D) {
-  std::cout << "Connecting to MYSQL to insert developer with email: " +
+  LOG(INFO) << "Connecting to MYSQL to insert developer with email: " +
   D.developer_email << std::endl;
   D.is_valid = false;
 
@@ -827,22 +827,22 @@ Developer DBService::add_developer(Developer D) {
     delete prep_stmt;
     delete con;
 
-    std::cout << "Successfully created developer with email: " +
+    LOG(INFO) << "Successfully created developer with email: " +
     D.developer_email << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout <<
+    LOG(INFO) <<
     "Error creating developer with email: " + D.developer_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return D;
 }
 
 Game_Details DBService::add_game_details(Game_Details GD) {
-  std::cout << "Connecting to MYSQL to insert new game" << std::endl;
+  LOG(INFO) << "Connecting to MYSQL to insert new game" << std::endl;
   GD.is_valid = false;
 
   try {
@@ -897,22 +897,22 @@ Game_Details DBService::add_game_details(Game_Details GD) {
     delete res;
     delete con;
 
-    std::cout << "Successfully created game with game_id: " +
+    LOG(INFO) << "Successfully created game with game_id: " +
     std::to_string(GD.game_id) << std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error creating game" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error creating game" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return GD;
 }
 
 Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {
-  std::cout << "Connecting to MYSQL to create rating in game with game_id: " +
+  LOG(INFO) << "Connecting to MYSQL to create rating in game with game_id: " +
   std::to_string(PGR.game_id) + " for player with email: " +
   PGR.player_email << std::endl;
 
@@ -946,26 +946,26 @@ Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {
     delete prep_stmt;
     delete con;
 
-    std::cout << "Successfully created rating in game with game_id: " +
+    LOG(INFO) << "Successfully created rating in game with game_id: " +
     std::to_string(PGR.game_id) +" for player with email: " +
     PGR.player_email<< std::endl;
   } catch (sql::SQLException &e) {
-    std::cout << "Error creating rating in game with game_id: " +
+    LOG(INFO) << "Error creating rating in game with game_id: " +
     std::to_string(PGR.game_id) + " for player with email: " +
     PGR.player_email<< std::endl;
 
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return PGR;
 }
 
 Player DBService::remove_player(std::string player_email) {
-  std::cout << "Connecting to MYSQL to delete player with email: " +
+  LOG(INFO) << "Connecting to MYSQL to delete player with email: " +
   player_email << std::endl;
 
   Player p;
@@ -995,24 +995,24 @@ Player DBService::remove_player(std::string player_email) {
     delete prep_stmt;
     delete con;
 
-    std::cout <<
+    LOG(INFO) <<
     "Successfully deleted player with email: " + player_email << std::endl;
   } catch (sql::SQLException &e) {
     p.is_valid = false;
-    std::cout <<
+    LOG(INFO) <<
     "Error deleting player with email: " + player_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return p;
 }
 
 Developer DBService::remove_developer(std::string developer_email) {
-  std::cout << "Connecting to MYSQL to delete developer with email: " +
+  LOG(INFO) << "Connecting to MYSQL to delete developer with email: " +
   developer_email << std::endl;
 
   Developer d;
@@ -1041,25 +1041,25 @@ Developer DBService::remove_developer(std::string developer_email) {
     delete prep_stmt;
     delete con;
 
-    std::cout <<
+    LOG(INFO) <<
     "Successfully deleted developer with email: " + developer_email
     << std::endl;
   } catch (sql::SQLException &e) {
     d.is_valid = false;
-    std::cout <<
+    LOG(INFO) <<
     "Error deleting developer with email: " + developer_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return d;
 }
 
 Game_Details DBService::remove_game_details(int game_id) {
-  std::cout << "Connecting to MYSQL to delete game with game_id: " +
+  LOG(INFO) << "Connecting to MYSQL to delete game with game_id: " +
   std::to_string(game_id) << std::endl;
 
   Game_Details GD;
@@ -1088,20 +1088,20 @@ Game_Details DBService::remove_game_details(int game_id) {
     delete prep_stmt;
     delete con;
 
-    std::cout <<
+    LOG(INFO) <<
     "Successfully deleted game with game_id: " + std::to_string(game_id)
     << std::endl;
   } catch (sql::SQLException &e) {
     GD.is_valid = false;
-    std::cout <<
+    LOG(INFO) <<
     "Error deleting game with game_id: " + std::to_string(game_id)
     << std::endl;
 
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return GD;
@@ -1109,7 +1109,7 @@ Game_Details DBService::remove_game_details(int game_id) {
 
 Player_Game_Ratings
 DBService::remove_player_rating(std::string player_email, int game_id) {
-  std::cout << "Connecting to MYSQL to delete rating for player with email: " +
+  LOG(INFO) << "Connecting to MYSQL to delete rating for player with email: " +
   player_email + " for game with game_id: " +
   std::to_string(game_id) << std::endl;
 
@@ -1140,27 +1140,27 @@ DBService::remove_player_rating(std::string player_email, int game_id) {
     delete prep_stmt;
     delete con;
 
-    std::cout << "Successfully deleted rating for player with email: " +
+    LOG(INFO) << "Successfully deleted rating for player with email: " +
     player_email + " for game with game_id: "+
     std::to_string(game_id) << std::endl;
   } catch (sql::SQLException &e) {
     PGR.is_valid = false;
-    std::cout << "Error deleting rating for player with email: " +
+    LOG(INFO) << "Error deleting rating for player with email: " +
     player_email + " for game with game_id: " +
     std::to_string(game_id) << std::endl;
 
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return PGR;
 }
 
 Player DBService::update_player(std::string player_email, Player P) {
-  std::cout << "Connecting to MYSQL to update player with email: " +
+  LOG(INFO) << "Connecting to MYSQL to update player with email: " +
   player_email << std::endl;
 
   // Object to store updated player
@@ -1194,24 +1194,24 @@ Player DBService::update_player(std::string player_email, Player P) {
     delete prep_stmt;
     delete con;
 
-    std::cout <<
+    LOG(INFO) <<
     "Successfully updated player with email: " + player_email << std::endl;
   } catch (sql::SQLException &e) {
     p.is_valid = false;
-    std::cout <<
+    LOG(INFO) <<
     "Error updating player with email: " + player_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return p;
 }
 
 Developer DBService::update_developer(std::string developer_email, Developer D) {
-  std::cout << "Connecting to MYSQL to update developer with email: " +
+  LOG(INFO) << "Connecting to MYSQL to update developer with email: " +
   developer_email << std::endl;
 
   // Object to store updated developer
@@ -1246,23 +1246,23 @@ Developer DBService::update_developer(std::string developer_email, Developer D) 
     delete prep_stmt;
     delete con;
 
-    std::cout << "Successfully updated developer with email: " +
+    LOG(INFO) << "Successfully updated developer with email: " +
     developer_email << std::endl;
   } catch (sql::SQLException &e) {
     d.is_valid = false;
-    std::cout <<
+    LOG(INFO) <<
     "Error updating developer with email: " + developer_email << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return d;
 }
 
 Game_Details DBService::update_game_details(int game_id, Game_Details GD) {
-  std::cout << "Connecting to MYSQL to update game" << std::endl;
+  LOG(INFO) << "Connecting to MYSQL to update game" << std::endl;
 
   // Object to store updated Game_Details object
   Game_Details gd;
@@ -1316,22 +1316,22 @@ Game_Details DBService::update_game_details(int game_id, Game_Details GD) {
     delete prep_stmt;
     delete con;
 
-    std::cout << "Successfully updated game with game_id: " +
+    LOG(INFO) << "Successfully updated game with game_id: " +
     std::to_string(game_id) << std::endl;
   } catch (sql::SQLException &e) {
     gd.is_valid = false;
-    std::cout << "Error updating game" << std::endl;
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "Error updating game" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
   return gd;
 }
 
 Player_Game_Ratings DBService::update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR) {
-  std::cout << "Connecting to MYSQL to update rating in game with game_id: " +
+  LOG(INFO) << "Connecting to MYSQL to update rating in game with game_id: " +
   std::to_string(game_id) + " for player with email: " +
   player_email << std::endl;
 
@@ -1376,20 +1376,20 @@ Player_Game_Ratings DBService::update_player_rating(std::string player_email, in
     delete prep_stmt;
     delete con;
 
-    std::cout << "Successfully updated rating in game with game_id: " +
+    LOG(INFO) << "Successfully updated rating in game with game_id: " +
     std::to_string(game_id) +" for player with email: " +
     player_email<< std::endl;
   } catch (sql::SQLException &e) {
     pgr.is_valid = false;
-    std::cout << "Error updating rating in game with game_id: " +
+    LOG(INFO) << "Error updating rating in game with game_id: " +
     std::to_string(game_id) + " for player with email: " +
     player_email<< std::endl;
 
-    std::cout << "# ERR: SQLException in " << __FILE__;
-    std::cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
-    std::cout << "# ERR: " << e.what();
-    std::cout << " (MySQL error code: " << e.getErrorCode();
-    std::cout << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
+    LOG(INFO) << "# ERR: SQLException in " << __FILE__;
+    LOG(INFO) << "(" << __FUNCTION__ << ") on line "<< __LINE__ << std::endl;
+    LOG(INFO) << "# ERR: " << e.what();
+    LOG(INFO) << " (MySQL error code: " << e.getErrorCode();
+    LOG(INFO) << ", SQLState: " << e.getSQLState() <<" )" << std::endl;
   }
 
   return pgr;

@@ -4,94 +4,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <cmath>
-#include <tuple>
-
 #include "crow/crow_all.h"
 #include "main/db-service.h"
 #include "api-endpoints/api-endpoints-lib.h"
-
-std::tuple<
-std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > matchmaking(int game_id, std::vector<std::string> player_emails) {
-  DBService DB = DBService();
-  // Step 0: Retrieve Game Details by Game ID
-  Game_Details details = DB.get_game_details(game_id);
-
-  // Step 1: Compute Holistic Ranking for Each Player using their Metrics
-  std::vector<std::tuple<float, std::string> > ranked_players;  // vector to which players and their ranks will be added
-
-  // Iterate through each passed player and computer their rank
-  for (uint64_t i = 0; i < player_emails.size(); i++) {
-    Player_Game_Ratings player_metrics = DB.get_player_game_rating(player_emails.at(i), game_id);
-    float rating = (details.game_parameter1_weight) * (player_metrics.game_parameter1_value) +
-                   (details.game_parameter2_weight) * (player_metrics.game_parameter2_value) +
-                   (details.game_parameter3_weight) * (player_metrics.game_parameter3_value) +
-                   (details.game_parameter4_weight) * (player_metrics.game_parameter4_value);
-
-    std::cout << rating << std::endl;
-
-    // Add each player, rank tuple to the vector of ranked players
-    ranked_players.push_back(make_tuple(rating, player_emails[i]));
-  }
-
-  // Sort the vector of ranked players by rank, starting with the highest value
-  sort(ranked_players.begin(), ranked_players.end());
-  reverse(ranked_players.begin(), ranked_players.end());
-
-  // Step 2: Populate Games w/ Players
-  int num_players_per_game = details.players_per_team * details.teams_per_match;
-  int num_games = floor(player_emails.size() / num_players_per_game);
-  int num_overflow = player_emails.size() % num_players_per_game;
-
-  // If the number of players given is less than the number of players expected in a game,
-  // add them all to overflow and return
-  if (player_emails.size() < (uint64_t) num_players_per_game) {
-    std::vector<std::vector<std::vector<std::string> > > games;
-
-    return make_tuple(games, player_emails);
-  }
-
-  // Populate the teams
-  std::vector<std::vector<std::vector<std::string> > > games;
-  int player_iter = 0;
-
-  for (int i = 0; i < num_games; i++) {
-    // Create empty vectors, representing each team in the game
-    std::vector<std::vector<std::string> > teams;
-    for (int j = 0; j < details.teams_per_match; j++) {
-      std::vector<std::string> t;
-      teams.push_back(t);
-    }
-
-    // Populate Each Team in the Game
-    // - Iterate through the players, adding one to each team
-    int players_ingame_count = 0;
-    int team_number = 0;
-    while (players_ingame_count < num_players_per_game) {
-      teams.at(team_number).push_back(std::get<1>(ranked_players.at(player_iter)));
-
-      player_iter++;
-      players_ingame_count++;
-      team_number++;
-
-      if (team_number == details.teams_per_match)
-        team_number = 0;
-    }
-
-    games.push_back(teams);
-  }
-
-  // Populate Overflow with Remaining Players
-  std::vector<std::string> overflow;
-  if (num_overflow > 0) {
-    for (uint64_t i = player_iter; i < ranked_players.size(); i++)
-      overflow.push_back(std::get<1>(ranked_players.at(i)));
-  }
-
-  return make_tuple(games, overflow);
-}
 
 bool valid_user(std::string email, std::string password) {
   DBService DB = DBService();
@@ -109,7 +24,7 @@ bool valid_user_gameid(std::string email, std::string password, int game_id) {
   return gd.is_valid && gd.developer_email == email;
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
 
   crow::SimpleApp app;  // define your crow application
   // define your endpoint at the root directory
@@ -464,81 +379,9 @@ int main(void) {
 
   CROW_ROUTE(app, "/matchmake").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
-    crow::json::rvalue request_body = crow::json::load(req.body);
-
-    std::string developer_email;
-    std::string developer_password;
-    int game_id;
-    crow::json::rvalue input_player_emails_rvalue;
-    std::vector<crow::json::rvalue> input_player_emails;
-    std::vector<std::string> player_emails;
-
-    try {
-      DBService DB = DBService();
-      crow::json::wvalue json_result;
-
-      // Authentication
-      developer_email = request_body["developer_email"].s();
-      developer_password = request_body["developer_password"].s();
-
-      Developer d = DB.get_developer(developer_email);
-
-      // Check given password against password in DB
-      if (d.developer_password != developer_password)
-        return crow::response(400, json_result);
-
-      game_id = request_body["game_id"].i();
-      std::vector<Game_Details> developer_games = DB.get_all_games_for_developer(developer_email);
-      bool game_found = false;
-
-      // Check to ensure that the developer "owns" the given game
-      for (uint64_t i = 0; i < developer_games.size(); i++) {
-        int g_id = developer_games.at(i).game_id;
-        if (game_id == g_id)
-          game_found = true;
-      }
-
-      if (game_found == false)
-        return crow::response(400, json_result);
-
-      input_player_emails_rvalue = request_body["player_emails"];
-      input_player_emails = input_player_emails_rvalue.lo();
-
-      for (crow::json::rvalue email : input_player_emails) {
-        player_emails.push_back(email.s());
-        std::cout << email.s() << std::endl;
-      }
-
-      std::tuple<
-      std::vector<std::vector<std::vector<std::string> > >,
-      std::vector<std::string> > result = matchmaking(game_id, player_emails);
-
-      std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
-      std::vector<std::string> overflow = std::get<1>(result);
-
-      for (uint64_t i = 0; i < games.size(); i++) {
-        json_result["Game_" + std::to_string(i + 1)];
-        for (uint64_t j = 0; j < games.at(i).size(); j++) {
-          std::vector<std::string> player_names;
-
-          for (uint64_t k = 0; k < games.at(i).at(j).size(); k++) {
-            player_names.push_back(games.at(i).at(j).at(k));
-          }
-
-          json_result["Game_" + std::to_string(i + 1)]["Team_" + std::to_string(j + 1)] = player_names;
-        }
-      }
-
-      json_result["overflow"] = overflow;
-
-      return crow::response(200, json_result);
-    }
-    catch(...) {
-      // Return a response to indicate an invalid request body
-      // Empty JSON == invalid request
-      crow::json::wvalue json_result;
-      return crow::response(400, json_result);
-    }
+    APIEndPoints api = APIEndPoints();
+    DBService DB = DBService();
+    return api.matchmake(req, DB);
   });
 
   // set the port, set the app to run on multiple threads, and run the app
