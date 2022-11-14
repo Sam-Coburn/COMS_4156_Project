@@ -36,7 +36,7 @@ int main(void) {
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
     DBService DB = DBService();
-    return api.postSignUp(req, DB);
+    return api.postSignUp(req, &DB);
   });
 
   // Login doesn't do much since we are always expecting to get the
@@ -45,14 +45,14 @@ int main(void) {
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
     DBService DB = DBService();
-    return api.postLogin(req, DB);
+    return api.postLogin(req, &DB);
   });
 
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
     DBService DB = DBService();
-    return api.deleteLogin(req, DB);
+    return api.deleteLogin(req, &DB);
   });
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)

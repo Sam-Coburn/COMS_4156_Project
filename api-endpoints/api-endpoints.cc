@@ -214,13 +214,13 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     return std::make_pair(200, std::to_string(addedGame.game_id));
 }
 
-crow::response APIEndPoints::postSignUp(const crow::request& req, DBService DB) {
+crow::response APIEndPoints::postSignUp(const crow::request& req, DBService *DB) {
     crow::json::rvalue x = crow::json::load(req.body);
     Developer D;
     try {
       D.developer_email = x["developer_email"].s();
       D.developer_password = x["developer_password"].s();
-      D = DB.add_developer(D);
+      D = DB->add_developer(D);
       if (!D.is_valid) {
         return crow::response(400, "Developer already exists");
       }
@@ -230,7 +230,7 @@ crow::response APIEndPoints::postSignUp(const crow::request& req, DBService DB) 
     }
 }
 
-crow::response APIEndPoints::postLogin(const crow::request& req, DBService DB) {
+crow::response APIEndPoints::postLogin(const crow::request& req, DBService* DB) {
     crow::json::rvalue x = crow::json::load(req.body);
     std::string developer_email;
     std::string developer_password;
@@ -239,7 +239,7 @@ crow::response APIEndPoints::postLogin(const crow::request& req, DBService DB) {
     try {
       developer_email = x["developer_email"].s();
       developer_password = x["developer_password"].s();
-      D = DB.get_developer(developer_email);
+      D = DB->get_developer(developer_email);
       if (!D.is_valid || D.developer_password != developer_password) {
         return crow::response(400, "Invalid credentials");
       }
@@ -249,7 +249,7 @@ crow::response APIEndPoints::postLogin(const crow::request& req, DBService DB) {
     }
 }
 
-crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService DB) {
+crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService* DB) {
     crow::json::rvalue x = crow::json::load(req.body);
     std::string developer_email;
     std::string developer_password;
@@ -258,7 +258,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService DB)
     try {
       developer_email = x["developer_email"].s();
       developer_password = x["developer_password"].s();
-      D = DB.get_developer(developer_email);
+      D = DB->get_developer(developer_email);
       if (!D.is_valid) {
         return crow::response(400, "User not found");
       }
@@ -267,7 +267,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService DB)
         return crow::response(400, "Invalid credentials");
       }
 
-      D = DB.remove_developer(developer_email);
+      D = DB->remove_developer(developer_email);
       if (!D.is_valid) {
         return crow::response(500, "Internal Server Error");
       }

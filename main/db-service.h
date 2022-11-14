@@ -200,34 +200,30 @@ class DBService {
     // object and returns the relevant instance of said object.
     // The get can only be considered succesful if the
     // is_valid flag of the returned object is true.
-    Player get_player(std::string player_email);
-    Developer get_developer(std::string developer_email);
-    Game_Details get_game_details(int game_id);
-    Player_Game_Ratings
-    get_player_game_rating(std::string player_email, int game_id);
-    Joined_Player_Game_Ratings
-    get_joined_player_game_rating(std::string player_email, int game_id);
+    virtual Player get_player(std::string player_email);
+    virtual Developer get_developer(std::string developer_email);
+    virtual Game_Details get_game_details(int game_id);
+    virtual Player_Game_Ratings get_player_game_rating(std::string player_email, int game_id);
+    virtual Joined_Player_Game_Ratings get_joined_player_game_rating(std::string player_email, int game_id);
 
 
     // The get_all functions return a vector of all instances of the
     // relevant object in the database
-    std::vector<Player> get_all_players();
-    std::vector<Developer> get_all_developers();
-    std::vector<Game_Details> get_all_games();
-    std::vector<Joined_Player_Game_Ratings>
-    get_all_player_game_ratings_for_game(int game_id);
-    std::vector<Game_Details>
-    get_all_games_for_developer(std::string developer_email);
+    virtual std::vector<Player> get_all_players();
+    virtual std::vector<Developer> get_all_developers();
+    virtual std::vector<Game_Details> get_all_games();
+    virtual std::vector<Joined_Player_Game_Ratings> get_all_player_game_ratings_for_game(int game_id);
+    virtual std::vector<Game_Details> get_all_games_for_developer(std::string developer_email);
 
     // The add functions take an instance of the object to
     // add to the database and return an instance of said
     // object. The creation of the object in the database
     // can only be considered successful if the is_valid
     // flag of the returned object is true.
-    Player add_player(Player P);
-    Developer add_developer(Developer D);
-    Game_Details add_game_details(Game_Details GD);
-    Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
+    virtual Player add_player(Player P);
+    virtual Developer add_developer(Developer D);
+    virtual Game_Details add_game_details(Game_Details GD);
+    virtual Player_Game_Ratings add_player_rating(Player_Game_Ratings PGR);
 
     // The remove functions take the primary key(s) of the
     // relevant object to be removed and returns an instance
@@ -235,11 +231,10 @@ class DBService {
     // the object in the database can only be considered
     // successful if the is_valid flag of the returned object
     // is true.
-    Player remove_player(std::string player_email);
-    Developer remove_developer(std::string developer_email);
-    Game_Details remove_game_details(int game_id);
-    Player_Game_Ratings
-    remove_player_rating(std::string player_email, int game_id);
+    virtual Player remove_player(std::string player_email);
+    virtual Developer remove_developer(std::string developer_email);
+    virtual Game_Details remove_game_details(int game_id);
+    virtual Player_Game_Ratings remove_player_rating(std::string player_email, int game_id);
 
 
     // The delete functions take the primary key(s) of the
@@ -248,10 +243,10 @@ class DBService {
     // the object in the database can only be considered
     // successful if the is_valid flag of the returned object
     // is true.
-    Player update_player(std::string player_email, Player P);
-    Developer update_developer(std::string developer_email, Developer D);
-    Game_Details update_game_details(int game_id, Game_Details GD);
-    Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);
+    virtual Player update_player(std::string player_email, Player P);
+    virtual Developer update_developer(std::string developer_email, Developer D);
+    virtual Game_Details update_game_details(int game_id, Game_Details GD);
+    virtual Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);
 };
 
 #endif  // MAIN_DB_SERVICE_H_
