@@ -32,7 +32,7 @@ jobs:
       - name: Install glog
         run: sudo apt install libgoogle-glog-dev
       - name: Build Project
-        run: bazel build //main:main
+        run: bazel build --linkopt="-ljsoncpp" //main:main
       - name: Test Project
         run: bazel test --test_output=all //testing:test
       
