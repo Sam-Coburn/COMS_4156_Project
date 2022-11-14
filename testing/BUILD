@@ -6,6 +6,5 @@ cc_test(
     "//main:main",
     "//main:db-service",
     "//api-endpoints:api-endpoints",
-    "//api-endpoints:api-matchmaking",
     "@com_google_googletest//:gtest_main"],
 )

@@ -40,20 +40,20 @@ class MockDBService : public DBService {
 
 class MockMatchmaking: public Matchmaking {
  public:
-  MOCK_METHOD(td::tuple<
+  MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >, matchmakingBackend, (int game_id, std::vector<std::string> player_emails), (override));
+        std::vector<std::string> >), matchmakingBackend, (int game_id, std::vector<std::string> player_emails));
 };
 
 TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests) {
-    APIEndpoints api = APIEndPoints();
+    APIEndPoints api = APIEndPoints();
 
     MockDBService DB;
     Developer d;
     d.developer_email = "developer_email@gmail.com";
     d.developer_password = "correct_password";
 
-    EXPECT_CALL(DB, get_developer())
+    EXPECT_CALL(DB, get_developer(d.developer_email))
     .WillOnce(Return(d));
 
     crow::request req;
@@ -63,13 +63,13 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests) {
     // Incorrect Password Given
     body = {
         {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
+        {"developer_password", "incorrect_password"},
         {"game_id", "1"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake();
-    ASSERT_EQ(res.code, 200);
+    res =  api.matchmake(req, &DB);
+    ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Credentials Given.\n");
 }
 
