@@ -8,8 +8,8 @@
 #include <vector>
 
 struct Player {
-  std::string player_email;
-  bool is_valid;
+  std::string player_email = "";
+  bool is_valid = false;
 
   std::string toString() {
     return "Player: player_email = " + player_email;
@@ -17,9 +17,9 @@ struct Player {
 };
 
 struct Developer {
-  std::string developer_email;
-  std::string developer_password;
-  bool is_valid;
+  std::string developer_email = "";
+  std::string developer_password = "";
+  bool is_valid = false;
 
   std::string toString() {
     return "Developer: developer_email = " + developer_email +
@@ -28,27 +28,27 @@ struct Developer {
 };
 
 struct Game_Details {
-  int game_id;
-  std::string developer_email;
-  std::string game_name;
+  int game_id = -1;
+  std::string developer_email = "";
+  std::string game_name = "";
 
-  std::string game_parameter1_name;
-  float game_parameter1_weight;
+  std::string game_parameter1_name = "";
+  float game_parameter1_weight = 0;
 
-  std::string game_parameter2_name;
-  float game_parameter2_weight;
+  std::string game_parameter2_name = "";
+  float game_parameter2_weight = 0;
 
-  std::string game_parameter3_name;
-  float game_parameter3_weight;
+  std::string game_parameter3_name = "";
+  float game_parameter3_weight = 0;
 
-  std::string game_parameter4_name;
-  float game_parameter4_weight;
+  std::string game_parameter4_name = "";
+  float game_parameter4_weight = 0;
 
-  std::string category;
-  int players_per_team;
-  int teams_per_match;
+  std::string category = "";
+  int players_per_team = 0;
+  int teams_per_match = 0;
 
-  bool is_valid;
+  bool is_valid = false;
 
   std::string toString() {
     std::string output =
@@ -85,13 +85,13 @@ struct Game_Details {
 };
 
 struct Player_Game_Ratings {
-  std::string player_email;
-  int game_id;
+  std::string player_email = "";
+  int game_id = -1;
 
-  int game_parameter1_value;
-  int game_parameter2_value;
-  int game_parameter3_value;
-  int game_parameter4_value;
+  int game_parameter1_value = 0;
+  int game_parameter2_value = 0;
+  int game_parameter3_value = 0;
+  int game_parameter4_value = 0;
 
   bool is_valid;
 
@@ -111,32 +111,32 @@ struct Player_Game_Ratings {
 // This struct represents the join between
 // Player, Game Details, and Player_Game_Ratings
 struct Joined_Player_Game_Ratings {
-  std::string player_email;
-  int game_id;
-  std::string developer_email;
-  std::string game_name;
+  std::string player_email = "";
+  int game_id = -1;
+  std::string developer_email = "";
+  std::string game_name = "";
 
-  std::string game_parameter1_name;
-  float game_parameter1_weight;
-  int game_parameter1_value;
+  std::string game_parameter1_name = "";
+  float game_parameter1_weight = 0;
+  int game_parameter1_value = 0;
 
-  std::string game_parameter2_name;
-  float game_parameter2_weight;
-  int game_parameter2_value;
+  std::string game_parameter2_name = "";
+  float game_parameter2_weight = 0;
+  int game_parameter2_value = 0;
 
-  std::string game_parameter3_name;
-  float game_parameter3_weight;
-  int game_parameter3_value;
+  std::string game_parameter3_name = "";
+  float game_parameter3_weight = 0;
+  int game_parameter3_value = 0;
 
-  std::string game_parameter4_name;
-  float game_parameter4_weight;
-  int game_parameter4_value;
+  std::string game_parameter4_name = "";
+  float game_parameter4_weight = 0;
+  int game_parameter4_value = 0;
 
-  std::string category;
-  int players_per_team;
-  int teams_per_match;
+  std::string category = "";
+  int players_per_team = 0;
+  int teams_per_match = 0;
 
-  bool is_valid;
+  bool is_valid = false;
 
   std::string toString() {
     std::string output =
