@@ -24,7 +24,7 @@ bool valid_user_gameid(std::string email, std::string password, int game_id) {
   return gd.is_valid && gd.developer_email == email;
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
 
   crow::SimpleApp app;  // define your crow application
   // define your endpoint at the root directory

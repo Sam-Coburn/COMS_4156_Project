@@ -78,7 +78,7 @@ std::vector<std::string> > APIEndPoints::matchmakingBackend(int game_id, std::ve
                    (details.game_parameter3_weight) * (player_metrics.game_parameter3_value) +
                    (details.game_parameter4_weight) * (player_metrics.game_parameter4_value);
 
-    std::cout << rating << std::endl;
+    LOG(INFO) << rating << std::endl;
 
     // Add each player, rank tuple to the vector of ranked players
     ranked_players.push_back(make_tuple(rating, player_emails[i]));
@@ -232,7 +232,7 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
 
     // validity checking
-    std::cout << "before empty string check" << std::endl;
+    LOG(INFO) << "before empty string check" << std::endl;
     if (req.body.length() == 0) {
         return std::make_pair(400, std::string("Empty body."));
     }

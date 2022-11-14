@@ -3,6 +3,7 @@
 #ifndef MAIN_DB_SERVICE_H_
 #define MAIN_DB_SERVICE_H_
 
+#include <glog/logging.h>
 #include <string>
 #include <vector>
 
@@ -193,8 +194,8 @@ class DBService {
 
 
     // These functions are mainly for testing
-    bool setUpDatabase(); // Setup database if not setup
-    bool tearDownDatabase(); // Drop all tables in database
+    bool setUpDatabase();     // Setup database if not setup
+    bool tearDownDatabase();  // Drop all tables in database
 
     // All the get functions take in the primary key(s) for the relevant
     // object and returns the relevant instance of said object.

@@ -3,6 +3,7 @@
 #ifndef API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 #define API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 
+#include <glog/logging.h>
 #include <jsoncpp/json/json.h>  // JsonCpp header file
 #include <cmath>
 #include <cstdlib>              // EXIT_FAILURE
