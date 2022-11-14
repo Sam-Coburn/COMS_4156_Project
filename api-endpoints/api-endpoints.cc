@@ -277,7 +277,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService* DB
     }
 }
 
-crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
+crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
     std::string developer_email;
@@ -287,21 +287,20 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
     std::vector<crow::json::rvalue> input_player_emails;
 
     try {
-      DBService DB = DBService();
       crow::json::wvalue json_result;
 
       // Authentication
       developer_email = request_body["developer_email"].s();
       developer_password = request_body["developer_password"].s();
 
-      Developer d = DB.get_developer(developer_email);
+      Developer d = DB->get_developer(developer_email);
 
       // Check given password against password in DB
       if (d.developer_password != developer_password)
         return crow::response(400, "Incorrect Credentials Given.\n");
 
       game_id = request_body["game_id"].i();
-      std::vector<Game_Details> developer_games = DB.get_all_games_for_developer(developer_email);
+      std::vector<Game_Details> developer_games = DB->get_all_games_for_developer(developer_email);
       bool game_found = false;
 
       // Check to ensure that the developer "owns" the given game
@@ -324,7 +323,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
       std::vector<std::string> player_emails;
       std::vector<std::string> nonexistent_emails;
       for (crow::json::rvalue email : input_player_emails) {
-        Player input_email = DB.get_player(email.s());
+        Player input_email = DB->get_player(email.s());
         if (input_email.is_valid == true)
             player_emails.push_back(email.s());
         else
