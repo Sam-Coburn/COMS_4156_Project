@@ -310,7 +310,7 @@ crow::response APIEndPoints::postSignUp(const crow::request& req) {
     }
 }
 
-crow::response APIEndPoints::postLogin(const crow::request& req, DBService* DB) {
+crow::response APIEndPoints::postLogin(const crow::request& req) {
     crow::json::rvalue x = crow::json::load(req.body);
     std::string developer_email;
     std::string developer_password;
@@ -329,7 +329,7 @@ crow::response APIEndPoints::postLogin(const crow::request& req, DBService* DB) 
     }
 }
 
-crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService* DB) {
+crow::response APIEndPoints::deleteLogin(const crow::request& req) {
     crow::json::rvalue x = crow::json::load(req.body);
     std::string developer_email;
     std::string developer_password;

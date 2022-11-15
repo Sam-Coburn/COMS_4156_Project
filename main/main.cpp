@@ -35,7 +35,6 @@ int main(int argc, char* argv[]) {
   CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
-    //DBService DB = DBService();
     return api.postSignUp(req);
   });
 
@@ -44,15 +43,13 @@ int main(int argc, char* argv[]) {
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
-    DBService DB = DBService();
-    return api.postLogin(req, &DB);
+    return api.postLogin(req);
   });
 
   CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
-    DBService DB = DBService();
-    return api.deleteLogin(req, &DB);
+    return api.deleteLogin(req);
   });
 
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::GET)
