@@ -133,42 +133,42 @@ TEST(AuthRouteTestFixture, Post_Login_Tests) {
   // Empty Body
   body = {};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing both parameters)
   body = {{"some_random_parameter", "something"}};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing developer_password)
   body = {{"developer_email", "some_email@gmail.com"}};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing developer_email)
   body = {{"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid Login (Invalid Credentials)
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "wrong_password"}};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid credentials");
 
   // Valid Login
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 200);
   ASSERT_EQ(res.body, "Succesfully logged in");
 }
@@ -211,56 +211,56 @@ TEST(AuthRouteTestFixture, Delete_Login_Tests) {
   // Valid Login
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postLogin(req, &DB);
+  res = api.postLogin(req);
   ASSERT_EQ(res.code, 200);
   ASSERT_EQ(res.body, "Succesfully logged in");
 
   // Empty Body
   body = {};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing both parameters)
   body = {{"some_random_parameter", "something"}};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing developer_password)
   body = {{"developer_email", "some_email@gmail.com"}};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing developer_email)
   body = {{"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
   
   // Invalid Delete (Invalid Email)
   body = {{"developer_email", "doesnt_exist@gmail.com"}, {"developer_password", "wrong_password"}};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "User not found");
 
   // Invalid Delete (Invalid Credentials)
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "wrong_password"}};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid credentials");
 
   // Valid Delete
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.deleteLogin(req, &DB);
+  res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 200);
   ASSERT_EQ(res.body, "Succesfully deleted account");
 

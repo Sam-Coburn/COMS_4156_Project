@@ -77,8 +77,8 @@ std::pair <int, std::string> getGames(const crow::request& req);
 std::pair <int, std::string> postGame(const crow::request& req);
 
 crow::response postSignUp(const crow::request& req);
-crow::response postLogin(const crow::request& req, DBService* DB);
-crow::response deleteLogin(const crow::request& req, DBService* DB);
+crow::response postLogin(const crow::request& req);
+crow::response deleteLogin(const crow::request& req);
 crow::response matchmake(const crow::request& req, DBService DB);
 };
 #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_
