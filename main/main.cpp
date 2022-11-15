@@ -35,8 +35,8 @@ int main(int argc, char* argv[]) {
   CROW_ROUTE(app, "/signup").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
-    DBService DB = DBService();
-    return api.postSignUp(req, &DB);
+    //DBService DB = DBService();
+    return api.postSignUp(req);
   });
 
   // Login doesn't do much since we are always expecting to get the

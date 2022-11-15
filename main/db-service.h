@@ -1,7 +1,7 @@
 // Copyright [2022] <Copyright Owner>"
 
-#ifndef MAIN_DB_SERVICE_H_
-#define MAIN_DB_SERVICE_H_
+#ifndef BAZEL_COMS_4156_PROJECT_MAIN_DB_SERVICE_H_
+#define BAZEL_COMS_4156_PROJECT_MAIN_DB_SERVICE_H_
 
 #include <glog/logging.h>
 #include <string>
@@ -192,6 +192,9 @@ class DBService {
     std::string pass = "123",
     std::string db = "matchmaking_api_db");
 
+    // Destructor marked virtual
+    virtual ~DBService() { }
+
 
     // These functions are mainly for testing
     bool setUpDatabase();     // Setup database if not setup
@@ -250,4 +253,4 @@ class DBService {
     virtual Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);
 };
 
-#endif  // MAIN_DB_SERVICE_H_
+#endif  // BAZEL_COMS_4156_PROJECT_MAIN_DB_SERVICE_H_ _

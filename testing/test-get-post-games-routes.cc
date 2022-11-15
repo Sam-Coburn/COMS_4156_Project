@@ -39,9 +39,9 @@ class MockDBService : public DBService {
 };
 
 TEST(AuthRouteTestFixture, Post_SignUp_Tests) {
-  MockDBService DB;
-  APIEndPoints api = APIEndPoints(&DB);
+  APIEndPoints api = APIEndPoints();
 
+  MockDBService DB;
   Developer valid_developer;
   valid_developer.developer_email = "some_email@gmail.com";
   valid_developer.developer_password = "some_password";
@@ -60,50 +60,51 @@ TEST(AuthRouteTestFixture, Post_SignUp_Tests) {
   // Empty Body
   body = {};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing both parameters)
   body = {{"some_random_parameter", "something"}};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing developer_password)
   body = {{"developer_email", "some_email@gmail.com"}};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Invalid body (missing developer_email)
   body = {{"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Invalid request body");
 
   // Valid Body
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 200);
   ASSERT_EQ(res.body, "Succesfully signed up");
 
   // Invalid Body (developer already exists)
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}} ;
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 400);
   ASSERT_EQ(res.body, "Developer already exists");
 }
 
 
 TEST(AuthRouteTestFixture, Post_Login_Tests) {
+  APIEndPoints api = APIEndPoints();
+
   MockDBService DB;
-  APIEndPoints api = APIEndPoints(&DB);
   Developer valid_developer;
   valid_developer.is_valid = true;
   valid_developer.developer_email = "some_email@gmail.com";
@@ -126,7 +127,7 @@ TEST(AuthRouteTestFixture, Post_Login_Tests) {
   // Valid SignUp
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 200);
   ASSERT_EQ(res.body, "Succesfully signed up");
 
@@ -175,8 +176,9 @@ TEST(AuthRouteTestFixture, Post_Login_Tests) {
 
 
 TEST(AuthRouteTestFixture, Delete_Login_Tests) {
+  APIEndPoints api = APIEndPoints();
+
   MockDBService DB;
-  APIEndPoints api = APIEndPoints(&DB);
   Developer valid_developer;
   valid_developer.is_valid = true;
   valid_developer.developer_email = "some_email@gmail.com";
@@ -204,7 +206,7 @@ TEST(AuthRouteTestFixture, Delete_Login_Tests) {
   // Valid SignUp
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
-  res = api.postSignUp(req);
+  res = api.postSignUp(req, &DB);
   ASSERT_EQ(res.code, 200);
   ASSERT_EQ(res.body, "Succesfully signed up");
 

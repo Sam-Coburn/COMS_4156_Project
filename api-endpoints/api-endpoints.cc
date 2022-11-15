@@ -33,7 +33,7 @@ std::pair<int, std::string> APIEndPoints::authenticateBadly(const crow::request&
     }
 
     // check credentials
-    Developer d = DB.get_developer(root["developer_email"].asString());
+    Developer d = DB->get_developer(root["developer_email"].asString());
     if (!d.is_valid) {
         return std::make_pair(401, std::string("developer not found."));
     }
@@ -164,7 +164,7 @@ std::pair <int, std::string> APIEndPoints::getGames(const crow::request& req) {
     }
 
     // get games from database
-    games = DB.get_all_games_for_developer(tokenInfo.second);
+    games = DB->get_all_games_for_developer(tokenInfo.second);
     if (games.empty()) {
         return std::make_pair(401, std::string("Error Accessing Games: none found!"));
     }
@@ -285,7 +285,7 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     gmInfo.players_per_team = root["players_per_team"].asInt();
 
     // store game
-    Game_Details addedGame = DB.add_game_details(gmInfo);
+    Game_Details addedGame = DB->add_game_details(gmInfo);
     if (!addedGame.is_valid) {
         return std::make_pair(400, std::string("error adding game."));
     }
@@ -294,7 +294,7 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     return std::make_pair(200, std::to_string(addedGame.game_id));
 }
 
-crow::response APIEndPoints::postSignUp(const crow::request& req, DBService *DB) {
+crow::response APIEndPoints::postSignUp(const crow::request& req) {
     crow::json::rvalue x = crow::json::load(req.body);
     Developer D;
     try {
