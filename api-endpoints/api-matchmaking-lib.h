@@ -20,7 +20,7 @@ class Matchmaking {
     public:
         std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails);
+        std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails, DBService* DB);
 };
 
 #endif

@@ -3,17 +3,16 @@
 
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > Matchmaking::matchmakingBackend(int game_id, std::vector<std::string> player_emails) {
-  DBService DB = DBService();
+std::vector<std::string> > Matchmaking::matchmakingBackend(int game_id, std::vector<std::string> player_emails, DBService* DB) {
   // Step 0: Retrieve Game Details by Game ID
-  Game_Details details = DB.get_game_details(game_id);
+  Game_Details details = DB->get_game_details(game_id);
 
   // Step 1: Compute Holistic Ranking for Each Player using their Metrics
   std::vector<std::tuple<float, std::string> > ranked_players;  // vector to which players and their ranks will be added
 
   // Iterate through each passed player and computer their rank
   for (uint64_t i = 0; i < player_emails.size(); i++) {
-    Player_Game_Ratings player_metrics = DB.get_player_game_rating(player_emails.at(i), game_id);
+    Player_Game_Ratings player_metrics = DB->get_player_game_rating(player_emails.at(i), game_id);
     float rating = (details.game_parameter1_weight) * (player_metrics.game_parameter1_value) +
                    (details.game_parameter2_weight) * (player_metrics.game_parameter2_value) +
                    (details.game_parameter3_weight) * (player_metrics.game_parameter3_value) +
