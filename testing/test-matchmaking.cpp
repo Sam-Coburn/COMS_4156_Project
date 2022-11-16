@@ -3,7 +3,6 @@
 
 #include "main/db-service.h"
 #include "api-endpoints/api-endpoints-lib.h"
-#include "api-endpoints/api-matchmaking-lib.h"
 
 using ::testing::_;
 using ::testing::Return;
@@ -42,13 +41,14 @@ class MockMatchmaking: public Matchmaking {
  public:
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >), matchmakingBackend, (int game_id, std::vector<std::string> player_emails));
+        std::vector<std::string> >), matchmakingBackend, (int game_id, std::vector<std::string> player_emails, DBService* DB));
 };
 
 TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     APIEndPoints api = APIEndPoints();
 
     MockDBService DB;
+    MockMatchmaking M;
     Developer d;
     d.developer_email = "developer_email@gmail.com";
     d.developer_password = "correct_password";
@@ -63,7 +63,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     // Test #1: Empty Request Body
     body = {};
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -74,7 +74,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -85,7 +85,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -96,7 +96,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -108,7 +108,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Credentials Given.\n");
 }
@@ -117,6 +117,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     APIEndPoints api = APIEndPoints();
 
     MockDBService DB;
+    MockMatchmaking M;
     Developer d;
     d.developer_email = "developer_email@gmail.com";
     d.developer_password = "correct_password";
@@ -132,8 +133,29 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     player_names.push_back("player_3@gmail.com");
     player_names.push_back("player_4@gmail.com");
 
-    Player p;
-    p.is_valid = false;
+    Player p_good;
+    p_good.is_valid = true;
+
+    Player p_bad;
+    p_bad.is_valid = false;
+
+    Game_Details chess;
+    chess.game_parameter1_weight = 1;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.players_per_team = 1;
+    chess.teams_per_match = 2;
+
+    Player_Game_Ratings player_1;
+    player_1.game_parameter1_value = 2000;
+    player_1.game_parameter2_value = 0;
+    player_1.game_parameter3_value = 0;
+    player_1.game_parameter4_value = 0;
+
+    std::tuple<
+    std::vector<std::vector<std::vector<std::string> > >,
+    std::vector<std::string> > matchmaking_result;
 
     EXPECT_CALL(DB, get_developer(d.developer_email))
     .WillRepeatedly(Return(d));
@@ -141,8 +163,19 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     EXPECT_CALL(DB, get_all_games_for_developer(d.developer_email))
     .WillRepeatedly(Return(good_developer_games));
 
-    //EXPECT_CALL(DB, get_player("player_5@gmail.com"))
-    //.WillOnce(Return(p));
+    EXPECT_CALL(DB, get_player(_))
+    .WillOnce(Return(p_good))
+    .WillOnce(Return(p_bad))
+    .WillRepeatedly(Return(p_good));
+
+    //EXPECT_CALL(M, matchmakingBackend(_, _, _))
+    //.WillOnce(Return(matchmaking_result));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _))
+    .WillRepeatedly(Return(player_1));
+
+    EXPECT_CALL(DB, get_game_details(_))
+    .WillRepeatedly(Return(chess));
 
     crow::request req;
     crow::response res;
@@ -154,7 +187,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
         {"game_id", "1"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -166,24 +199,55 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Given Game ID does not belong to the Given Developer.\n");
 
     // Test #10: Passed a non-existent player email
-    /*
     body = {
         {"developer_email", "developer_email@gmail.com"},
         {"developer_password", "correct_password"},
         {"game_id", "1"},
-        {"player_emails", crow::json::list({"player_1@gmail.com", "player_5@gmail.com"})}
     };
-    std::vector<std::string> player_emails;
+    std::vector<std::string> player_emails_1;
+    player_emails_1.push_back("player_1@gmail.com");
+    player_emails_1.push_back("player_5@gmail.com");
+    body["player_emails"] = player_emails_1;
     req.body = body.dump();
-    res =  api.matchmake(req, &DB);
+    res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "The following player IDs were not found: player_5@gmail.com\n");
-    */
+
+    // Test #11: Passed a repeat player email
+    body = {
+        {"developer_email", "developer_email@gmail.com"},
+        {"developer_password", "correct_password"},
+        {"game_id", "1"},
+    };
+    std::vector<std::string> player_emails_2;
+    player_emails_2.push_back("player_1@gmail.com");
+    player_emails_2.push_back("player_1@gmail.com");
+    player_emails_2.push_back("player_1@gmail.com");
+    player_emails_2.push_back("player_2@gmail.com");
+    body["player_emails"] = player_emails_2;
+    req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "The following player IDs were found multiple times in the input: player_1@gmail.com\n");
+
+    // Test #12: Normal Matchmaking Request Body
+    body = {
+        {"developer_email", "developer_email@gmail.com"},
+        {"developer_password", "correct_password"},
+        {"game_id", "1"},
+    };
+    std::vector<std::string> player_emails_3;
+    player_emails_3.push_back("player_1@gmail.com");
+    player_emails_3.push_back("player_2@gmail.com");
+    body["player_emails"] = player_emails_3;
+    req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 200);
 }
 
 TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set1) {

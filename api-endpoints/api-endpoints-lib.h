@@ -15,6 +15,7 @@
 #include <utility>              // std::pair, std::make_pair
 #include "crow/crow_all.h"
 #include "main/db-service.h"
+#include "api-endpoints/api-matchmaking-lib.h"
 
 // cpplint --linelength=100 ./main/* ./testing/*
 
@@ -72,7 +73,7 @@ std::pair <int, std::string> postGame(const crow::request& req);
 crow::response postSignUp(const crow::request& req, DBService *DB);
 crow::response postLogin(const crow::request& req, DBService *DB);
 crow::response deleteLogin(const crow::request& req, DBService *DB);
-crow::response matchmake(const crow::request& req, DBService *DB);
+crow::response matchmake(const crow::request& req, DBService *DB, Matchmaking *M);
 
 };
 #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_

@@ -1,6 +1,5 @@
 // Copyright [2022] RaisingCanesFanClub
 #include "api-endpoints/api-endpoints-lib.h"
-#include "api-endpoints/api-matchmaking-lib.h"
 
 // helper function
 // Checks whether supplied username and password are valid; insecure!
@@ -277,7 +276,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req, DBService* DB
     }
 }
 
-crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB) {
+crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, Matchmaking *M) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
     std::string developer_email;
@@ -362,11 +361,9 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB) 
         return crow::response(400, error_message);
       }
 
-      Matchmaking m;
-
       std::tuple<
       std::vector<std::vector<std::vector<std::string> > >,
-      std::vector<std::string> > result = m.matchmakingBackend(game_id, player_emails, DB);
+      std::vector<std::string> > result = M->matchmakingBackend(game_id, player_emails, DB);
 
       std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
       std::vector<std::string> overflow = std::get<1>(result);
