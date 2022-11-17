@@ -177,7 +177,7 @@ Once cpplint is installed run:
        │   └── test.ccp
        └── WORKSPACE
 
-## Install Bazel and jsoncpp Library
+## Install Bazel and other libraries
 **Platform: Debian 11**
 Reference instructions: https://bazel.build/install/ubuntu
 ```
@@ -189,8 +189,13 @@ Reference instructions: https://bazel.build/install/ubuntu
 	sudo apt update && sudo apt install bazel
 	sudo apt update && sudo apt full-upgrade
 ```
+
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
+
+Install Auth Libraries
+```sudo apt-get install libcrypto```
+```sudo apt-get install libssl-dev```
 
 **Platform: Ubuntu 22.04**
 
@@ -202,6 +207,10 @@ https://bazel.build/install
 
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
+
+Install Auth Libraries
+```sudo apt-get install libcrypto```
+```sudo apt-get install libssl-dev```
 
 ## Install MySql + Set Up Database
 **Platform: Debian 11**
