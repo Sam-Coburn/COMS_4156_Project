@@ -191,10 +191,10 @@ Reference instructions: https://bazel.build/install/ubuntu
 ```
 
 **Platform: Ubuntu 22.04**
-
+```
     sudo apt install npm
     sudo npm install -g @bazel/bazelisk
-
+```
 General Install Instructions:
 https://bazel.build/install
 
@@ -239,12 +239,16 @@ https://bazel.build/install
   ```sudo apt-get install libjsoncpp-dev```
 
 7. Install Auth Libraries
-  ```
+  ```  
   sudo apt-get install libssl-dev
   sudo apt-get install libcrypto
   ```
+8. Install cpplint StyleChecker
+```sudo apt -y install cpplint```
+9. Install glog for logging
+```sudo apt install libgoogle-glog-dev```
 
-8. Restart the VM
+10. Restart the VM
 
 **Platform: Ubuntu 22.04**
 Instructions based on this tutorial: https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04
@@ -287,9 +291,13 @@ exit
   ```sudo apt-get install libjsoncpp-dev```
 
 7. Install Auth Libraries
+  ```  sudo apt-get install libssl-dev
+       sudo apt-get install libcrypto
   ```
-  sudo apt-get install libssl-dev
-  ```
+8. Install cpplint StyleChecker
+```sudo apt -y install cpplint```
+9. Install glog for logging
+```sudo apt install libgoogle-glog-dev```
 
 ## Example Run of Project
 Navigate to Project Directory\
