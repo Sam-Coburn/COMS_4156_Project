@@ -6,7 +6,6 @@
 #include <glog/logging.h>
 #include <string>
 #include <iostream>
-#include "bcrypt/BCrypt.hpp"
 
 
 /* 
