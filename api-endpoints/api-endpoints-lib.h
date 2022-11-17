@@ -3,6 +3,7 @@
 #ifndef API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 #define API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 
+#include <glog/logging.h>
 #include <jsoncpp/json/json.h>  // JsonCpp header file
 #include <cmath>
 #include <cstdlib>              // EXIT_FAILURE
@@ -21,8 +22,8 @@
 
 class APIEndPoints {
  private:
-DBService DB;  // a DB service to use for api calls
-
+DBService* DB;  // a DB service to use for api calls
+bool onHeap;    // whether the DB service object is allocated on heap
 // Checks whether supplied username and password are valid
 // helper for all API calls that require authentication before proceeding
 std::pair<int, std::string> authenticateBadly(const crow::request& req);
@@ -33,7 +34,9 @@ std::pair<int, std::string> authenticateBadly(const crow::request& req);
 std::pair<int, std::string> authenticateToken(const crow::request& req);
 
  public:
-APIEndPoints() : DB(DBService()) {};  // default constructor
+APIEndPoints() : DB(new DBService()), onHeap(true) {}  // default constructor
+APIEndPoints(DBService* db, bool dbOnHeap = false) : DB(db), onHeap(dbOnHeap) {}
+~APIEndPoints() {if (onHeap) { delete DB; }}
 
 // All API Endpoints
 // Take in a crow request and return a pair of (int, string)
@@ -70,9 +73,9 @@ std::pair <int, std::string> getGames(const crow::request& req);
 // Category [String] OPTIONAL
 std::pair <int, std::string> postGame(const crow::request& req);
 
-crow::response postSignUp(const crow::request& req, DBService *DB);
-crow::response postLogin(const crow::request& req, DBService *DB);
-crow::response deleteLogin(const crow::request& req, DBService *DB);
+crow::response postSignUp(const crow::request& req);
+crow::response postLogin(const crow::request& req);
+crow::response deleteLogin(const crow::request& req);
 crow::response matchmake(const crow::request& req, DBService *DB, Matchmaking *M);
 
 };
