@@ -177,7 +177,7 @@ Once cpplint is installed run:
        │   └── test.ccp
        └── WORKSPACE
 
-## Install Bazel and other libraries
+## Install Bazel
 **Platform: Debian 11**
 Reference instructions: https://bazel.build/install/ubuntu
 ```
@@ -190,12 +190,6 @@ Reference instructions: https://bazel.build/install/ubuntu
 	sudo apt update && sudo apt full-upgrade
 ```
 
-Install Jsconcpp:
-```sudo apt-get install libjsoncpp-dev```
-
-Install Auth Libraries
-```sudo apt-get install libssl-dev```
-
 **Platform: Ubuntu 22.04**
 
     sudo apt install npm
@@ -203,13 +197,6 @@ Install Auth Libraries
 
 General Install Instructions:
 https://bazel.build/install
-
-Install Jsconcpp:
-```sudo apt-get install libjsoncpp-dev```
-
-Install Auth Libraries
-```sudo apt-get install libssl-dev```
-```sudo apt-get install libcrypto```
 
 ## Install MySql + Set Up Database
 **Platform: Debian 11**
@@ -248,7 +235,16 @@ Install Auth Libraries
 5. Install Boost for Crow\
 	```sudo apt-get install libboost-all-dev```
 
-6. Restart the VM
+6. Install JSONCPP
+  ```sudo apt-get install libjsoncpp-dev```
+
+7. Install Auth Libraries
+  ```
+  sudo apt-get install libssl-dev
+  sudo apt-get install libcrypto
+  ```
+
+8. Restart the VM
 
 **Platform: Ubuntu 22.04**
 Instructions based on this tutorial: https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04
@@ -279,13 +275,22 @@ exit
 	```sudo apt-get install libboost-all-dev```
 
 5. Set up the DB:
-When prompted for a password, enter "password"
-```
-mysql -u root -p
-source /home/spinel/COMS_4156_Project/matchmaking_api_db_sql.sql;
-SHOW DATABASES;
-exit
-```
+  When prompted for a password, enter "password"
+  ```
+  mysql -u root -p
+  source /home/spinel/COMS_4156_Project/matchmaking_api_db_sql.sql;
+  SHOW DATABASES;
+  exit
+  ```
+
+6. Install JSONCPP
+  ```sudo apt-get install libjsoncpp-dev```
+
+7. Install Auth Libraries
+  ```
+  sudo apt-get install libssl-dev
+  ```
+
 ## Example Run of Project
 Navigate to Project Directory\
 Run:
