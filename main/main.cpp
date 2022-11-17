@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
   CROW_ROUTE(app, "/games").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req){
     APIEndPoints api = APIEndPoints();
-    std::pair<int, std::string> rsp = api.postGame(req);
+    std::pair<int, std::string> rsp = api.postGames(req);
     return crow::response(rsp.first, rsp.second);
   });
 

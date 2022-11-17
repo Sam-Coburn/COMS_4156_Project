@@ -1234,7 +1234,8 @@ Developer DBService::update_developer(std::string developer_email, Developer D) 
       return d;
 
     // Create statement and fill in relevant variables
-    prep_stmt = con->prepareStatement("UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;");
+    prep_stmt = con->prepareStatement(
+      "UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;");
     prep_stmt->setString(1, D.developer_email);
     prep_stmt->setString(2, D.developer_password);
     prep_stmt->setString(3, developer_email);

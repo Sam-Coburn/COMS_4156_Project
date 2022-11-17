@@ -6,7 +6,9 @@ cc_library(
 cc_test(
   name = "test",
   size = "small",
-  srcs = ["test-db.cpp","test-auth-routes.cpp"],
+  srcs = ["test-db.cpp",
+          "test-auth-routes.cpp",
+          "test-get-post-games-routes.cc",],
   deps = [
     "//main:main",
     "//main:db-service",
