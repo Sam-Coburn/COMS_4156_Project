@@ -195,7 +195,6 @@ Install Jsconcpp:
 
 Install Auth Libraries
 ```sudo apt-get install libssl-dev```
-```sudo apt-get install libcrypto```
 
 **Platform: Ubuntu 22.04**
 
