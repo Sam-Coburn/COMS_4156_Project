@@ -177,7 +177,7 @@ Once cpplint is installed run:
        │   └── test.ccp
        └── WORKSPACE
 
-## Install Bazel and jsoncpp Library
+## Install Bazel and jsoncpp and glog Libraries
 **Platform: Debian 11**
 Reference instructions: https://bazel.build/install/ubuntu
 ```
@@ -192,16 +192,22 @@ Reference instructions: https://bazel.build/install/ubuntu
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
 
-**Platform: Ubuntu 22.04**
+Install glog:
+```sudo apt install libgoogle-glog-dev```
 
+**Platform: Ubuntu 22.04**
+```
     sudo apt install npm
     sudo npm install -g @bazel/bazelisk
-
+```
 General Install Instructions:
 https://bazel.build/install
 
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
+
+Install glog:
+```sudo apt install libgoogle-glog-dev```
 
 ## Install MySql + Set Up Database
 **Platform: Debian 11**
