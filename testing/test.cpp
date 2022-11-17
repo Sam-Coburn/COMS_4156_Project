@@ -194,3 +194,9 @@ TEST_F(DBServiceTestFixture, Player_Game_Ratings_Tests) {
   D = DB.remove_developer("fake_developer@dev.com");  // Valid delete
   ASSERT_EQ(D.is_valid, true);
 }
+
+int main(int argc, char **argv) {
+    testing::InitGoogleTest(&argc, argv);
+    google::InitGoogleLogging(argv[0]);
+    return RUN_ALL_TESTS();
+}

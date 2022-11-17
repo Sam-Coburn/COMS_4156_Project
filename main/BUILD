@@ -20,6 +20,7 @@ cc_binary(
         "//crow:crow_all",
         ":db-service",
         "//api-endpoints:api-endpoints",
+        "@com_github_google_glog//:glog",
     ],
     copts = ["-I/usr/include/mysql-cppconn-8/jdbc/"],
     linkopts = ["-lpthread", "-lmysqlcppconn", "-lboost_system"],

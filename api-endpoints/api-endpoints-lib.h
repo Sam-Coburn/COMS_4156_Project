@@ -3,11 +3,15 @@
 #ifndef API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 #define API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 
+#include <glog/logging.h>
 #include <jsoncpp/json/json.h>  // JsonCpp header file
+#include <cmath>
 #include <cstdlib>              // EXIT_FAILURE
 #include <string>
 #include <iostream>
 #include <sstream>              // std::stringstream
+#include <tuple>
+#include <vector>
 #include <fstream>
 #include <utility>              // std::pair, std::make_pair
 #include "crow/crow_all.h"
@@ -17,8 +21,8 @@
 
 class APIEndPoints {
  private:
-    DBService DB;  // a DB service to use for api calls
-
+    DBService* DB;  // a DB service to use for api calls
+    bool onHeap;    // whether the DB service object is allocated on heap
     // Checks whether supplied username and password are valid
     // helper for all API calls that require authentication before proceeding
     std::pair<int, std::string> authenticateBadly(const crow::request& req);
@@ -39,8 +43,14 @@ class APIEndPoints {
     */
     bool valid_user_gameid(std::string email, std::string password, int game_id);
 
+std::tuple<
+std::vector<std::vector<std::vector<std::string> > >,
+std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails);
+
  public:
-    APIEndPoints() : DB(DBService()) {};  // default constructor
+    APIEndPoints() : DB(new DBService()), onHeap(true) {}  // default constructor
+    APIEndPoints(DBService* db, bool dbOnHeap = false) : DB(db), onHeap(dbOnHeap) {}
+    virtual ~APIEndPoints() {if (onHeap) { delete DB; }}
 
     /*
         --------------------------------------------------------------------------------
@@ -82,6 +92,11 @@ class APIEndPoints {
     // Max-players-per-team [Integer] REQUIRED
     // Category [String] OPTIONAL
     std::pair <int, std::string> postGame(const crow::request& req);
+
+    crow::response postSignUp(const crow::request& req);
+    crow::response postLogin(const crow::request& req);
+    crow::response deleteLogin(const crow::request& req);
+    crow::response matchmake(const crow::request& req, DBService DB);
 
     /*
         Get all players for a requested game

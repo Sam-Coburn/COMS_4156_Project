@@ -150,6 +150,13 @@ For example,
 
     bazel test --test_output=all //testing:test
 
+#### Testing with Logging Levels
+We use [glog](https://github.com/google/glog#severity-levels) for our logging output, which has log levels `INFO`, `WARNING`, `ERROR`, and `FATAL`, corresponding to 0, 1, 2, and 3.
+- To run a test and only see error messages or worse, run
+`bazel test //testing:test --test_output=all --test_env=GLOG_minloglevel=1`
+- To run a test and see all logging output, run 
+`bazel test //testing:test --test_output=all --test_env=GLOG_minloglevel=0`
+
 ### Style Checker
 Once cpplint is installed run:
 `cpplint --linelength=120 ./main/* ./api-endpoints/* ./testing/* &> style-check.txt`
@@ -170,7 +177,7 @@ Once cpplint is installed run:
        │   └── test.ccp
        └── WORKSPACE
 
-## Install Bazel and jsoncpp Library
+## Install Bazel and jsoncpp and glog Libraries
 **Platform: Debian 11**
 Reference instructions: https://bazel.build/install/ubuntu
 ```
@@ -185,16 +192,22 @@ Reference instructions: https://bazel.build/install/ubuntu
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
 
-**Platform: Ubuntu 22.04**
+Install glog:
+```sudo apt install libgoogle-glog-dev```
 
+**Platform: Ubuntu 22.04**
+```
     sudo apt install npm
     sudo npm install -g @bazel/bazelisk
-
+```
 General Install Instructions:
 https://bazel.build/install
 
 Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
+
+Install glog:
+```sudo apt install libgoogle-glog-dev```
 
 ## Install MySql + Set Up Database
 **Platform: Debian 11**
