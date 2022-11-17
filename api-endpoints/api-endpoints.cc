@@ -44,21 +44,39 @@ std::pair<int, std::string> APIEndPoints::authenticateBadly(const crow::request&
     return std::make_pair(200, root["developer_email"].asString());
 }
 
-// // helper function
-// // Checks whether supplied token is valid for client
-// // helper for all API calls (other than login)
-// // that require authentication of a token before proceeding
-// std::pair<bool, std::string> APIEndPoints::authenticateToken(const crow::request& req) {
-//     std::string myauth = req.get_header_value("Authorization");
-//     // in future, should find user email from their stored token
-//     if (myauth.compare("test-token") == 0) {
-//         // for now, just return one valid user email
-//         return std::make_pair(true, std::string("techlead@apex.com"));
-//     } else {
-//         // return failure; token not found, or maybe expired!
-//         return std::make_pair(false, std::string(""));
-//     }
-// }
+
+std::pair<bool, std::string> APIEndPoints::authenticateToken(const crow::request& req) {
+  std::string header;
+  std::string token;
+  Developer D;
+
+  // To catch missing token or header
+  try {
+    header = req.get_header_value("Authorization");
+    token = header.substr(7);
+  } catch (...) {
+    return std::make_pair(false, "Invalid Header");
+  }
+  
+  // Validation logic
+  try {
+    std::pair<bool, std::string> decodedToken = auth->decodeAndVerifyJWT(token);
+    if (decodedToken.first == false) {
+      return std::make_pair(false, decodedToken.second);
+    }
+
+    D = DB->get_developer(decodedToken.second);
+    if (!D.is_valid) {
+      // Developer might have been deleted
+      return std::make_pair(false, "Developer does not exist");
+    }
+
+    return std::make_pair(true, D.developer_email);
+  } catch (...) {
+    // Should never be hit unless something really goes wrong
+    return std::make_pair(false, "Internal Server Error");
+  }
+}
 
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
@@ -295,66 +313,72 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
 }
 
 crow::response APIEndPoints::postSignUp(const crow::request& req) {
-    crow::json::rvalue x = crow::json::load(req.body);
-    Developer D;
-    try {
-      D.developer_email = x["developer_email"].s();
-      D.developer_password = x["developer_password"].s();
-      D = DB->add_developer(D);
-      if (!D.is_valid) {
-        return crow::response(400, "Developer already exists");
-      }
-      return crow::response(200, "Succesfully signed up");
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
+  crow::json::rvalue x = crow::json::load(req.body);
+  Developer D;
+  try {
+    D.developer_email = x["developer_email"].s();
+    D.developer_password = x["developer_password"].s();
+    D.developer_password = auth->encryptPassword(D.developer_password);
+
+    D = DB->add_developer(D);
+    if (!D.is_valid) {
+      return crow::response(400, "Developer already exists");
     }
+    return crow::response(200, "Succesfully signed up, please login to get your API key.");
+  } catch(...) {
+    return crow::response(400, "Invalid request body");
+  }
 }
 
 crow::response APIEndPoints::postLogin(const crow::request& req) {
-    crow::json::rvalue x = crow::json::load(req.body);
-    std::string developer_email;
-    std::string developer_password;
-    Developer D;
+  crow::json::rvalue x = crow::json::load(req.body);
+  std::string developer_email;
+  std::string developer_password;
+  Developer D;
 
-    try {
-      developer_email = x["developer_email"].s();
-      developer_password = x["developer_password"].s();
-      D = DB->get_developer(developer_email);
-      if (!D.is_valid || D.developer_password != developer_password) {
-        return crow::response(400, "Invalid credentials");
-      }
-      return crow::response(200, "Succesfully logged in");
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
+  try {
+    developer_email = x["developer_email"].s();
+    developer_password = x["developer_password"].s();
+    D = DB->get_developer(developer_email);
+    if (!D.is_valid) {
+      return crow::response(400, "Developer does not exist");
     }
+
+    if (!auth->validatePassword(developer_password, D.developer_password)) {
+      return crow::response(401, "Invalid credentials");
+    }
+
+    std::string token = auth->createJWT(D.developer_email);
+    return crow::response(200, 
+    "Success please put the following in the authorization header of you requests: Bearer " + token);
+
+  } catch(...) {
+    return crow::response(400, "Invalid request body");
+  }
 }
 
 crow::response APIEndPoints::deleteLogin(const crow::request& req) {
-    crow::json::rvalue x = crow::json::load(req.body);
-    std::string developer_email;
-    std::string developer_password;
-    Developer D;
+  crow::json::rvalue x = crow::json::load(req.body);
+  std::string developer_email;
+  Developer D;
 
-    try {
-      developer_email = x["developer_email"].s();
-      developer_password = x["developer_password"].s();
-      D = DB->get_developer(developer_email);
-      if (!D.is_valid) {
-        return crow::response(400, "User not found");
-      }
-
-      if (D.developer_password != developer_password) {
-        return crow::response(400, "Invalid credentials");
-      }
-
-      D = DB->remove_developer(developer_email);
-      if (!D.is_valid) {
-        return crow::response(500, "Internal Server Error");
-      }
-      return crow::response(200, "Succesfully deleted account");
-    } catch(...) {
-      return crow::response(400, "Invalid request body");
+  try {
+    std::pair<int, std::string> tokenInfo = authenticateToken(req);
+    if (tokenInfo.first == false) {
+      return crow::response(401, tokenInfo.second);;
     }
+
+    std::string developer_email = tokenInfo.second;
+
+    D = DB->remove_developer(developer_email);
+    if (!D.is_valid) {
+      return crow::response(500, "Developer does not exist");
+    }
+
+    return crow::response(200, "Succesfully deleted account");
+  } catch(...) {
+    return crow::response(500, "Internal Server Error");
+  }
 }
 
 crow::response APIEndPoints::matchmake(const crow::request& req, DBService DB) {
