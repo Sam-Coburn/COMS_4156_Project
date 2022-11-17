@@ -15,5 +15,6 @@ cc_library(
         "//main:db-service",
         "@com_github_google_glog//:glog",
         "//authentication:auth-service",
+        "@com_google_googletest//:gtest_main",
     ],
 )
