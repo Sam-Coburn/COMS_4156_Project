@@ -37,5 +37,8 @@ jobs:
         run: bazel build --linkopt="-ljsoncpp" //main:main
       - name: Test Project
         run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
+      - name: Style Checker
+        run: |
+         cpplint ../../cpplint.sh --linelength=120
       
       
