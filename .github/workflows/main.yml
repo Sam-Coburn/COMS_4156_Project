@@ -33,8 +33,8 @@ jobs:
         run: sudo apt install libgoogle-glog-dev
       - name: Install Auth Libraries
         run: |
-          sudo apt-get install libcrypto
           sudo apt-get install libssl-dev
+          sudo apt-get install libcrypto
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
       - name: Test Project

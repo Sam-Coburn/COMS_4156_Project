@@ -194,8 +194,8 @@ Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
 
 Install Auth Libraries
-```sudo apt-get install libcrypto```
 ```sudo apt-get install libssl-dev```
+```sudo apt-get install libcrypto```
 
 **Platform: Ubuntu 22.04**
 
@@ -209,8 +209,8 @@ Install Jsconcpp:
 ```sudo apt-get install libjsoncpp-dev```
 
 Install Auth Libraries
-```sudo apt-get install libcrypto```
 ```sudo apt-get install libssl-dev```
+```sudo apt-get install libcrypto```
 
 ## Install MySql + Set Up Database
 **Platform: Debian 11**
