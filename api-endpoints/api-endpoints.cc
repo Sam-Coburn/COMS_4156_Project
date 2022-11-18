@@ -364,7 +364,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, 
 
       std::tuple<
       std::vector<std::vector<std::vector<std::string> > >,
-      std::vector<std::string> > result = M->matchmakingBackend(game_id, player_emails, DB);
+      std::vector<std::string> > result = M->matchmakingBackendAdvanced(game_id, player_emails, DB);
 
       std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
       std::vector<std::string> overflow = std::get<1>(result);

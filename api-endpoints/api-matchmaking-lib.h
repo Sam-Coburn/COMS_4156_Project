@@ -12,6 +12,7 @@
 #include <tuple>
 #include <vector>
 #include <fstream>
+#include <map>
 #include <utility>              // std::pair, std::make_pair
 #include "crow/crow_all.h"
 #include "main/db-service.h"
@@ -20,7 +21,11 @@ class Matchmaking {
     public:
         std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails, DBService* DB);
+        std::vector<std::string> > matchmakingBackendBasic(int game_id, std::vector<std::string> player_emails, DBService* DB);
+
+        std::tuple<
+        std::vector<std::vector<std::vector<std::string> > >,
+        std::vector<std::string> > matchmakingBackendAdvanced(int game_id, std::vector<std::string> player_emails, DBService* DB);
 };
 
 #endif

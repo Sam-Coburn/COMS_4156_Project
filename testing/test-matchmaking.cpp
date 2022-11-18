@@ -41,7 +41,9 @@ class MockMatchmaking: public Matchmaking {
  public:
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >), matchmakingBackend, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+        std::vector<std::string> >), matchmakingBackendBasic, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+        std::vector<std::vector<std::vector<std::string> > >,
+        std::vector<std::string> >), matchmakingBackendAdvanced, (int game_id, std::vector<std::string> player_emails, DBService* DB));
 };
 
 TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
@@ -168,7 +170,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     .WillOnce(Return(p_bad))
     .WillRepeatedly(Return(p_good));
 
-    //EXPECT_CALL(M, matchmakingBackend(_, _, _))
+    //EXPECT_CALL(M, matchmakingBackendBasic(_, _, _))
     //.WillOnce(Return(matchmaking_result));
 
     EXPECT_CALL(DB, get_player_game_rating(_, _))
@@ -303,7 +305,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set1) {
     std::vector<std::string> player_emails;
     player_emails.push_back("player_1@gmail.com");
     player_emails.push_back("player_2@gmail.com");
-    backend_result = matchmaking.matchmakingBackend(game_id, player_emails, &DB);
+    backend_result = matchmaking.matchmakingBackendBasic(game_id, player_emails, &DB);
 
     std::vector<std::vector<std::vector<std::string> > > test_lobbies = std::get<0>(backend_result);
     for (uint64_t i = 0; i < lobbies.size(); i++)
@@ -350,7 +352,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set2) {
     int game_id = 1;
     std::vector<std::string> player_emails;
     player_emails.push_back("player_1@gmail.com");
-    backend_result = matchmaking.matchmakingBackend(game_id, player_emails, &DB);
+    backend_result = matchmaking.matchmakingBackendBasic(game_id, player_emails, &DB);
 
     std::vector<std::string> test_overflow = std::get<1>(backend_result);
     for (uint64_t i = 0; i < overflow.size(); i++)
@@ -421,7 +423,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set3) {
     player_emails.push_back("player_1@gmail.com");
     player_emails.push_back("player_2@gmail.com");
     player_emails.push_back("player_3@gmail.com");
-    backend_result = matchmaking.matchmakingBackend(game_id, player_emails, &DB);
+    backend_result = matchmaking.matchmakingBackendBasic(game_id, player_emails, &DB);
 
     std::vector<std::vector<std::vector<std::string> > > test_lobbies = std::get<0>(backend_result);
     for (uint64_t i = 0; i < lobbies.size(); i++)
