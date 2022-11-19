@@ -302,9 +302,8 @@ crow::response APIEndPoints::postLogin(const crow::request& req) {
     }
 
     std::string token = auth->createJWT(D.developer_email);
-    return crow::response(200, 
+    return crow::response(200,
     "Success please put the following in the authorization header of you requests: Bearer " + token);
-
   } catch(...) {
     return crow::response(400, "Invalid request body");
   }
@@ -318,7 +317,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   try {
     std::pair<int, std::string> tokenInfo = authenticateToken(req);
     if (tokenInfo.first == false) {
-      return crow::response(401, tokenInfo.second);;
+      return crow::response(401, tokenInfo.second);
     }
 
     std::string developer_email = tokenInfo.second;
