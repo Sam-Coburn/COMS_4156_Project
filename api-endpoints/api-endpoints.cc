@@ -57,7 +57,7 @@ std::pair<bool, std::string> APIEndPoints::authenticateToken(const crow::request
   } catch (...) {
     return std::make_pair(false, "Invalid Header");
   }
-  
+
   // Validation logic
   try {
     std::pair<bool, std::string> decodedToken = auth->decodeAndVerifyJWT(token);
@@ -75,6 +75,39 @@ std::pair<bool, std::string> APIEndPoints::authenticateToken(const crow::request
   } catch (...) {
     // Should never be hit unless something really goes wrong
     return std::make_pair(false, "Internal Server Error");
+  }
+}
+
+std::pair<int, std::string> APIEndPoints::authenticateTokenGetErrorCode(const crow::request& req) {
+  std::string header;
+  std::string token;
+  Developer D;
+
+  // To catch missing token or header
+  try {
+    header = req.get_header_value("Authorization");
+    token = header.substr(7);
+  } catch (...) {
+    return std::make_pair(400, "Invalid Header");
+  }
+
+  // Validation logic
+  try {
+    std::pair<bool, std::string> decodedToken = auth->decodeAndVerifyJWT(token);
+    if (decodedToken.first == false) {
+      return std::make_pair(401, decodedToken.second);
+    }
+
+    D = DB->get_developer(decodedToken.second);
+    if (!D.is_valid) {
+      // Developer might have been deleted
+      return std::make_pair(401, "Developer does not exist");
+    }
+
+    return std::make_pair(200, D.developer_email);
+  } catch (...) {
+    // Should never be hit unless something really goes wrong
+    return std::make_pair(500, "Internal Server Error");
   }
 }
 
@@ -176,7 +209,7 @@ std::pair <int, std::string> APIEndPoints::getGames(const crow::request& req) {
     std::vector<Game_Details> games;
 
     // authentication
-    std::pair<int, std::string> tokenInfo = authenticateBadly(req);
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
     if (tokenInfo.first != 200) {
         return tokenInfo;
     }
@@ -237,7 +270,7 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     Game_Details gmInfo;
 
     // authentication
-    std::pair<int, std::string> tokenInfo = authenticateBadly(req);
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
     if (tokenInfo.first != 200) {
         return tokenInfo;
     }

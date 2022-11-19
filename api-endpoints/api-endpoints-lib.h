@@ -4,6 +4,7 @@
 #define API_ENDPOINTS_API_ENDPOINTS_LIB_H_
 
 #include <glog/logging.h>
+#include <gtest/gtest_prod.h>   // For FRIEND_TEST
 #include <jsoncpp/json/json.h>  // JsonCpp header file
 #include <cmath>
 #include <cstdlib>              // EXIT_FAILURE
@@ -13,7 +14,6 @@
 #include <tuple>
 #include <vector>
 #include <fstream>
-#include <gtest/gtest_prod.h>   // For FRIEND_TEST
 #include <utility>              // std::pair, std::make_pair
 #include "crow/crow_all.h"
 #include "main/db-service.h"
@@ -37,11 +37,17 @@ std::pair<int, std::string> authenticateBadly(const crow::request& req);
 // If the first element of the pair is true then the authentication was
 // successful and the second element of the pair will be the email of
 // the developer just authenticated. If the first element of the pair
-// is false the authentication failed, and the second element of the 
+// is false the authentication failed, and the second element of the
 // pair will be an error message.
+[[deprecated("Replaced by AuthenticateTokenGetErrorCode, which returns helpful error codes on failure")]]
 std::pair<bool, std::string> authenticateToken(const crow::request& req);
 FRIEND_TEST(AuthRouteTest, Authenticate_Token_Test);
 FRIEND_TEST(AuthRouteTestFixture, Authenticate_Token_Test);
+
+// works exactly the same as authenticateToken except
+// - on success 200 is returned as first elt of tuple
+// - failure, specific failure error code is returned as first elt of tuple
+std::pair<int, std::string> authenticateTokenGetErrorCode(const crow::request& req);
 
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
@@ -50,7 +56,8 @@ std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::stri
  public:
 APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor
 APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) : DB(db), auth(auth), onHeap(dbOnHeap) {}
-~APIEndPoints() {if (onHeap) { delete DB; delete auth;}}
+~APIEndPoints() {if (onHeap) { delete DB;
+                               delete auth;}}
 
 // All API Endpoints
 // Take in a crow request and return a pair of (int, string)
