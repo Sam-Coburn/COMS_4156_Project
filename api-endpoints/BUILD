@@ -2,8 +2,8 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
     name = "api-endpoints",
-    srcs = ["api-endpoints.cc"],
-    hdrs = ["api-endpoints-lib.h"],
+    srcs = ["api-endpoints.cc", "api-matchmaking.cc"],
+    hdrs = ["api-endpoints-lib.h", "api-matchmaking-lib.h"],
     visibility = [
         "//main:__pkg__", 
         "//api-endpoints:__pkg__", 

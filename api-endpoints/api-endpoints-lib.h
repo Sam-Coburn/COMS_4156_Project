@@ -18,6 +18,7 @@
 #include "crow/crow_all.h"
 #include "main/db-service.h"
 #include "authentication/auth-service.h"
+#include "api-endpoints/api-matchmaking-lib.h"
 
 // cpplint --linelength=100 ./main/* ./testing/*
 
@@ -48,10 +49,6 @@ FRIEND_TEST(AuthRouteTestFixture, Authenticate_Token_Test);
 // - on success 200 is returned as first elt of tuple
 // - failure, specific failure error code is returned as first elt of tuple
 std::pair<int, std::string> authenticateTokenGetErrorCode(const crow::request& req);
-
-std::tuple<
-std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > matchmakingBackend(int game_id, std::vector<std::string> player_emails);
 
  public:
 APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor
@@ -97,6 +94,7 @@ std::pair <int, std::string> postGame(const crow::request& req);
 crow::response postSignUp(const crow::request& req);
 crow::response postLogin(const crow::request& req);
 crow::response deleteLogin(const crow::request& req);
-crow::response matchmake(const crow::request& req, DBService DB);
+crow::response matchmake(const crow::request& req, DBService *DB, Matchmaking *M);
+
 };
 #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_

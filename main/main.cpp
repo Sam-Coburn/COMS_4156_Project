@@ -378,7 +378,8 @@ int main(int argc, char* argv[]) {
   ([](const crow::request& req) {
     APIEndPoints api = APIEndPoints();
     DBService DB = DBService();
-    return api.matchmake(req, DB);
+    Matchmaking M = Matchmaking();
+    return api.matchmake(req, &DB, &M);
   });
 
   // set the port, set the app to run on multiple threads, and run the app

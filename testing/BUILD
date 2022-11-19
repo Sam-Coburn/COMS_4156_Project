@@ -1,7 +1,7 @@
 cc_test(
   name = "test",
   size = "small",
-  srcs = ["test-db-integration.cpp", "test-auth-routes.cpp", "test-auth.cpp", "test-auth-routes-integration.cpp"],
+  srcs = ["test-db-integration.cpp", "test-auth-routes.cpp", "test-auth.cpp", "test-auth-routes-integration.cpp", "test-matchmaking.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
