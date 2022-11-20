@@ -35,7 +35,5 @@ jobs:
         run: sudo apt-get install libssl-dev
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
-      - name: Unit Tests
-        run: bazel test //testing:test-get-post-games-routes-units --test_output=all --test_env=GLOG_minloglevel=0
       - name: Test Project
         run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test    
