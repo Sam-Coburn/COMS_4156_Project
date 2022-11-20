@@ -407,7 +407,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set2) {
 
     overflow.push_back("player_1@gmail.com");
 
-    // Test: Chess with 1 Player
+    // Test: Basic Chess with 1 Player
     int game_id = 1;
     std::vector<std::string> player_emails;
     player_emails.push_back("player_1@gmail.com");
@@ -476,7 +476,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set3) {
     std::vector<std::string> overflow;
     overflow.push_back("player_1@gmail.com");
 
-    // Test: Chess with 3 Players
+    // Test: Basic Chess with 3 Players
     int game_id = 1;
     std::vector<std::string> player_emails;
     player_emails.push_back("player_1@gmail.com");
@@ -493,4 +493,361 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set3) {
     std::vector<std::string> test_overflow = std::get<1>(backend_result);
     for (uint64_t i = 0; i < overflow.size(); i++)
         ASSERT_EQ(test_overflow.at(i), overflow.at(i));
+}
+
+TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
+    Matchmaking matchmaking;
+
+    MockDBService DB;
+
+    Game_Details chess;
+    chess.game_parameter1_weight = 1;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.players_per_team = 1;
+    chess.teams_per_match = 2;
+
+    Game_Details checkers;
+    checkers.game_parameter1_weight = 1;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.players_per_team = 1;
+    checkers.teams_per_match = 2;
+
+    std::vector<Game_Details> all_games;
+    all_games.push_back(chess);
+    all_games.push_back(checkers);
+
+    Player_Game_Ratings player_1_chess;
+    player_1_chess.game_parameter1_value = 2000;
+    player_1_chess.game_parameter2_value = 0;
+    player_1_chess.game_parameter3_value = 0;
+    player_1_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_2_chess;
+    player_2_chess.game_parameter1_value = 1000;
+    player_2_chess.game_parameter2_value = 0;
+    player_2_chess.game_parameter3_value = 0;
+    player_2_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings null_player;
+    null_player.game_parameter1_value = 0;
+    null_player.game_parameter2_value = 0;
+    null_player.game_parameter3_value = 0;
+    null_player.game_parameter4_value = 0;
+
+    EXPECT_CALL(DB, get_game_details(_))
+    .WillRepeatedly(Return(chess));
+
+    EXPECT_CALL(DB, get_all_games())
+    .WillOnce(Return(all_games));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _))
+    .WillOnce(Return(player_1_chess))
+    .WillOnce(Return(player_2_chess))
+    .WillRepeatedly(Return(null_player));
+
+    std::tuple<
+    std::vector<std::vector<std::vector<std::string> > >,
+    std::vector<std::string> > backend_result;
+
+    std::vector<std::vector<std::vector<std::string> > > lobbies;
+    std::vector<std::vector<std::string> > games;
+    std::vector<std::string> team1;
+    std::vector<std::string> team2;
+
+    team1.push_back("player_1@gmail.com");
+    team2.push_back("player_2@gmail.com");
+    games.push_back(team1);
+    games.push_back(team2);
+    lobbies.push_back(games);
+
+    // Test: Advanced Chess with 2 Players
+    // -- Both only play Chess
+    int game_id = 1;
+    std::vector<std::string> player_emails;
+    player_emails.push_back("player_1@gmail.com");
+    player_emails.push_back("player_2@gmail.com");
+    backend_result = matchmaking.matchmakingBackendAdvanced(game_id, player_emails, &DB);
+
+    std::vector<std::vector<std::vector<std::string> > > test_lobbies = std::get<0>(backend_result);
+    for (uint64_t i = 0; i < lobbies.size(); i++)
+        for (uint64_t j = 0; j < lobbies.at(i).size(); j++)
+            for (uint64_t k = 0; k < lobbies.at(i).at(j).size(); k++)
+                ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
+}
+
+TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
+    Matchmaking matchmaking;
+
+    MockDBService DB;
+
+    Game_Details chess;
+    chess.game_parameter1_weight = 1;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.players_per_team = 1;
+    chess.teams_per_match = 2;
+
+    Game_Details checkers;
+    checkers.game_parameter1_weight = 1;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.players_per_team = 1;
+    checkers.teams_per_match = 2;
+
+    std::vector<Game_Details> all_games;
+    all_games.push_back(chess);
+    all_games.push_back(checkers);
+
+    Player_Game_Ratings player_1_chess;
+    player_1_chess.game_parameter1_value = 2000;
+    player_1_chess.game_parameter2_value = 0;
+    player_1_chess.game_parameter3_value = 0;
+    player_1_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_1_checkers;
+    player_1_checkers.game_parameter1_value = 2000;
+    player_1_checkers.game_parameter2_value = 0;
+    player_1_checkers.game_parameter3_value = 0;
+    player_1_checkers.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_2_chess;
+    player_2_chess.game_parameter1_value = 1000;
+    player_2_chess.game_parameter2_value = 0;
+    player_2_chess.game_parameter3_value = 0;
+    player_2_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings null_player;
+    null_player.game_parameter1_value = 0;
+    null_player.game_parameter2_value = 0;
+    null_player.game_parameter3_value = 0;
+    null_player.game_parameter4_value = 0;
+
+    EXPECT_CALL(DB, get_game_details(_))
+    .WillRepeatedly(Return(chess));
+
+    EXPECT_CALL(DB, get_all_games())
+    .WillOnce(Return(all_games));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _))
+    .WillOnce(Return(player_1_chess))
+    .WillOnce(Return(player_2_chess))
+    .WillOnce(Return(player_1_checkers))
+    .WillOnce(Return(null_player));
+
+    std::tuple<
+    std::vector<std::vector<std::vector<std::string> > >,
+    std::vector<std::string> > backend_result;
+
+    std::vector<std::vector<std::vector<std::string> > > lobbies;
+    std::vector<std::vector<std::string> > games;
+    std::vector<std::string> team1;
+    std::vector<std::string> team2;
+
+    team1.push_back("player_1@gmail.com");
+    team2.push_back("player_2@gmail.com");
+    games.push_back(team1);
+    games.push_back(team2);
+    lobbies.push_back(games);
+
+    // Test: Advanced Chess with 2 Players
+    // -- Player 1 Plays Chess and Checkers
+    int game_id = 1;
+    std::vector<std::string> player_emails;
+    player_emails.push_back("player_1@gmail.com");
+    player_emails.push_back("player_2@gmail.com");
+    backend_result = matchmaking.matchmakingBackendAdvanced(game_id, player_emails, &DB);
+
+    std::vector<std::vector<std::vector<std::string> > > test_lobbies = std::get<0>(backend_result);
+    for (uint64_t i = 0; i < lobbies.size(); i++)
+        for (uint64_t j = 0; j < lobbies.at(i).size(); j++)
+            for (uint64_t k = 0; k < lobbies.at(i).at(j).size(); k++)
+                ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
+}
+
+TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
+    Matchmaking matchmaking;
+
+    MockDBService DB;
+
+    Game_Details chess;
+    chess.game_parameter1_weight = 1;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.players_per_team = 1;
+    chess.teams_per_match = 2;
+
+    Game_Details checkers;
+    checkers.game_parameter1_weight = 1;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.players_per_team = 1;
+    checkers.teams_per_match = 2;
+
+    std::vector<Game_Details> all_games;
+    all_games.push_back(chess);
+    all_games.push_back(checkers);
+
+    Player_Game_Ratings player_1_chess;
+    player_1_chess.game_parameter1_value = 2000;
+    player_1_chess.game_parameter2_value = 0;
+    player_1_chess.game_parameter3_value = 0;
+    player_1_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_2_chess;
+    player_2_chess.game_parameter1_value = 1000;
+    player_2_chess.game_parameter2_value = 0;
+    player_2_chess.game_parameter3_value = 0;
+    player_2_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_2_checkers;
+    player_2_checkers.game_parameter1_value = 2000;
+    player_2_checkers.game_parameter2_value = 0;
+    player_2_checkers.game_parameter3_value = 0;
+    player_2_checkers.game_parameter4_value = 0;
+
+    Player_Game_Ratings null_player;
+    null_player.game_parameter1_value = 0;
+    null_player.game_parameter2_value = 0;
+    null_player.game_parameter3_value = 0;
+    null_player.game_parameter4_value = 0;
+
+    EXPECT_CALL(DB, get_game_details(_))
+    .WillRepeatedly(Return(chess));
+
+    EXPECT_CALL(DB, get_all_games())
+    .WillOnce(Return(all_games));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _))
+    .WillOnce(Return(player_1_chess))
+    .WillOnce(Return(player_2_chess))
+    .WillOnce(Return(null_player))
+    .WillOnce(Return(player_2_checkers));
+
+    std::tuple<
+    std::vector<std::vector<std::vector<std::string> > >,
+    std::vector<std::string> > backend_result;
+
+    std::vector<std::vector<std::vector<std::string> > > lobbies;
+    std::vector<std::vector<std::string> > games;
+    std::vector<std::string> team1;
+    std::vector<std::string> team2;
+
+    team1.push_back("player_1@gmail.com");
+    team2.push_back("player_2@gmail.com");
+    games.push_back(team1);
+    games.push_back(team2);
+    lobbies.push_back(games);
+
+    // Test: Advanced Chess with 2 Players
+    // -- Player 2 Plays Chess and Checkers, not Player 1
+    int game_id = 1;
+    std::vector<std::string> player_emails;
+    player_emails.push_back("player_1@gmail.com");
+    player_emails.push_back("player_2@gmail.com");
+    backend_result = matchmaking.matchmakingBackendAdvanced(game_id, player_emails, &DB);
+
+    std::vector<std::vector<std::vector<std::string> > > test_lobbies = std::get<0>(backend_result);
+    for (uint64_t i = 0; i < lobbies.size(); i++)
+        for (uint64_t j = 0; j < lobbies.at(i).size(); j++)
+            for (uint64_t k = 0; k < lobbies.at(i).at(j).size(); k++)
+                ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
+}
+
+TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
+    Matchmaking matchmaking;
+
+    MockDBService DB;
+
+    Game_Details chess;
+    chess.game_parameter1_weight = 1;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.game_parameter1_weight = 0;
+    chess.players_per_team = 1;
+    chess.teams_per_match = 2;
+
+    Game_Details checkers;
+    checkers.game_parameter1_weight = 1;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.game_parameter1_weight = 0;
+    checkers.players_per_team = 1;
+    checkers.teams_per_match = 2;
+
+    std::vector<Game_Details> all_games;
+    all_games.push_back(chess);
+    all_games.push_back(checkers);
+
+    Player_Game_Ratings player_1_chess;
+    player_1_chess.game_parameter1_value = 2000;
+    player_1_chess.game_parameter2_value = 0;
+    player_1_chess.game_parameter3_value = 0;
+    player_1_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_1_checkers;
+    player_1_checkers.game_parameter1_value = 500;
+    player_1_checkers.game_parameter2_value = 0;
+    player_1_checkers.game_parameter3_value = 0;
+    player_1_checkers.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_2_chess;
+    player_2_chess.game_parameter1_value = 1000;
+    player_2_chess.game_parameter2_value = 0;
+    player_2_chess.game_parameter3_value = 0;
+    player_2_chess.game_parameter4_value = 0;
+
+    Player_Game_Ratings player_2_checkers;
+    player_2_checkers.game_parameter1_value = 2000;
+    player_2_checkers.game_parameter2_value = 0;
+    player_2_checkers.game_parameter3_value = 0;
+    player_2_checkers.game_parameter4_value = 0;
+
+    EXPECT_CALL(DB, get_game_details(_))
+    .WillRepeatedly(Return(chess));
+
+    EXPECT_CALL(DB, get_all_games())
+    .WillOnce(Return(all_games));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _))
+    .WillOnce(Return(player_1_chess))
+    .WillOnce(Return(player_2_chess))
+    .WillOnce(Return(player_1_checkers))
+    .WillOnce(Return(player_2_checkers));
+
+    std::tuple<
+    std::vector<std::vector<std::vector<std::string> > >,
+    std::vector<std::string> > backend_result;
+
+    std::vector<std::vector<std::vector<std::string> > > lobbies;
+    std::vector<std::vector<std::string> > games;
+    std::vector<std::string> team1;
+    std::vector<std::string> team2;
+
+    team1.push_back("player_1@gmail.com");
+    team2.push_back("player_2@gmail.com");
+    games.push_back(team1);
+    games.push_back(team2);
+    lobbies.push_back(games);
+
+    // Test: Advanced Chess with 2 Players
+    // -- Player 2 Plays Chess and Checkers, not Player 1
+    int game_id = 1;
+    std::vector<std::string> player_emails;
+    player_emails.push_back("player_1@gmail.com");
+    player_emails.push_back("player_2@gmail.com");
+    backend_result = matchmaking.matchmakingBackendAdvanced(game_id, player_emails, &DB);
+
+    std::vector<std::vector<std::vector<std::string> > > test_lobbies = std::get<0>(backend_result);
+    for (uint64_t i = 0; i < lobbies.size(); i++)
+        for (uint64_t j = 0; j < lobbies.at(i).size(); j++)
+            for (uint64_t k = 0; k < lobbies.at(i).at(j).size(); k++)
+                ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
