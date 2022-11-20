@@ -1,4 +1,4 @@
-// "Copyright [year] <Copyright Owner>"
+// Copyright [2022] RaisingCanesFanClub
 
 #ifndef TESTING_MOCKAUTHSERVICE_H_
 #define TESTING_MOCKAUTHSERVICE_H_
@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <utility>
+#include <vector>
 #include <string>
 #include "authentication/auth-service.h"
 

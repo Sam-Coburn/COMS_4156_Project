@@ -1,5 +1,13 @@
 # Matchmaking API
 ## Endpoints
+- `POST /signup`
+    - Description:
+      Adds a developer to the database with the
+      specified credentials
+    - Request Body:
+      - `developer_email:string`
+      - `developer_password:string`
+
 - `POST /login`
     - Description:
       Due to the nature of our authentication this endpoint
@@ -16,21 +24,11 @@
       - `developer_email:string`
       - `developer_password:string`
     
-- `POST /signup`
-    - Description:
-      Adds a developer to the database with the
-      specified credentials
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
-
 - `POST /games`
     - Description:
       Add a game to developer's account
       specified credentials
     - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
       - `name:string`
       - `category:string`
       - `parameters:Array<String>`
@@ -42,17 +40,12 @@
     - Description:
       Retrieve a list of all games assocaited with developer's account
       specified credentials
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
 
 - `POST /matchmake`
     - Description:
       Use the given list of player emails to sort players into game lobbies
       using the given game's parameters.
     - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
       - `game_id:int`
       - `player_emails:vector<string>`
       
@@ -61,27 +54,18 @@
       Returns game details in JSON format. Details include, but are not limited to, game name, players per team, etc.
     - Request Parameters:
       - `game_id:int`
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
  
  - `DELETE /game/<int>`
     - Description:
       Deletes a game (and its details).
     - Request Parameters:
       - `game_id:int`
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
  
   - `GET /games/{game-id}/players`
     - Description:
       Gets a list of players and player details for a game.
     - Request Parameters:
       - `game_id:int`
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
 
   - `POST /game/<int>/players`
     - Description:
@@ -89,8 +73,6 @@
     - Request Parameters:
       - `game_id:int`
     - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
       - `(player_email:<JsonObject>)+`
         where `<JsonObject>` is of the form
         - `game_parameter1_value:int`
@@ -104,9 +86,6 @@
     - Request Parameters:
       - `game_id:int`
       - `player_email:string`
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
 
   - `DELETE /game/<int>/players`
     - Description:
@@ -114,8 +93,6 @@
     - Request Parameters:
       - `game_id:int`
     - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
       - `player_emails:vector<string>`
       
 ## Build + Run
@@ -159,23 +136,7 @@ We use [glog](https://github.com/google/glog#severity-levels) for our logging ou
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint --linelength=120 ./main/* ./api-endpoints/* ./testing/* &> style-check.txt`
-
-## Repo Structure
-
-    └── COMS_4156_Project
-       ├── crow
-       │   ├── BUILD
-       │   └── crow-all.h
-       ├── main
-       │   ├── BUILD
-       │   ├── db-service.cpp
-       │   ├── db-service.h
-       │   └── main.cpp
-       ├── testing
-       │   ├── BUILD
-       │   └── test.ccp
-       └── WORKSPACE
+`cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/* &> style-check.txt`
 
 ## Install Bazel
 **Platform: Debian 11**
@@ -231,24 +192,7 @@ https://bazel.build/install
 4. Install C++ Connector for MySQL
 
 	```sudo apt install libmysqlcppconn-dev```
-
-5. Install Boost for Crow\
-	```sudo apt-get install libboost-all-dev```
-
-6. Install JSONCPP
-  ```sudo apt-get install libjsoncpp-dev```
-
-7. Install Auth Libraries
-  ```  
-  sudo apt-get install libssl-dev
-  sudo apt-get install libcrypto
-  ```
-8. Install cpplint StyleChecker
-```sudo apt -y install cpplint```
-9. Install glog for logging
-```sudo apt install libgoogle-glog-dev```
-
-10. Restart the VM
+5. Restart the VM
 
 **Platform: Ubuntu 22.04**
 Instructions based on this tutorial: https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04
@@ -286,26 +230,58 @@ exit
   SHOW DATABASES;
   exit
   ```
+## Install Remaining Dependencies + Dev Tools
+**Platform: Debian 11**
+1. Install Boost for Crow\
+	```sudo apt-get install libboost-all-dev```
 
-6. Install JSONCPP
+2. Install JSONCPP
   ```sudo apt-get install libjsoncpp-dev```
 
-7. Install Auth Libraries
+3. Install Auth Libraries
+  ```  
+  sudo apt-get install libssl-dev
+  ```
+4. Install glog for logging
+```sudo apt install libgoogle-glog-dev```
+5. Install cpplint StyleChecker
+```
+sudo apt install -y python3-pip
+pip3 install cpplint
+```
+6. Install flawchecker security checker
+```pip install flawfinder```
+7. Install cppcheck static analysis checker
+```sudo apt-get -y install cppcheck```
+8. Restart the VM
+
+**Platform: Ubuntu 22.04**
+1. Install JSONCPP
+  ```sudo apt-get install libjsoncpp-dev```
+
+2. Install Auth Libraries
   ```  sudo apt-get install libssl-dev
        sudo apt-get install libcrypto
   ```
-8. Install cpplint StyleChecker
-```sudo apt -y install cpplint```
-9. Install glog for logging
+3. Install glog for logging
 ```sudo apt install libgoogle-glog-dev```
+4. Install cpplint StyleChecker
+```
+sudo apt install -y python3-pip
+pip3 install cpplint
+```
+5. Install flawchecker security checker
+```pip install flawfinder```
+6. Install cppcheck static analysis checker
+```sudo apt-get -y install cppcheck```
 
 ## Example Run of Project
-Navigate to Project Directory\
+Navigate to Project Directory
 Run:
-
+```
     bazel build //main:main
     bazel-bin/main/main
-
+```
 
 When you start the project you should see something like the following:
 ```

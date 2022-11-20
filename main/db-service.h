@@ -1,7 +1,7 @@
 // Copyright [2022] <Copyright Owner>"
 
-#ifndef BAZEL_COMS_4156_PROJECT_MAIN_DB_SERVICE_H_
-#define BAZEL_COMS_4156_PROJECT_MAIN_DB_SERVICE_H_
+#ifndef MAIN_DB_SERVICE_H_
+#define MAIN_DB_SERVICE_H_
 
 #include <glog/logging.h>
 #include <string>
@@ -253,4 +253,4 @@ class DBService {
     virtual Player_Game_Ratings update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR);
 };
 
-#endif  // BAZEL_COMS_4156_PROJECT_MAIN_DB_SERVICE_H_ _
+#endif  // MAIN_DB_SERVICE_H_
