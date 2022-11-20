@@ -8,6 +8,20 @@ on:
     branches: [main]
 
 jobs:
+   try-to-be-a-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Bazel
+        uses: ngalaiko/bazel-action/1.2.1@master
+      - name: Install cpplint format checker
+        run: |
+          sudo apt install -y python3-pip
+          pip3 install cpplint
+      - name: Install flawchecker security checker
+        run: pip install flawfinder
+      - name: Install cppcheck static analysis checker
+        run: sudo apt-get -y install cppcheck
    build-and-test:
     runs-on: ubuntu-latest
     steps:
