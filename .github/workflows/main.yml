@@ -16,8 +16,6 @@ jobs:
         uses: ngalaiko/bazel-action/1.2.1@master
       - name: Install cpplint
         run: |
-          sudo apt update
-          sudo apt -y upgrade
           sudo apt install -y python3-pip
           pip3 install cpplint
         # run: sudo apt -y install cpplint
