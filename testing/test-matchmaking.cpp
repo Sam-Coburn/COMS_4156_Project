@@ -42,6 +42,7 @@ class MockMatchmaking: public Matchmaking {
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
         std::vector<std::string> >), matchmakingBackendBasic, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+  MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
         std::vector<std::string> >), matchmakingBackendAdvanced, (int game_id, std::vector<std::string> player_emails, DBService* DB));
 };
@@ -51,28 +52,38 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
 
     MockDBService DB;
     MockMatchmaking M;
-    Developer d;
-    d.developer_email = "developer_email@gmail.com";
-    d.developer_password = "correct_password";
-
-    EXPECT_CALL(DB, get_developer(d.developer_email))
-    .WillRepeatedly(Return(d));
 
     crow::request req;
     crow::response res;
     crow::json::wvalue body;
 
-    // Test #1: Empty Request Body
+    // Login for Token
+    body = {
+        {"developer_email", "totally_new_dev"},
+        {"developer_password", "passwordo"}
+    };
+    req.body = body.dump();
+    res = api.postSignUp(req);
+    ASSERT_EQ(res.code, 200);
+
+    body = {
+        {"developer_email", "totally_new_dev"},
+        {"developer_password", "passwordo"}
+    };
+    req.body = body.dump();
+    res = api.postLogin(req);
+    ASSERT_EQ(res.code, 200);
+    std::string token = res.body.substr(res.body.find(":") + 2);
+    req.add_header("Authorization", token);
+
+    // Test: Empty Request Body
     body = {};
     req.body = body.dump();
     res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
-    // Test #2: No Developer Email Given
+    // Test: No Developer Email Given
     body = {
-        {"developer_password", "correct_password"},
-        {"game_id", "1"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
@@ -80,10 +91,9 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
-    // Test #3: No Developer Password Given
+    // Test: No Game ID Given
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"game_id", "1"},
+        {"developer_email", "developer@gmail.com"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
@@ -91,28 +101,13 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
-    // Test #4: No Game ID Given
+    // Delete Testing Account
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
-        {"player_emails", "[\"player1@gmail.com\"]"}
+        {"developer_email", "totally_new_dev"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
-    ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Incorrect Request Format.\n");
-
-    // Test #7: Incorrect Password Given
-    body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "incorrect_password"},
-        {"game_id", "1"},
-        {"player_emails", "[\"player1@gmail.com\"]"}
-    };
-    req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
-    ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Incorrect Credentials Given.\n");
+    res = api.deleteLogin(req);
+    ASSERT_EQ(res.code, 200);
 }
 
 TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
@@ -120,9 +115,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     MockDBService DB;
     MockMatchmaking M;
-    Developer d;
-    d.developer_email = "developer_email@gmail.com";
-    d.developer_password = "correct_password";
 
     std::vector<Game_Details> good_developer_games;
     Game_Details g;
@@ -159,19 +151,13 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     std::vector<std::vector<std::vector<std::string> > >,
     std::vector<std::string> > matchmaking_result;
 
-    EXPECT_CALL(DB, get_developer(d.developer_email))
-    .WillRepeatedly(Return(d));
-
-    EXPECT_CALL(DB, get_all_games_for_developer(d.developer_email))
+    EXPECT_CALL(DB, get_all_games_for_developer(_))
     .WillRepeatedly(Return(good_developer_games));
 
     EXPECT_CALL(DB, get_player(_))
     .WillOnce(Return(p_good))
     .WillOnce(Return(p_bad))
     .WillRepeatedly(Return(p_good));
-
-    //EXPECT_CALL(M, matchmakingBackendBasic(_, _, _))
-    //.WillOnce(Return(matchmaking_result));
 
     EXPECT_CALL(DB, get_player_game_rating(_, _))
     .WillRepeatedly(Return(player_1));
@@ -182,10 +168,29 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     crow::request req;
     crow::response res;
     crow::json::wvalue body;
-    // Test #8: No Player Emails Given
+
+    // Login for Token
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
+        {"developer_email", "totally_new_dev"},
+        {"developer_password", "passwordo"}
+    };
+    req.body = body.dump();
+    res = api.postSignUp(req);
+    ASSERT_EQ(res.code, 200);
+
+    body = {
+        {"developer_email", "totally_new_dev"},
+        {"developer_password", "passwordo"}
+    };
+    req.body = body.dump();
+    res = api.postLogin(req);
+    ASSERT_EQ(res.code, 200);
+    std::string token = res.body.substr(res.body.find(":") + 2);
+    req.add_header("Authorization", token);
+
+    // Test: No Player Emails Given
+    body = {
+        {"developer_email", "developer@gmail.com"},
         {"game_id", "1"}
     };
     req.body = body.dump();
@@ -193,10 +198,9 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
-    // Test #9: Given Game ID does not Belong to Developer
+    // Test: Given Game ID does not Belong to Developer
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
+        {"developer_email", "developer@gmail.com"},
         {"game_id", "-1"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
@@ -205,11 +209,10 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Given Game ID does not belong to the Given Developer.\n");
 
-    // Test #10: Passed a non-existent player email
+    // Test: Passed a non-existent player email
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
-        {"game_id", "1"},
+        {"developer_email", "developer@gmail.com"},
+        {"game_id", "1"}
     };
     std::vector<std::string> player_emails_1;
     player_emails_1.push_back("player_1@gmail.com");
@@ -220,11 +223,10 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "The following player IDs were not found: player_5@gmail.com\n");
 
-    // Test #11: Passed a repeat player email
+    // Test: Passed a repeat player email
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
-        {"game_id", "1"},
+        {"developer_email", "developer@gmail.com"},
+        {"game_id", "1"}
     };
     std::vector<std::string> player_emails_2;
     player_emails_2.push_back("player_1@gmail.com");
@@ -239,9 +241,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test #12: Normal Matchmaking Request Body
     body = {
-        {"developer_email", "developer_email@gmail.com"},
-        {"developer_password", "correct_password"},
-        {"game_id", "1"},
+        {"developer_email", "developer@gmail.com"},
+        {"game_id", "1"}
     };
     std::vector<std::string> player_emails_3;
     player_emails_3.push_back("player_1@gmail.com");
@@ -249,6 +250,14 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     body["player_emails"] = player_emails_3;
     req.body = body.dump();
     res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 200);
+
+    // Delete Testing Account
+    body = {
+        {"developer_email", "totally_new_dev"}
+    };
+    req.body = body.dump();
+    res = api.deleteLogin(req);
     ASSERT_EQ(res.code, 200);
 }
 
