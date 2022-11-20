@@ -55,7 +55,7 @@ class MockMatchmaking: public Matchmaking {
         std::vector<std::string> >), matchmakingBackendAdvanced, (int game_id, std::vector<std::string> player_emails, DBService* DB));
 };
 
-TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
+TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set1) {
     MockDBService DB;
     MockAuthService auth;
     MockMatchmaking M;
@@ -85,23 +85,12 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     // Test: Empty Request Body
     body = {};
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
-    ASSERT_EQ(res.code, 400);
-
-    // Test: No Developer Email Given
-    body = {
-        {"matchmaking_type", "basic"},
-        {"player_emails", "[\"player1@gmail.com\"]"}
-    };
-    req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
     req.add_header("Authorization", "VALID TOKEN");
     res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
 
     // Test: No Game ID Given
     body = {
-        {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
@@ -121,7 +110,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     ASSERT_EQ(res.code, 400);
 }
 
-TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
+TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     MockDBService DB;
     MockAuthService auth;
     MockMatchmaking M;
@@ -194,7 +183,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: No Player Emails Given
     body = {
-        {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
@@ -206,7 +194,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Given Game ID does not Belong to Developer
     body = {
-        {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
         {"game_id", "-1"},
         {"player_emails", "[\"player1@gmail.com\"]"}
@@ -219,7 +206,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Passed a non-existent player email
     body = {
-        {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
@@ -235,7 +221,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Passed a repeat player email
     body = {
-        {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
@@ -253,7 +238,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Normal Matchmaking Request Body
     body = {
-        {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
@@ -267,7 +251,7 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     ASSERT_EQ(res.code, 200);
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set1) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set1) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -329,7 +313,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set1) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set2) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set2) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -374,7 +358,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set2) {
         ASSERT_EQ(test_overflow.at(i), overflow.at(i));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set3) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set3) {
     Matchmaking matchmaking;
 
     MockDBService DB;

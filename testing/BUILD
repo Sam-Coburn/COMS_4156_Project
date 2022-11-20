@@ -13,6 +13,7 @@ cc_test(
           "test-auth.cpp",
           "test-auth-routes-integration.cpp",
           "test-matchmaking.cpp",
+          "test-matchmaking-integration.cpp",
           "test-get-post-games-routes.cc"],
   deps = [
     "//main:main",
