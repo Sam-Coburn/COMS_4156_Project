@@ -6,6 +6,13 @@
 using ::testing::_;
 using ::testing::Return;
 
+enum POST_GAME_BODY_KIND { COPY, EMPTY, BAD_JSON, ROOT_NULL, NOT_NAME_VAL_PAIRS,
+                           INVALID_NAME, INVALID_PARAMS, INVALID_PARAMS_ELT,
+                           INVALID_WEIGHTS, INVALID_WEIGHTS_ELT, INVALID_CATEGORY };
+Game_Details static defaultVal();
+std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
+void testAgainstBody(APIEndPoints* api, POST_GAME_BODY_KIND kind,
+                     std::string err, Game_Details gm, int code, bool noBody);
 /*
 std::pair <int, std::string> getGames(const crow::request& req);
 
@@ -180,9 +187,7 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
 }
 */
 
-enum POST_GAME_BODY_KIND { COPY, EMPTY, BAD_JSON, ROOT_NULL, NOT_NAME_VAL_PAIRS,
-                           INVALID_NAME, INVALID_PARAMS, INVALID_PARAMS_ELT,
-                           INVALID_WEIGHTS, INVALID_WEIGHTS_ELT, INVALID_CATEGORY };
+
 Game_Details static defaultVal() {
   Game_Details defaultVal;
   defaultVal.category = "cards";
@@ -363,7 +368,7 @@ std::string genPostGamesBody(POST_GAME_BODY_KIND kind = COPY, Game_Details gm = 
 
 void testAgainstBody(APIEndPoints* api,
                      POST_GAME_BODY_KIND kind,
-                     std::string err,
+                     std::string want,
                      Game_Details gm = defaultVal(),
                      int code = 400,
                      bool noBody = false) {
@@ -373,9 +378,9 @@ void testAgainstBody(APIEndPoints* api,
      res = api->postGames(req);
      ASSERT_EQ(code, res.first);
      if (!noBody) {
-        LOG(INFO) << "body I want: " << err << std::endl;
+        LOG(INFO) << "body I want: " << want << std::endl;
         LOG(INFO) << "body I get: " << res.second << std::endl;
-        ASSERT_EQ(res.second.compare(err), 0);
+        ASSERT_EQ(res.second.compare(want), 0);
      }
 }
 
@@ -383,21 +388,42 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
   MockDBService DB;
   APIEndPoints api = APIEndPoints(&DB);
 
-  std::string err;
+  // input value
+  Game_Details gm;
+
+  // expected output body
+  std::string bdy;
+
+  // mock return values
   Game_Details invalid_game_details;
-  invalid_game_details.is_valid = false;
   Game_Details valid_game_details;
+  Developer valid_developer;
+  Developer invalid_developer;
+
+  // initialize mock return values
   valid_game_details.is_valid = true;
   valid_game_details.game_id = 5;
-  Developer valid_developer;
+  invalid_developer.is_valid = false;
+  invalid_game_details.is_valid = false;
   valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
   valid_developer.developer_password = "some_password";
   valid_developer.is_valid = true;
-  Developer invalid_developer;
-  invalid_developer.is_valid = false;
 
-  // a valid game
-  Game_Details gm;
+  // specify mocked call behavior
+  EXPECT_CALL(DB, get_developer(_))
+  .WillRepeatedly(Return(valid_developer));
+
+  EXPECT_CALL(DB, add_game_details(_)).Times(2)
+  .WillOnce(Return(valid_game_details))
+  .WillOnce(Return(invalid_game_details));
+
+
+
+  // test with valid developer
+
+  // test with invalid developer
+
+  // set input as valid game
   gm.category = "cards";
   gm.game_name = "poker";
   gm.developer_email = "gamedev42@awesomeCardGames.com";
@@ -414,59 +440,52 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
   gm.teams_per_match = 100;
   gm.is_valid = true;
 
-  EXPECT_CALL(DB, get_developer(_))
-  .WillRepeatedly(Return(valid_developer));
-
-  EXPECT_CALL(DB, add_game_details(_)).Times(2)
-  .WillOnce(Return(valid_game_details))
-  .WillOnce(Return(invalid_game_details));
-
   // valid game, so add it.
-  err = "5";
-  testAgainstBody(&api, COPY, err, gm, 200, false);
+  bdy = "5";
+  testAgainstBody(&api, COPY, bdy, gm, 200, false);
 
   // DB error, so can't add it.
-  err = "DB error adding game.";
-  testAgainstBody(&api, COPY, err, gm);
+  bdy = "DB error adding game.";
+  testAgainstBody(&api, COPY, bdy, gm);
 
-  err = "Empty body.";
-  testAgainstBody(&api, EMPTY, err);
+  bdy = "Empty body.";
+  testAgainstBody(&api, EMPTY, bdy);
 
-  err = "Malformed json.";
-  testAgainstBody(&api, BAD_JSON, err);
+  bdy = "Malformed json.";
+  testAgainstBody(&api, BAD_JSON, bdy);
 
-  err = "Root of json is null";
-  testAgainstBody(&api, ROOT_NULL, err);
+  bdy = "Root of json is null";
+  testAgainstBody(&api, ROOT_NULL, bdy);
 
-  err = "Expecting collection of name:value pairs.";
-  testAgainstBody(&api, NOT_NAME_VAL_PAIRS, err);
+  bdy = "Expecting collection of name:value pairs.";
+  testAgainstBody(&api, NOT_NAME_VAL_PAIRS, bdy);
 
-  err = "invalid name field";
-  testAgainstBody(&api, INVALID_NAME, err);
+  bdy = "invalid name field";
+  testAgainstBody(&api, INVALID_NAME, bdy);
 
-  err = "invalid params field";
-  testAgainstBody(&api, INVALID_PARAMS, err);
+  bdy = "invalid params field";
+  testAgainstBody(&api, INVALID_PARAMS, bdy);
 
-  err = "params elt is invalid string";
-  testAgainstBody(&api, INVALID_PARAMS_ELT, err);
+  bdy = "params elt is invalid string";
+  testAgainstBody(&api, INVALID_PARAMS_ELT, bdy);
 
-  err = "invalid weights field";
-  testAgainstBody(&api, INVALID_WEIGHTS, err);
+  bdy = "invalid weights field";
+  testAgainstBody(&api, INVALID_WEIGHTS, bdy);
 
-  err = "weights elt is invalid float";
-  testAgainstBody(&api, INVALID_WEIGHTS_ELT, err);
+  bdy = "weights elt is invalid float";
+  testAgainstBody(&api, INVALID_WEIGHTS_ELT, bdy);
 
-  err = "invalid category";
-  testAgainstBody(&api, INVALID_CATEGORY, err);
+  bdy = "invalid category";
+  testAgainstBody(&api, INVALID_CATEGORY, bdy);
 
-  err = "teams_per_match must be > 0";
+  bdy = "teams_per_match must be > 0";
   gm.teams_per_match = -5;
-  testAgainstBody(&api, COPY, err, gm);
+  testAgainstBody(&api, COPY, bdy, gm);
 
-  err = "players_per_team must be > 0";
+  bdy = "players_per_team must be > 0";
   gm.teams_per_match = 8;
   gm.players_per_team = 0;
-  testAgainstBody(&api, COPY, err, gm);
+  testAgainstBody(&api, COPY, bdy, gm);
 }
 
 TEST(Get_Post_Games_Suite, Get_Games_Tests) {
