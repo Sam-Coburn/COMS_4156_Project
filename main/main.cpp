@@ -242,7 +242,8 @@ int main(int argc, char* argv[]) {
   CROW_ROUTE(app, "/matchmake").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req) {
     DBService DB = DBService();
-    return api.matchmake(req, DB);
+    Matchmaking M = Matchmaking();
+    return api.matchmake(req, &DB, &M);
   });
 
   // set the port, set the app to run on multiple threads, and run the app
