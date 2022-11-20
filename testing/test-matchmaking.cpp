@@ -245,7 +245,21 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "The following player IDs were found multiple times in the input: player_1@gmail.com\n");
 
-    // Test: Normal Matchmaking Request Body
+    // Test: No Matchmaking Type Given
+    body = {
+        {"developer_email", "developer@gmail.com"},
+        {"game_id", "1"},
+    };
+    std::vector<std::string> player_emails_4;
+    player_emails_4.push_back("player_1@gmail.com");
+    player_emails_4.push_back("player_2@gmail.com");
+    body["player_emails"] = player_emails_4;
+    req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Incorrect Request Format.\n");
+
+    // Test: Basic Matchmaking Request Body
     body = {
         {"developer_email", "developer@gmail.com"},
         {"matchmaking_type", "basic"},
@@ -258,6 +272,35 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     req.body = body.dump();
     res =  api.matchmake(req, &DB, &M);
     ASSERT_EQ(res.code, 200);
+
+    // Test: Advanced Matchmaking Request Body
+    body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "advanced"},
+        {"game_id", "1"}
+    };
+    std::vector<std::string> player_emails_5;
+    player_emails_5.push_back("player_1@gmail.com");
+    player_emails_5.push_back("player_2@gmail.com");
+    body["player_emails"] = player_emails_5;
+    req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 200);
+
+    // Test: Given Matchmaking Type Doesn't Exist
+    body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "ligma"},
+        {"game_id", "1"}
+    };
+    std::vector<std::string> player_emails_6;
+    player_emails_6.push_back("player_1@gmail.com");
+    player_emails_6.push_back("player_2@gmail.com");
+    body["player_emails"] = player_emails_6;
+    req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 400);
+    ASSERT_EQ(res.body, "Matchmaking Type Not Found.\n");
 
     // Delete Testing Account
     body = {
