@@ -302,9 +302,8 @@ crow::response APIEndPoints::postLogin(const crow::request& req) {
     }
 
     std::string token = auth->createJWT(D.developer_email);
-    return crow::response(200, 
+    return crow::response(200,
     "Success please put the following in the authorization header of you requests: Bearer " + token);
-
   } catch(...) {
     return crow::response(400, "Invalid request body");
   }
@@ -318,7 +317,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   try {
     std::pair<int, std::string> tokenInfo = authenticateToken(req);
     if (tokenInfo.first == false) {
-      return crow::response(401, tokenInfo.second);;
+      return crow::response(401, tokenInfo.second);
     }
 
     std::string developer_email = tokenInfo.second;
@@ -334,7 +333,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   }
 }
 
-crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, Matchmaking *M) {
+crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
     int game_id;
@@ -346,12 +345,12 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, 
       crow::json::wvalue json_result;
 
       // Authentication
-      std::pair<int, std::string> tokenInfo = authenticateToken(req);
+      std::pair<bool, std::string> tokenInfo = authenticateToken(req);
       if (tokenInfo.first == false) {
         return crow::response(401, tokenInfo.second);;
       }
 
-      developer_email = request_body["developer_email"].s();
+      developer_email = tokenInfo.second;
 
       // Check to ensure that the developer "owns" the given game
       game_id = request_body["game_id"].i();

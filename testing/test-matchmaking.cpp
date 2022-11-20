@@ -7,6 +7,14 @@
 using ::testing::_;
 using ::testing::Return;
 
+class MockAuthService : public AuthService {
+ public:
+  MOCK_METHOD(std::string, encryptPassword, (std::string password), (override));
+  MOCK_METHOD(bool, validatePassword, (std::string password, std::string hash), (override));
+  MOCK_METHOD(std::string, createJWT, (std::string password, int seconds), (override));
+  MOCK_METHOD((std::pair<bool, std::string>), decodeAndVerifyJWT, (std::string token), (override));
+};
+
 class MockDBService : public DBService {
  public:
   MOCK_METHOD(Player, get_player, (std::string player_email), (override));
@@ -48,33 +56,31 @@ class MockMatchmaking: public Matchmaking {
 };
 
 TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
-    APIEndPoints api = APIEndPoints();
-
     MockDBService DB;
+    MockAuthService auth;
     MockMatchmaking M;
+
+    APIEndPoints api = APIEndPoints(&DB, &auth);
 
     crow::request req;
     crow::response res;
     crow::json::wvalue body;
 
-    // Login for Token
-    body = {
-        {"developer_email", "totally_new_dev"},
-        {"developer_password", "passwordo"}
-    };
-    req.body = body.dump();
-    res = api.postSignUp(req);
-    ASSERT_EQ(res.code, 200);
+    Developer valid_developer;
+    valid_developer.developer_email = "some_email@gmail.com";
+    valid_developer.developer_password = "some_password";
+    valid_developer.is_valid = true;
 
-    body = {
-        {"developer_email", "totally_new_dev"},
-        {"developer_password", "passwordo"}
-    };
-    req.body = body.dump();
-    res = api.postLogin(req);
-    ASSERT_EQ(res.code, 200);
-    std::string token = res.body.substr(res.body.find(":") + 2);
-    req.add_header("Authorization", token);
+    std::vector<Game_Details> games;
+
+    EXPECT_CALL(DB, get_developer(_))
+    .WillRepeatedly(Return(valid_developer));
+
+    EXPECT_CALL(DB, get_all_games_for_developer(_))
+    .WillRepeatedly(Return(games));
+
+    EXPECT_CALL(auth, decodeAndVerifyJWT(_))
+    .WillRepeatedly(Return(std::make_pair(true, "some_email@gmail.com")));
 
     // Test: Empty Request Body
     body = {};
@@ -89,8 +95,9 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     };
     req.body = body.dump();
     res =  api.matchmake(req, &DB, &M);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
     // Test: No Game ID Given
     body = {
@@ -99,24 +106,27 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
-    // Delete Testing Account
+    // Test: No Player Emails Given
     body = {
-        {"developer_email", "totally_new_dev"}
+        {"game_id", 1}
     };
     req.body = body.dump();
-    res = api.deleteLogin(req);
-    ASSERT_EQ(res.code, 200);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
+    ASSERT_EQ(res.code, 400);
 }
 
 TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
-    APIEndPoints api = APIEndPoints();
-
     MockDBService DB;
+    MockAuthService auth;
     MockMatchmaking M;
+
+    APIEndPoints api = APIEndPoints(&DB, &auth);
 
     std::vector<Game_Details> good_developer_games;
     Game_Details g;
@@ -149,9 +159,20 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     player_1.game_parameter3_value = 0;
     player_1.game_parameter4_value = 0;
 
+    Developer valid_developer;
+    valid_developer.developer_email = "developer@gmail.com";
+    valid_developer.developer_password = "some_password";
+    valid_developer.is_valid = true;
+
     std::tuple<
     std::vector<std::vector<std::vector<std::string> > >,
     std::vector<std::string> > matchmaking_result;
+    
+    EXPECT_CALL(DB, get_developer(_))
+    .WillRepeatedly(Return(valid_developer));
+
+    EXPECT_CALL(auth, decodeAndVerifyJWT(_))
+    .WillRepeatedly(Return(std::make_pair(true, "developer@gmail.com")));
 
     EXPECT_CALL(DB, get_all_games_for_developer(_))
     .WillRepeatedly(Return(good_developer_games));
@@ -171,25 +192,6 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     crow::response res;
     crow::json::wvalue body;
 
-    // Login for Token
-    body = {
-        {"developer_email", "totally_new_dev"},
-        {"developer_password", "passwordo"}
-    };
-    req.body = body.dump();
-    res = api.postSignUp(req);
-    ASSERT_EQ(res.code, 200);
-
-    body = {
-        {"developer_email", "totally_new_dev"},
-        {"developer_password", "passwordo"}
-    };
-    req.body = body.dump();
-    res = api.postLogin(req);
-    ASSERT_EQ(res.code, 200);
-    std::string token = res.body.substr(res.body.find(":") + 2);
-    req.add_header("Authorization", token);
-
     // Test: No Player Emails Given
     body = {
         {"developer_email", "developer@gmail.com"},
@@ -197,7 +199,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
         {"game_id", "1"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -209,7 +212,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Given Game ID does not belong to the Given Developer.\n");
 
@@ -224,7 +228,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     player_emails_1.push_back("player_5@gmail.com");
     body["player_emails"] = player_emails_1;
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "The following player IDs were not found: player_5@gmail.com\n");
 
@@ -241,7 +246,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     player_emails_2.push_back("player_2@gmail.com");
     body["player_emails"] = player_emails_2;
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "The following player IDs were found multiple times in the input: player_1@gmail.com\n");
 
@@ -270,44 +276,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     player_emails_3.push_back("player_2@gmail.com");
     body["player_emails"] = player_emails_3;
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
-    ASSERT_EQ(res.code, 200);
-
-    // Test: Advanced Matchmaking Request Body
-    body = {
-        {"developer_email", "developer@gmail.com"},
-        {"matchmaking_type", "advanced"},
-        {"game_id", "1"}
-    };
-    std::vector<std::string> player_emails_5;
-    player_emails_5.push_back("player_1@gmail.com");
-    player_emails_5.push_back("player_2@gmail.com");
-    body["player_emails"] = player_emails_5;
-    req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
-    ASSERT_EQ(res.code, 200);
-
-    // Test: Given Matchmaking Type Doesn't Exist
-    body = {
-        {"developer_email", "developer@gmail.com"},
-        {"matchmaking_type", "ligma"},
-        {"game_id", "1"}
-    };
-    std::vector<std::string> player_emails_6;
-    player_emails_6.push_back("player_1@gmail.com");
-    player_emails_6.push_back("player_2@gmail.com");
-    body["player_emails"] = player_emails_6;
-    req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
-    ASSERT_EQ(res.code, 400);
-    ASSERT_EQ(res.body, "Matchmaking Type Not Found.\n");
-
-    // Delete Testing Account
-    body = {
-        {"developer_email", "totally_new_dev"}
-    };
-    req.body = body.dump();
-    res = api.deleteLogin(req);
+    req.add_header("Authorization", "VALID TOKEN");
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 200);
 }
 
