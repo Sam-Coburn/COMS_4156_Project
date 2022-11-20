@@ -1,66 +1,220 @@
 // "Copyright [year] <Copyright Owner>"
 
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "api-endpoints/api-endpoints-lib.h"
-#include "MockDBService.h"
+#include "authentication/auth-service.h"
+#include "testing/MockDBService.h"
+#include "testing/MockAuthService.h"
+#include "main/db-service.h"
 
 using ::testing::_;
 using ::testing::Return;
 
+// what kind of input body for the postGames request do we want to use?
 enum POST_GAME_BODY_KIND { COPY, EMPTY, BAD_JSON, ROOT_NULL, NOT_NAME_VAL_PAIRS,
                            INVALID_NAME, INVALID_PARAMS, INVALID_PARAMS_ELT,
                            INVALID_WEIGHTS, INVALID_WEIGHTS_ELT, INVALID_CATEGORY };
+// return a valid Game_Details struct for poker
 Game_Details static defaultVal();
+// generate input for a PostGames endpoint body, according to the flag POST_GAME_BODY_KIND
 std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
-void testAgainstBody(APIEndPoints* api, POST_GAME_BODY_KIND kind,
-                     std::string err, Game_Details gm, int code, bool noBody);
-/*
-std::pair <int, std::string> getGames(const crow::request& req);
 
-std::pair <int, std::string> postGame(const crow::request& req);
-*/
-
-/*
-{
-    "developer_email":"developer@chess.com",
-    "developer_password":"super_secret_password",
-
-			"category" : "casual",
-			"name" : "poker",
-			"parameters" : 
-			[
-				"rating",
-				"don't need 'em",
-				"nope",
-				""
-			],
-			"players_per_team" : 1,
-			"teams_per_match" : 4,
-			"weights" : 
-			[
-				2.0,
-				1.0,
-				1.0,
-				0.0
-			]
+// test desired response from PostGames vs actual response
+static void testAgainstBody(APIEndPoints* api,
+                     POST_GAME_BODY_KIND kind,
+                     std::string want,
+                     Game_Details gm = defaultVal(),
+                     int code = 400,
+                     bool noBody = false) {
+     std::pair <int, std::string> res;
+     crow::request req;
+     req.add_header("Authorization", "a-very-nice-placeholder-token");
+     req.body = genPostGamesBody(kind, gm);
+     res = api->postGames(req);
+     ASSERT_EQ(code, res.first);
+     if (!noBody) {
+        LOG(INFO) << "body I want: " << want << std::endl;
+        LOG(INFO) << "body I get: " << res.second << std::endl;
+        ASSERT_EQ(res.second.compare(want), 0);
+     }
 }
-*/
 
-/*
-std::pair <int, std::string> APIEndPoints::getGames(const crow::request& req) {
-    std::vector<Game_Details> games;
+// test desired response from getGames vs actual response
+static void testAgainstBodyGet(APIEndPoints* api,
+                               POST_GAME_BODY_KIND kind,
+                               std::string want,
+                               std::string reqBdy,
+                               int code = 400,
+                               bool noBody = false) {
+     std::pair <int, std::string> res;
+     crow::request req;
+     req.body = reqBdy;
+     req.add_header("Authorization", "a-very-nice-placeholder-token");
+     res = api->getGames(req);
+     ASSERT_EQ(code, res.first);
+     if (!noBody) {
+        LOG(INFO) << "body I want: " << want << std::endl;
+        LOG(INFO) << "body I get: " << res.second << std::endl;
+        ASSERT_EQ(res.second.compare(want), 0);
+     }
+}
 
-    // authentication
-    std::pair<int, std::string> tokenInfo = authenticateBadly(req);
-    if (tokenInfo.first != 200) {
-        return tokenInfo;
-    }
+TEST(Get_Post_Games_Suite, Post_Games_Tests) {
+  MockDBService DB;
+  MockAuthService auth;
+  APIEndPoints api = APIEndPoints(&DB, &auth);
 
-    // get games from database
-    games = DB->get_all_games_for_developer(tokenInfo.second);
-    if (games.empty()) {
-        return std::make_pair(401, std::string("Error Accessing Games: none found!"));
-    }
+  // input value
+  Game_Details gm;
 
+  // expected output body
+  std::string bdy;
+
+  // mock return values
+  Game_Details invalid_game_details;
+  Game_Details valid_game_details;
+  Developer valid_developer;
+
+  // initialize mock return values
+  valid_game_details.is_valid = true;
+  valid_game_details.game_id = 5;
+  invalid_game_details.is_valid = false;
+  valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
+  valid_developer.developer_password = "some_password";
+  valid_developer.is_valid = true;
+
+  // specify mocked call behavior
+
+  EXPECT_CALL(auth, decodeAndVerifyJWT(_))
+  .WillOnce(Return(std::make_pair(false, "Invalid token")))
+  .WillRepeatedly(Return(std::make_pair(true, "gamedev42@awesomeCardGames.com")));
+
+  EXPECT_CALL(DB, get_developer(_))
+  .WillRepeatedly(Return(valid_developer));
+
+  EXPECT_CALL(DB, add_game_details(_)).Times(2)
+  .WillOnce(Return(valid_game_details))
+  .WillOnce(Return(invalid_game_details));
+
+  // set input as valid game
+  gm.category = "cards";
+  gm.game_name = "poker";
+  gm.developer_email = "gamedev42@awesomeCardGames.com";
+  gm.game_id = 5;
+  gm.game_parameter1_name = "wins";
+  gm.game_parameter2_name = "losses";
+  gm.game_parameter3_name = "totalMoneyWon";
+  gm.game_parameter4_name = "";
+  gm.game_parameter1_weight = 0.2;
+  gm.game_parameter2_weight = 0.1;
+  gm.game_parameter3_weight = 0.7;
+  gm.game_parameter4_weight = 0;
+  gm.players_per_team = 100;
+  gm.teams_per_match = 100;
+  gm.is_valid = true;
+
+
+  // test with invalid developer
+  bdy = "Invalid token";
+  testAgainstBody(&api, COPY, bdy, gm, 401);
+
+  // rest of the tests are with valid developer
+
+  // valid game, so add it.
+  bdy = "5";
+  testAgainstBody(&api, COPY, bdy, gm, 200, false);
+
+  // DB error, so can't add it.
+  bdy = "DB error adding game.";
+  testAgainstBody(&api, COPY, bdy, gm);
+
+  bdy = "Empty body.";
+  testAgainstBody(&api, EMPTY, bdy);
+
+  bdy = "Malformed json.";
+  testAgainstBody(&api, BAD_JSON, bdy);
+
+  bdy = "Root of json is null";
+  testAgainstBody(&api, ROOT_NULL, bdy);
+
+  bdy = "Expecting collection of name:value pairs.";
+  testAgainstBody(&api, NOT_NAME_VAL_PAIRS, bdy);
+
+  bdy = "invalid name field";
+  testAgainstBody(&api, INVALID_NAME, bdy);
+
+  bdy = "invalid params field";
+  testAgainstBody(&api, INVALID_PARAMS, bdy);
+
+  bdy = "params elt is invalid string";
+  testAgainstBody(&api, INVALID_PARAMS_ELT, bdy);
+
+  bdy = "invalid weights field";
+  testAgainstBody(&api, INVALID_WEIGHTS, bdy);
+
+  bdy = "weights elt is invalid float";
+  testAgainstBody(&api, INVALID_WEIGHTS_ELT, bdy);
+
+  bdy = "invalid category";
+  testAgainstBody(&api, INVALID_CATEGORY, bdy);
+
+  bdy = "teams_per_match must be > 0";
+  gm.teams_per_match = -5;
+  testAgainstBody(&api, COPY, bdy, gm);
+
+  bdy = "players_per_team must be > 0";
+  gm.teams_per_match = 8;
+  gm.players_per_team = 0;
+  testAgainstBody(&api, COPY, bdy, gm);
+}
+
+TEST(Get_Post_Games_Suite, Get_Games_Tests) {
+  MockDBService DB;
+  MockAuthService auth;
+  APIEndPoints api = APIEndPoints(&DB, &auth);
+
+  // input value
+  Game_Details gm;
+
+  // expected output body
+  std::string bdy;
+
+  // mock return values
+  Game_Details invalid_game_details;
+  Game_Details valid_game_details;
+  Developer valid_developer;
+  Developer invalid_developer;
+  std::vector<Game_Details> empty;
+  std::vector<Game_Details> games;
+
+  // initialize mock return values
+  valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
+  valid_developer.is_valid = true;
+  invalid_developer.is_valid = false;
+  empty = std::vector<Game_Details>();
+  games.push_back(Game_Details());
+  games.push_back(Game_Details());
+  games.push_back(Game_Details());
+  games.push_back(Game_Details());
+  std::string names[4] = {"texas holdem", "blackjack", "5-card draw", "omaha"};
+  for (size_t i = 0; i < 4; i++) {
+    games[i].category = "cards";
+    games[i].game_name = names[i];
+    games[i].developer_email = "gamedev42@awesomeCardGames.com";
+    games[i].game_id = 5;
+    games[i].game_parameter1_name = "wins";
+    games[i].game_parameter2_name = "losses";
+    games[i].game_parameter3_name = "totalMoneyWon";
+    games[i].game_parameter4_name = "";
+    games[i].game_parameter1_weight = 0.2;
+    games[i].game_parameter2_weight = 0.1;
+    games[i].game_parameter3_weight = 0.7;
+    games[i].game_parameter4_weight = 0;
+    games[i].players_per_team = 1;
+    games[i].teams_per_match = 8;
+    games[i].is_valid = true;
+  }
     // define a lambda function for outputting a game to a json...
     auto toJson = [](Game_Details gm){
         Json::Value gmInfo;
@@ -79,114 +233,44 @@ std::pair <int, std::string> APIEndPoints::getGames(const crow::request& req) {
         gmInfo["players_per_team"] = gm.players_per_team;
         return gmInfo;
     };
-
     // output games in json array
     Json::Value root;
     root["games"] = Json::Value(Json::arrayValue);
     for (size_t i = 0; i < games.size(); i++) {
         root["games"].append(toJson(games[i]));
     }
-
     // convert json object to stringstream
     std::stringstream ss;
     Json::StreamWriterBuilder builder;
     const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
     writer->write(root, &ss);
 
-    // return response body as string
-    return std::make_pair(200, ss.str());
+  // specify mocked call behavior
+  EXPECT_CALL(auth, decodeAndVerifyJWT(_))
+  .WillOnce(Return(std::make_pair(false, "Invalid token")))
+  .WillRepeatedly(Return(std::make_pair(true, "gamedev42@awesomeCardGames.com")));
+
+  EXPECT_CALL(DB, get_developer(_))
+  .WillOnce(Return(invalid_developer))
+  .WillRepeatedly(Return(valid_developer));
+
+  EXPECT_CALL(DB, get_all_games_for_developer(_))
+  .WillOnce(Return(empty))
+  .WillOnce(Return(games));
+
+  // test with invalid developer
+  bdy = "Invalid token";
+  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+
+  bdy = "Developer does not exist";
+  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+
+  bdy = "Error Accessing Games: none found!";
+  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+
+  bdy = ss.str();  // case success
+  testAgainstBodyGet(&api, COPY, bdy, "", 200);
 }
-
-// Adds a game to client's account
-// Request Parameters:
-// name [String] REQUIRED
-// parameters [Array<String>] REQUIRED
-// weights [Array<Integer>] REQUIRED
-// category [String] OPTIONAL
-// teams_per_match [Integer]
-// players_per_team; [Integer]
-// SOMEDAY, ADD: Min-players-per-team [Integer] ??
-// SOMEDAY, ADD: Max-players-per-team [Integer] ??
-std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
-    Game_Details gmInfo;
-
-    // authentication
-    std::pair<int, std::string> tokenInfo = authenticateBadly(req);
-    if (tokenInfo.first != 200) {
-        return tokenInfo;
-    }
-
-    // parse body into json object
-    std::string errs;
-    Json::Value root;
-    std::string s = req.body;
-    Json::CharReaderBuilder builder;
-    const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-
-    // validity checking
-    LOG(INFO) << "before empty string check" << std::endl;
-    if (req.body.length() == 0) {
-        return std::make_pair(400, std::string("Empty body."));
-    }
-    if (!reader->parse(s.c_str(), s.c_str() + s.length(), &root,
-                       &errs)) {
-      return std::make_pair(400, std::string("Malformed json."));
-    }
-    if (root.isNull()) {
-        return std::make_pair(400, std::string("Root of json is null"));
-    }
-    if (root.type() != Json::objectValue) {
-        return std::make_pair(400, std::string("Expecting collection of name:value pairs."));
-    }
-    if (root["name"].isNull() || !root["name"].isString()) {
-        return std::make_pair(400, std::string("invalid name field"));
-    }
-    if (root["parameters"].isNull() ||
-        !root["parameters"].isArray() ||
-        root["parameters"].size() != 4 ) {
-        return std::make_pair(400, std::string("invalid params field"));
-    }
-    if (root["weights"].isNull() ||
-        !root["weights"].isArray() ||
-        root["weights"].size() != 4) {
-        return std::make_pair(400, std::string("invalid weights field"));
-    }
-    if (root["category"].isNull() || !root["category"].isString()) {
-        return std::make_pair(400, std::string("invalid category"));
-    }
-    if (root["teams_per_match"].isNull() || !root["teams_per_match"].isInt()) {
-        return std::make_pair(400, std::string("invalid teams_per_match field"));
-    }
-    if (root["players_per_team"].isNull() || !root["players_per_team"].isInt()) {
-        return std::make_pair(400, std::string("invalid players_per_team field."));
-    }
-
-    // intialize game
-    gmInfo.developer_email = tokenInfo.second;
-    gmInfo.game_name = root["name"].asString();
-    gmInfo.category = root["category"].asString();
-    gmInfo.game_parameter1_name = root["parameters"][0].asString();
-    gmInfo.game_parameter2_name = root["parameters"][1].asString();
-    gmInfo.game_parameter3_name = root["parameters"][2].asString();
-    gmInfo.game_parameter4_name = root["parameters"][3].asString();
-    gmInfo.game_parameter1_weight = root["weights"][0].asFloat();
-    gmInfo.game_parameter2_weight = root["weights"][1].asFloat();
-    gmInfo.game_parameter3_weight = root["weights"][2].asFloat();
-    gmInfo.game_parameter4_weight = root["weights"][3].asFloat();
-    gmInfo.teams_per_match = root["teams_per_match"].asInt();
-    gmInfo.players_per_team = root["players_per_team"].asInt();
-
-    // store game
-    Game_Details addedGame = DB->add_game_details(gmInfo);
-    if (!addedGame.is_valid) {
-        return std::make_pair(400, std::string("error adding game."));
-    }
-
-    // return response body as string
-    return std::make_pair(200, std::to_string(addedGame.game_id));
-}
-*/
-
 
 Game_Details static defaultVal() {
   Game_Details defaultVal;
@@ -364,133 +448,4 @@ std::string genPostGamesBody(POST_GAME_BODY_KIND kind = COPY, Game_Details gm = 
     }
     writer->write(root, &ss);
     return ss.str();
-}
-
-void testAgainstBody(APIEndPoints* api,
-                     POST_GAME_BODY_KIND kind,
-                     std::string want,
-                     Game_Details gm = defaultVal(),
-                     int code = 400,
-                     bool noBody = false) {
-     std::pair <int, std::string> res;
-     crow::request req;
-     req.body = genPostGamesBody(kind, gm);
-     res = api->postGames(req);
-     ASSERT_EQ(code, res.first);
-     if (!noBody) {
-        LOG(INFO) << "body I want: " << want << std::endl;
-        LOG(INFO) << "body I get: " << res.second << std::endl;
-        ASSERT_EQ(res.second.compare(want), 0);
-     }
-}
-
-TEST(Get_Post_Games_Suite, Post_Games_Tests) {
-  MockDBService DB;
-  APIEndPoints api = APIEndPoints(&DB);
-
-  // input value
-  Game_Details gm;
-
-  // expected output body
-  std::string bdy;
-
-  // mock return values
-  Game_Details invalid_game_details;
-  Game_Details valid_game_details;
-  Developer valid_developer;
-  Developer invalid_developer;
-
-  // initialize mock return values
-  valid_game_details.is_valid = true;
-  valid_game_details.game_id = 5;
-  invalid_developer.is_valid = false;
-  invalid_game_details.is_valid = false;
-  valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
-  valid_developer.developer_password = "some_password";
-  valid_developer.is_valid = true;
-
-  // specify mocked call behavior
-  EXPECT_CALL(DB, get_developer(_))
-  .WillRepeatedly(Return(valid_developer));
-
-  EXPECT_CALL(DB, add_game_details(_)).Times(2)
-  .WillOnce(Return(valid_game_details))
-  .WillOnce(Return(invalid_game_details));
-
-
-
-  // test with valid developer
-
-  // test with invalid developer
-
-  // set input as valid game
-  gm.category = "cards";
-  gm.game_name = "poker";
-  gm.developer_email = "gamedev42@awesomeCardGames.com";
-  gm.game_id = 5;
-  gm.game_parameter1_name = "wins";
-  gm.game_parameter2_name = "losses";
-  gm.game_parameter3_name = "totalMoneyWon";
-  gm.game_parameter4_name = "";
-  gm.game_parameter1_weight = 0.2;
-  gm.game_parameter2_weight = 0.1;
-  gm.game_parameter3_weight = 0.7;
-  gm.game_parameter4_weight = 0;
-  gm.players_per_team = 100;
-  gm.teams_per_match = 100;
-  gm.is_valid = true;
-
-  // valid game, so add it.
-  bdy = "5";
-  testAgainstBody(&api, COPY, bdy, gm, 200, false);
-
-  // DB error, so can't add it.
-  bdy = "DB error adding game.";
-  testAgainstBody(&api, COPY, bdy, gm);
-
-  bdy = "Empty body.";
-  testAgainstBody(&api, EMPTY, bdy);
-
-  bdy = "Malformed json.";
-  testAgainstBody(&api, BAD_JSON, bdy);
-
-  bdy = "Root of json is null";
-  testAgainstBody(&api, ROOT_NULL, bdy);
-
-  bdy = "Expecting collection of name:value pairs.";
-  testAgainstBody(&api, NOT_NAME_VAL_PAIRS, bdy);
-
-  bdy = "invalid name field";
-  testAgainstBody(&api, INVALID_NAME, bdy);
-
-  bdy = "invalid params field";
-  testAgainstBody(&api, INVALID_PARAMS, bdy);
-
-  bdy = "params elt is invalid string";
-  testAgainstBody(&api, INVALID_PARAMS_ELT, bdy);
-
-  bdy = "invalid weights field";
-  testAgainstBody(&api, INVALID_WEIGHTS, bdy);
-
-  bdy = "weights elt is invalid float";
-  testAgainstBody(&api, INVALID_WEIGHTS_ELT, bdy);
-
-  bdy = "invalid category";
-  testAgainstBody(&api, INVALID_CATEGORY, bdy);
-
-  bdy = "teams_per_match must be > 0";
-  gm.teams_per_match = -5;
-  testAgainstBody(&api, COPY, bdy, gm);
-
-  bdy = "players_per_team must be > 0";
-  gm.teams_per_match = 8;
-  gm.players_per_team = 0;
-  testAgainstBody(&api, COPY, bdy, gm);
-}
-
-TEST(Get_Post_Games_Suite, Get_Games_Tests) {
-  MockDBService DB;
-  APIEndPoints api = APIEndPoints(&DB);
-
-  ASSERT_EQ(5, 5);
 }

@@ -1,4 +1,4 @@
-// "Copyright [year] <Copyright Owner>"
+// Copyright [2022] RaisingCanesFanClub
 
 #ifndef TESTING_MOCKAPIENDPOINTS_H_
 #define TESTING_MOCKAPIENDPOINTS_H_
@@ -9,14 +9,11 @@
 #include <string>
 #include "api-endpoints/api-endpoints-lib.h"
 
-// I just realized to be able to mock authentication and use those mocked methods
-// in testing of APIEndPoints methods, authentication would need to be in a different class.
+// maybe some day we will need this
 
 class MockAPIEndPoints : public APIEndPoints {
  public:
-//   MOCK_METHOD(crow::response, postSignUp, (const crow::request& req), (override));
-//   MOCK_METHOD(crow::response, postLogin, (const crow::request& req), (override));
-//   MOCK_METHOD(crow::response, deleteLogin, (const crow::request& req), (override));
+// put the mocked method decls in here
 };
 
 #endif  // TESTING_MOCKAPIENDPOINTS_H_

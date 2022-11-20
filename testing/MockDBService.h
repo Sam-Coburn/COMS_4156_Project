@@ -1,4 +1,4 @@
-// "Copyright [year] <Copyright Owner>"
+// Copyright [2022] RaisingCanesFanClub
 
 #ifndef TESTING_MOCKDBSERVICE_H_
 #define TESTING_MOCKDBSERVICE_H_

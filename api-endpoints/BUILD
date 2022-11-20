@@ -2,8 +2,12 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
     name = "api-endpoints",
-    srcs = ["api-endpoints.cc"],
-    hdrs = ["api-endpoints-lib.h"],
+    srcs = ["api-endpoints.cc", 
+            "api-matchmaking.cc",
+            "api-endpoints-bandaid.cc"],
+    hdrs = ["api-endpoints-lib.h", 
+            "api-matchmaking-lib.h",
+            "api-endpoints-bandaid-lib.h"],
     visibility = [
         "//main:__pkg__", 
         "//api-endpoints:__pkg__", 
@@ -14,5 +18,7 @@ cc_library(
         "//crow:crow_all",
         "//main:db-service",
         "@com_github_google_glog//:glog",
+        "//authentication:auth-service",
+        "@com_google_googletest//:gtest_main",
     ],
 )
