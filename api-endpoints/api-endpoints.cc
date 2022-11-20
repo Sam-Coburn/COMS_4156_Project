@@ -365,33 +365,30 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   }
 }
 
-crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, Matchmaking *M) {
+crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
-    std::string developer_email;
-    std::string developer_password;
     int game_id;
     crow::json::rvalue input_player_emails_rvalue;
     std::vector<crow::json::rvalue> input_player_emails;
+    std::string developer_email;
 
     try {
       crow::json::wvalue json_result;
 
       // Authentication
-      developer_email = request_body["developer_email"].s();
-      developer_password = request_body["developer_password"].s();
+      std::pair<bool, std::string> tokenInfo = authenticateToken(req);
+      if (tokenInfo.first == false) {
+        return crow::response(401, tokenInfo.second);;
+      }
 
-      Developer d = DB->get_developer(developer_email);
+      developer_email = tokenInfo.second;
 
-      // Check given password against password in DB
-      if (d.developer_password != developer_password)
-        return crow::response(400, "Incorrect Credentials Given.\n");
-
+      // Check to ensure that the developer "owns" the given game
       game_id = request_body["game_id"].i();
       std::vector<Game_Details> developer_games = DB->get_all_games_for_developer(developer_email);
       bool game_found = false;
 
-      // Check to ensure that the developer "owns" the given game
       for (uint64_t i = 0; i < developer_games.size(); i++) {
         int g_id = developer_games.at(i).game_id;
         if (game_id == g_id)
@@ -450,9 +447,18 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, 
         return crow::response(400, error_message);
       }
 
+      std::string matchmaking_type = request_body["matchmaking_type"].s();
+
       std::tuple<
       std::vector<std::vector<std::vector<std::string> > >,
-      std::vector<std::string> > result = M->matchmakingBackendAdvanced(game_id, player_emails, DB);
+      std::vector<std::string> > result;
+      
+      if (matchmaking_type == "basic")
+        result = M->matchmakingBackendBasic(game_id, player_emails, DB);
+      else if (matchmaking_type == "advanced")
+        result = M->matchmakingBackendAdvanced(game_id, player_emails, DB);
+      else
+        return crow::response(400, "Matchmaking Type Not Found.\n");
 
       std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
       std::vector<std::string> overflow = std::get<1>(result);

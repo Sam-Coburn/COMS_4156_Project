@@ -12,7 +12,7 @@ class APIEndPointsBandaid : public APIEndPoints {
     bool valid_user(std::string email, std::string password);
     bool valid_user_gameid(std::string email, int game_id);
 
-    crow::response matchmake(const crow::request& req, DBService *DB, Matchmaking *M) override;
+    crow::response matchmake(const crow::request& req, Matchmaking *M) override;
     crow::response getGamePlayers(const crow::request& req, int game_id) override;
     crow::response getGame(const crow::request& req, int game_id) override;
     crow::response postGamePlayers(const crow::request& req, int game_id) override;

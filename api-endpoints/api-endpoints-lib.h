@@ -64,7 +64,7 @@ std::pair <int, std::string> postGames(const crow::request& req);  // Adds a lis
 crow::response postSignUp(const crow::request& req);
 crow::response postLogin(const crow::request& req);
 crow::response deleteLogin(const crow::request& req);
-virtual crow::response matchmake(const crow::request& req, DBService *DB, Matchmaking *M);
+virtual crow::response matchmake(const crow::request& req, Matchmaking *M);
 // Kaylee and Maryam, go ahead and change these method names/signatures
 //  if they don't match what you want for your endpoint methods
 virtual crow::response getGamePlayers(const crow::request& req, int game_id);

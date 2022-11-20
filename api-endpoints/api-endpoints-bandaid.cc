@@ -16,7 +16,7 @@ bool APIEndPointsBandaid::valid_user_gameid(std::string email, int game_id) {
   return gd.is_valid && gd.developer_email == email;
 }
 
-crow::response APIEndPointsBandaid::matchmake(const crow::request& req, DBService *DB, Matchmaking *M) {
+crow::response APIEndPointsBandaid::matchmake(const crow::request& req, Matchmaking *M) {
   // authentication from bandaid
   std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
   if (tokenInfo.first != 200) {
