@@ -39,6 +39,7 @@ jobs:
         run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test  
   test-job-2:
     needs: build-and-test
+    runs-on: ubuntu-latest
     steps:
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
