@@ -8,7 +8,7 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+   build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -36,4 +36,11 @@ jobs:
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
       - name: Test Project
-        run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test      
+        run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test  
+  test-job-2:
+    needs: build-and-test
+    steps:
+      - name: Build Project
+        run: bazel build --linkopt="-ljsoncpp" //main:main
+      - name: Test Project
+        run: bazel test //testing:test-get-post-games-routes-units --test_output=all --test_env=GLOG_minloglevel=0    

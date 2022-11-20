@@ -3,9 +3,8 @@
 #include <gtest/gtest.h>
 #include "main/db-service.h"
 
-class DBServiceTestFixture: public testing::Test
-{
-  public:
+class DBServiceTestFixture: public testing::Test {
+ public:
     static DBService DB;
 
     virtual void SetUp() {
