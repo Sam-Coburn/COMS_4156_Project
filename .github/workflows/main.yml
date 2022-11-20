@@ -26,9 +26,7 @@ jobs:
         run: sudo apt install libgoogle-glog-dev
       - name: Install Auth Libraries
         run: sudo apt-get install libssl-dev
-      - name: Build Project
-        run: bazel build --linkopt="-ljsoncpp" //main:main
-      - name: Install cpplint
+      - name: Install cpplint format checker
         run: |
           sudo apt install -y python3-pip
           pip3 install cpplint
@@ -43,16 +41,22 @@ jobs:
           root-password: 123
       - name: Setup Database
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
-      - name: Unit Tests
+      - name: Build Project
+        run: bazel build --linkopt="-ljsoncpp" //main:main
+      - name: Unit Test - Authentication
         run: | 
-          bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test-auth-routes-units
-          bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test-get-post-games-routes-units
-          bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test-matchmaking-route-units 
-      - name: Integration Tests
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-units
+      - name: Unit Test - Get/Post Games
+        run: | 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-get-post-games-routes-units
+      - name: Unit Test - Matchmaking
+        run: | 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-matchmaking-route-units 
+      - name: Integration Test - Authentication
         run: |
-          bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test-auth-routes-integration
-      - name: Test Project (all the tests at once)
-        run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-integration
+      # - name: Test Project (all the tests at once)
+      #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test 
       - name: run style checker cpplint
         run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
       - name: run static analysis bug finding
