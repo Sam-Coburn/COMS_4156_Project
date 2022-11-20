@@ -8,20 +8,32 @@ on:
     branches: [main]
 
 jobs:
-   try-to-be-a-job:
+   style-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Bazel
-        uses: ngalaiko/bazel-action/1.2.1@master
       - name: Install cpplint format checker
         run: |
           sudo apt install -y python3-pip
           pip3 install cpplint
+      - name: cpplint
+        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
+   static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
       - name: Install flawchecker security checker
         run: pip install flawfinder
       - name: Install cppcheck static analysis checker
         run: sudo apt-get -y install cppcheck
+      - name: flawfinder
+        run: flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*
+      - name: cppcheck
+        run: |
+          cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h
+          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp
+          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h
+          cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
    build-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -40,14 +52,6 @@ jobs:
         run: sudo apt install libgoogle-glog-dev
       - name: Install Auth Libraries
         run: sudo apt-get install libssl-dev
-      - name: Install cpplint format checker
-        run: |
-          sudo apt install -y python3-pip
-          pip3 install cpplint
-      - name: Install flawchecker security checker
-        run: pip install flawfinder
-      - name: Install cppcheck static analysis checker
-        run: sudo apt-get -y install cppcheck
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
         with:
@@ -70,13 +74,4 @@ jobs:
         run: |
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-integration
       # - name: Test Project (all the tests at once)
-      #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test 
-      - name: run style checker cpplint
-        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
-      - name: run static analysis bug finding
-        run: |
-          flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*
-          cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h
-          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp
-          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h
-          cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
+      #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
