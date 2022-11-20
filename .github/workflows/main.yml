@@ -14,26 +14,28 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Bazel
         uses: ngalaiko/bazel-action/1.2.1@master
-      - name: Setup MySQL
-        uses: shogo82148/actions-setup-mysql@v1
-        with:
-          mysql-version: '8.0'
-          root-password: 123
-      - name: Setup Database
-        run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
-      - name: Install C++ Connector to MySQL
-        run: sudo apt install libmysqlcppconn-dev
-      - name: Install Boost for Crow
-        run: sudo apt-get install libboost-all-dev
-      - name: Install Git
-        run: sudo apt-get install git
-      - name: Install JSONCPP
-        run: sudo apt-get install libjsoncpp-dev
-      - name: Install glog
-        run: sudo apt install libgoogle-glog-dev
-      - name: Install Auth Libraries
-        run: sudo apt-get install libssl-dev
-      - name: Build Project
-        run: bazel build --linkopt="-ljsoncpp" //main:main
-      - name: Test Project
-        run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test    
+      - name: Install cpplint
+        run: sudo apt -y install cpplint
+      # - name: Setup MySQL
+      #   uses: shogo82148/actions-setup-mysql@v1
+      #   with:
+      #     mysql-version: '8.0'
+      #     root-password: 123
+      # - name: Setup Database
+      #   run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
+      # - name: Install C++ Connector to MySQL
+      #   run: sudo apt install libmysqlcppconn-dev
+      # - name: Install Boost for Crow
+      #   run: sudo apt-get install libboost-all-dev
+      # - name: Install Git
+      #   run: sudo apt-get install git
+      # - name: Install JSONCPP
+      #   run: sudo apt-get install libjsoncpp-dev
+      # - name: Install glog
+      #   run: sudo apt install libgoogle-glog-dev
+      # - name: Install Auth Libraries
+      #   run: sudo apt-get install libssl-dev
+      # - name: Build Project
+      #   run: bazel build --linkopt="-ljsoncpp" //main:main
+      # - name: Test Project
+      #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test    
