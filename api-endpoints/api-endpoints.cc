@@ -416,9 +416,18 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, 
         return crow::response(400, error_message);
       }
 
+      std::string matchmaking_type = request_body["matchmaking_type"].s();
+
       std::tuple<
       std::vector<std::vector<std::vector<std::string> > >,
-      std::vector<std::string> > result = M->matchmakingBackendBasic(game_id, player_emails, DB);
+      std::vector<std::string> > result;
+      
+      if (matchmaking_type == "basic")
+        result = M->matchmakingBackendBasic(game_id, player_emails, DB);
+      else if (matchmaking_type == "advanced")
+        result = M->matchmakingBackendAdvanced(game_id, player_emails, DB);
+      else
+        return crow::response(400, "Matchmaking Type Not Found.\n");
 
       std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
       std::vector<std::string> overflow = std::get<1>(result);
