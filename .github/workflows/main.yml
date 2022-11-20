@@ -14,19 +14,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Bazel
         uses: ngalaiko/bazel-action/1.2.1@master
-      - name: Install cpplint
-        run: |
-          sudo apt install -y python3-pip
-          pip3 install cpplint
-        # run: sudo apt -y install cpplint
-      # yODELayheeHoooo~~~!
-      # - name: Setup MySQL
-      #   uses: shogo82148/actions-setup-mysql@v1
-      #   with:
-      #     mysql-version: '8.0'
-      #     root-password: 123
-      # - name: Setup Database
-      #   run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
       # - name: Install C++ Connector to MySQL
       #   run: sudo apt install libmysqlcppconn-dev
       # - name: Install Boost for Crow
@@ -41,5 +28,35 @@ jobs:
       #   run: sudo apt-get install libssl-dev
       # - name: Build Project
       #   run: bazel build --linkopt="-ljsoncpp" //main:main
+      - name: Install cpplint
+        run: |
+          sudo apt install -y python3-pip
+          pip3 install cpplint
+      - name: Install flawchecker security checker
+        run: pip install flawfinder
+      - name: Install cppcheck static analysis checker
+        run: sudo apt-get -y install cppcheck
+      - name: run style checker cpplint
+        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
+      - name: run static analysis bug finding
+        run: |
+          flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*
+          cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h
+          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp
+          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h
+          cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
+        
+
+
+        # run: sudo apt -y install cpplint
+      # yODELayheeHoooo~~~!
+      # - name: Setup MySQL
+      #   uses: shogo82148/actions-setup-mysql@v1
+      #   with:
+      #     mysql-version: '8.0'
+      #     root-password: 123
+      # - name: Setup Database
+      #   run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
+
       # - name: Test Project
       #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test    
