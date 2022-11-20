@@ -85,12 +85,24 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set1) {
     // Test: Empty Request Body
     body = {};
     req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
+    ASSERT_EQ(res.code, 400);
+
+    // Test: No Developer Email Given
+    body = {
+        {"matchmaking_type", "basic"},
+        {"player_emails", "[\"player1@gmail.com\"]"}
+    };
+    req.body = body.dump();
+    res =  api.matchmake(req, &DB, &M);
     req.add_header("Authorization", "VALID TOKEN");
     res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
 
     // Test: No Game ID Given
     body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "basic"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
     req.body = body.dump();
@@ -182,6 +194,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: No Player Emails Given
     body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
     req.body = body.dump();
@@ -192,6 +206,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Given Game ID does not Belong to Developer
     body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "basic"},
         {"game_id", "-1"},
         {"player_emails", "[\"player1@gmail.com\"]"}
     };
@@ -203,6 +219,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Passed a non-existent player email
     body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
     std::vector<std::string> player_emails_1;
@@ -217,6 +235,8 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
     // Test: Passed a repeat player email
     body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
     std::vector<std::string> player_emails_2;
@@ -231,8 +251,10 @@ TEST(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "The following player IDs were found multiple times in the input: player_1@gmail.com\n");
 
-    // Test #12: Normal Matchmaking Request Body
+    // Test: Normal Matchmaking Request Body
     body = {
+        {"developer_email", "developer@gmail.com"},
+        {"matchmaking_type", "basic"},
         {"game_id", "1"}
     };
     std::vector<std::string> player_emails_3;
