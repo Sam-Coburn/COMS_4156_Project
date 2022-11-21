@@ -207,7 +207,13 @@ std::pair <int, std::string> APIEndPoints::postGames(const crow::request& req) {
         Json::StreamWriterBuilder builder;
         const std::string s = Json::writeString(builder, v);
         int dotCount = 0;
-        for (size_t i = 0; i < s.size(); i++) {
+        size_t i = 0;
+        // negative float
+        if ((s.size() > 2) && (s[i] == '-')) {
+          i = 1;
+        }
+        // any other case
+        for (i; i < s.size(); i++) {
           if (s[i] == '.') {
             dotCount++;
           } else if (!std::isdigit(s[i])) {
