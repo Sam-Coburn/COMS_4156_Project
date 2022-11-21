@@ -1,3 +1,5 @@
+// "Copyright [year] <Copyright Owner>"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -21,7 +23,8 @@ class MockDBService : public DBService {
   MOCK_METHOD(Developer, get_developer, (std::string developer_email), (override));
   MOCK_METHOD(Game_Details, get_game_details, (int game_id), (override));
   MOCK_METHOD(Player_Game_Ratings, get_player_game_rating, (std::string player_email, int game_id), (override));
-  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating, (std::string player_email, int game_id), (override));
+  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating,
+  (std::string player_email, int game_id), (override));
 
   MOCK_METHOD(std::vector<Player>, get_all_players, (), (override));
   MOCK_METHOD(std::vector<Developer>, get_all_developers, (), (override));
@@ -42,17 +45,20 @@ class MockDBService : public DBService {
   MOCK_METHOD(Player, update_player, (std::string player_email, Player P), (override));
   MOCK_METHOD(Developer, update_developer, (std::string developer_email, Developer D), (override));
   MOCK_METHOD(Game_Details, update_game_details, (int game_id, Game_Details GD), (override));
-  MOCK_METHOD(Player_Game_Ratings, update_player_rating, (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
+  MOCK_METHOD(Player_Game_Ratings, update_player_rating,
+  (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
 };
 
 class MockMatchmaking: public Matchmaking {
  public:
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >), matchmakingBackendBasic, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+        std::vector<std::string> >), matchmakingBackendBasic,
+        (int game_id, std::vector<std::string> player_emails, DBService* DB));
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >), matchmakingBackendAdvanced, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+        std::vector<std::string> >), matchmakingBackendAdvanced,
+        (int game_id, std::vector<std::string> player_emails, DBService* DB));
 };
 
 TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set1) {
@@ -156,7 +162,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     std::tuple<
     std::vector<std::vector<std::vector<std::string> > >,
     std::vector<std::string> > matchmaking_result;
-    
+
     EXPECT_CALL(DB, get_developer(_))
     .WillRepeatedly(Return(valid_developer));
 
@@ -246,7 +252,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     player_emails_4.push_back("player_2@gmail.com");
     body["player_emails"] = player_emails_4;
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -449,7 +455,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set3) {
         ASSERT_EQ(test_overflow.at(i), overflow.at(i));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set4) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -530,7 +536,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set5) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -618,7 +624,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set6) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -706,7 +712,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set7) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -797,7 +803,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set8) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -906,7 +912,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
         ASSERT_EQ(test_overflow.at(i), overflow.at(i));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set9) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set9) {
     Matchmaking matchmaking;
 
     MockDBService DB;

@@ -452,7 +452,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
       std::tuple<
       std::vector<std::vector<std::vector<std::string> > >,
       std::vector<std::string> > result;
-      
+
       if (matchmaking_type == "basic")
         result = M->matchmakingBackendBasic(game_id, player_emails, DB);
       else if (matchmaking_type == "advanced")

@@ -4,9 +4,8 @@
 #include <gmock/gmock.h>
 #include "main/db-service.h"
 
-class DBServiceTestFixture: public testing::Test
-{
-  public:
+class DBServiceTestFixture: public testing::Test {
+ public:
     static DBService DB;
 
     virtual void SetUp() {
@@ -270,11 +269,9 @@ TEST_F(DBServiceTestFixture, Game_Details_Tests) {
 
   games = DB.get_all_games();
   ASSERT_EQ(games.size(), 3);
-
 }
 
 TEST_F(DBServiceTestFixture, Player_Game_Ratings_Tests) {
-
   Joined_Player_Game_Ratings JPGR;
   Player_Game_Ratings PGR;
   PGR.player_email = "fake_player@gmail.com";

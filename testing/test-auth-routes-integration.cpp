@@ -9,9 +9,8 @@
 using ::testing::_;
 using ::testing::Return;
 
-class AuthRouteTestFixture: public testing::Test
-{
-  public:
+class AuthRouteTestFixture: public testing::Test {
+ public:
     static DBService DB;
     static AuthService auth;
 
@@ -82,7 +81,7 @@ TEST_F(AuthRouteTestFixture, Authenticate_Token_Test) {
   req.add_header("Authorization", "Expired Token");
   result = api.authenticateToken(req);
   ASSERT_EQ(result.first, false);
-  
+
   // Valid token
   req.add_header("Authorization", token);
   result = api.authenticateToken(req);
@@ -131,7 +130,7 @@ TEST_F(AuthRouteTestFixture, Post_SignUp_Tests) {
   ASSERT_EQ(res.code, 200);
 
   // Invalid Body (developer already exists)
-  body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}} ;
+  body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
   res = api.postSignUp(req);
   ASSERT_EQ(res.code, 400);
@@ -204,7 +203,7 @@ TEST_F(AuthRouteTestFixture, Post_Login_Tests) {
 
 TEST_F(AuthRouteTestFixture, Delete_Login_Tests) {
   APIEndPoints api = APIEndPoints(&DB, &auth);
-  
+
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
@@ -237,7 +236,7 @@ TEST_F(AuthRouteTestFixture, Delete_Login_Tests) {
   req.add_header("Authorization", "Expired Token");
   res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 401);
-  
+
   // Valid Delete
   req.add_header("Authorization", token);
   res = api.deleteLogin(req);

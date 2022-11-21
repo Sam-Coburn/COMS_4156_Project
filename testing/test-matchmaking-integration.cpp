@@ -1,3 +1,5 @@
+// "Copyright [year] <Copyright Owner>"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -8,9 +10,8 @@ using ::testing::_;
 using ::testing::Return;
 
 
-class MatchmakingTestFixture: public testing::Test
-{
-  public:
+class MatchmakingTestFixture: public testing::Test {
+ public:
     static DBService DB;
     static AuthService auth;
     static Matchmaking M;
