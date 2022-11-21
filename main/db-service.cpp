@@ -38,46 +38,46 @@ bool DBService::setUpDatabase() {
     stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
     "Developers ("
     "developer_email varchar(255) NOT NULL, "
-  	"developer_password varchar(255) NOT NULL, "
-  	"PRIMARY KEY (developer_email));");
+    "developer_password varchar(255) NOT NULL, "
+    "PRIMARY KEY (developer_email));");
 
     stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
     "Players ("
     "player_email varchar(255) NOT NULL, "
-  	"PRIMARY KEY (player_email));");
+    "PRIMARY KEY (player_email));");
 
     stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
     "Game_Details ("
     "game_id int NOT NULL auto_increment, "
-	  "developer_email varchar(255) NOT NULL, "
-  	"game_name varchar(255) NOT NULL, "
-  	"game_parameter1_name varchar(255), "
-  	"game_parameter1_weight float, "
-  	"game_parameter2_name varchar(255), "
-  	"game_parameter2_weight float, "
-  	"game_parameter3_name varchar(255), "
-  	"game_parameter3_weight float, "
-  	"game_parameter4_name varchar(255), "
-  	"game_parameter4_weight float, "
-  	"category varchar(255), "
-  	"players_per_team int, "
-  	"teams_per_match int, "
-  	"PRIMARY KEY (game_id), "
-	  "FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) "
+    "developer_email varchar(255) NOT NULL, "
+    "game_name varchar(255) NOT NULL, "
+    "game_parameter1_name varchar(255), "
+    "game_parameter1_weight float, "
+    "game_parameter2_name varchar(255), "
+    "game_parameter2_weight float, "
+    "game_parameter3_name varchar(255), "
+    "game_parameter3_weight float, "
+    "game_parameter4_name varchar(255), "
+    "game_parameter4_weight float, "
+    "category varchar(255), "
+    "players_per_team int, "
+    "teams_per_match int, "
+    "PRIMARY KEY (game_id), "
+    "FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) "
     "ON DELETE CASCADE ON UPDATE CASCADE);");
 
     stmt->executeUpdate("CREATE TABLE IF NOT EXISTS "
     "Player_Game_Ratings ("
-  	"player_email varchar(255) NOT NULL, "
+    "player_email varchar(255) NOT NULL, "
     "game_id int NOT NULL, "
-  	"game_parameter1_value int, "
-  	"game_parameter2_value int, "
-  	"game_parameter3_value int, "
-  	"game_parameter4_value int, "
-  	"PRIMARY KEY (player_email, game_id), "
-  	"FOREIGN KEY (player_email) REFERENCES Players(player_email) "
+    "game_parameter1_value int, "
+    "game_parameter2_value int, "
+    "game_parameter3_value int, "
+    "game_parameter4_value int, "
+    "PRIMARY KEY (player_email, game_id), "
+    "FOREIGN KEY (player_email) REFERENCES Players(player_email) "
     "ON DELETE CASCADE ON UPDATE CASCADE, "
-  	"FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) "
+    "FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) "
     "ON DELETE CASCADE ON UPDATE CASCADE);");
 
     delete stmt;
@@ -1234,7 +1234,8 @@ Developer DBService::update_developer(std::string developer_email, Developer D) 
       return d;
 
     // Create statement and fill in relevant variables
-    prep_stmt = con->prepareStatement("UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;");
+    prep_stmt = con->prepareStatement(
+      "UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;");
     prep_stmt->setString(1, D.developer_email);
     prep_stmt->setString(2, D.developer_password);
     prep_stmt->setString(3, developer_email);

@@ -186,7 +186,7 @@ std::pair <int, std::string> APIEndPoints::getGames(const crow::request& req) {
 // players_per_team; [Integer]
 // SOMEDAY, ADD: Min-players-per-team [Integer] ??
 // SOMEDAY, ADD: Max-players-per-team [Integer] ??
-std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
+std::pair <int, std::string> APIEndPoints::postGames(const crow::request& req) {
     Game_Details gmInfo;
 
     // authentication
@@ -202,8 +202,22 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     Json::CharReaderBuilder builder;
     const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
 
+    // unfortunate helper to check if a jsoncpp value is a float
+    auto myIsFloat = [](Json::Value v) {
+        Json::StreamWriterBuilder builder;
+        const std::string s = Json::writeString(builder, v);
+        int dotCount = 0;
+        for (size_t i = 0; i < s.size(); i++) {
+          if (s[i] == '.') {
+            dotCount++;
+          } else if (!std::isdigit(s[i])) {
+            return false;
+          }
+        }
+        return (dotCount <= 1);
+    };
+
     // validity checking
-    LOG(INFO) << "before empty string check" << std::endl;
     if (req.body.length() == 0) {
         return std::make_pair(400, std::string("Empty body."));
     }
@@ -225,10 +239,20 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
         root["parameters"].size() != 4 ) {
         return std::make_pair(400, std::string("invalid params field"));
     }
+    for (unsigned int i = 0; i < root["parameters"].size(); i++) {
+      if (!root["parameters"][i].isString()) {
+        return std::make_pair(400, std::string("params elt is invalid string"));
+      }
+    }
     if (root["weights"].isNull() ||
         !root["weights"].isArray() ||
         root["weights"].size() != 4) {
         return std::make_pair(400, std::string("invalid weights field"));
+    }
+    for (unsigned int i = 0; i < root["weights"].size(); i++) {
+      if (!myIsFloat(root["weights"][i])) {
+        return std::make_pair(400, std::string("weights elt is invalid float"));
+      }
     }
     if (root["category"].isNull() || !root["category"].isString()) {
         return std::make_pair(400, std::string("invalid category"));
@@ -237,7 +261,7 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
         return std::make_pair(400, std::string("invalid teams_per_match field"));
     }
     if (root["players_per_team"].isNull() || !root["players_per_team"].isInt()) {
-        return std::make_pair(400, std::string("invalid players_per_team field."));
+        return std::make_pair(400, std::string("invalid players_per_team field"));
     }
 
     // intialize game
@@ -248,17 +272,25 @@ std::pair <int, std::string> APIEndPoints::postGame(const crow::request& req) {
     gmInfo.game_parameter2_name = root["parameters"][1].asString();
     gmInfo.game_parameter3_name = root["parameters"][2].asString();
     gmInfo.game_parameter4_name = root["parameters"][3].asString();
-    gmInfo.game_parameter1_weight = root["weights"][0].asFloat();
-    gmInfo.game_parameter2_weight = root["weights"][1].asFloat();
-    gmInfo.game_parameter3_weight = root["weights"][2].asFloat();
-    gmInfo.game_parameter4_weight = root["weights"][3].asFloat();
+    gmInfo.game_parameter1_weight = root["weights"][0].asDouble();
+    gmInfo.game_parameter2_weight = root["weights"][1].asDouble();
+    gmInfo.game_parameter3_weight = root["weights"][2].asDouble();
+    gmInfo.game_parameter4_weight = root["weights"][3].asDouble();
     gmInfo.teams_per_match = root["teams_per_match"].asInt();
     gmInfo.players_per_team = root["players_per_team"].asInt();
+
+    // field meaning error check
+    if (gmInfo.teams_per_match <= 0) {
+      return std::make_pair(400, std::string("teams_per_match must be > 0"));
+    }
+    if (gmInfo.players_per_team <= 0) {
+      return std::make_pair(400, std::string("players_per_team must be > 0"));
+    }
 
     // store game
     Game_Details addedGame = DB->add_game_details(gmInfo);
     if (!addedGame.is_valid) {
-        return std::make_pair(400, std::string("error adding game."));
+        return std::make_pair(400, std::string("DB error adding game."));
     }
 
     // return response body as string
@@ -302,9 +334,8 @@ crow::response APIEndPoints::postLogin(const crow::request& req) {
     }
 
     std::string token = auth->createJWT(D.developer_email);
-    return crow::response(200, 
+    return crow::response(200,
     "Success please put the following in the authorization header of you requests: Bearer " + token);
-
   } catch(...) {
     return crow::response(400, "Invalid request body");
   }
@@ -318,7 +349,7 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   try {
     std::pair<int, std::string> tokenInfo = authenticateToken(req);
     if (tokenInfo.first == false) {
-      return crow::response(401, tokenInfo.second);;
+      return crow::response(401, tokenInfo.second);
     }
 
     std::string developer_email = tokenInfo.second;
@@ -334,33 +365,30 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   }
 }
 
-crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, Matchmaking *M) {
+crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M) {
     crow::json::rvalue request_body = crow::json::load(req.body);
 
-    std::string developer_email;
-    std::string developer_password;
     int game_id;
     crow::json::rvalue input_player_emails_rvalue;
     std::vector<crow::json::rvalue> input_player_emails;
+    std::string developer_email;
 
     try {
       crow::json::wvalue json_result;
 
       // Authentication
-      developer_email = request_body["developer_email"].s();
-      developer_password = request_body["developer_password"].s();
+      std::pair<bool, std::string> tokenInfo = authenticateToken(req);
+      if (tokenInfo.first == false) {
+        return crow::response(401, tokenInfo.second);;
+      }
 
-      Developer d = DB->get_developer(developer_email);
+      developer_email = tokenInfo.second;
 
-      // Check given password against password in DB
-      if (d.developer_password != developer_password)
-        return crow::response(400, "Incorrect Credentials Given.\n");
-
+      // Check to ensure that the developer "owns" the given game
       game_id = request_body["game_id"].i();
       std::vector<Game_Details> developer_games = DB->get_all_games_for_developer(developer_email);
       bool game_found = false;
 
-      // Check to ensure that the developer "owns" the given game
       for (uint64_t i = 0; i < developer_games.size(); i++) {
         int g_id = developer_games.at(i).game_id;
         if (game_id == g_id)
@@ -419,9 +447,18 @@ crow::response APIEndPoints::matchmake(const crow::request& req, DBService *DB, 
         return crow::response(400, error_message);
       }
 
+      std::string matchmaking_type = request_body["matchmaking_type"].s();
+
       std::tuple<
       std::vector<std::vector<std::vector<std::string> > >,
-      std::vector<std::string> > result = M->matchmakingBackendAdvanced(game_id, player_emails, DB);
+      std::vector<std::string> > result;
+      
+      if (matchmaking_type == "basic")
+        result = M->matchmakingBackendBasic(game_id, player_emails, DB);
+      else if (matchmaking_type == "advanced")
+        result = M->matchmakingBackendAdvanced(game_id, player_emails, DB);
+      else
+        return crow::response(400, "Matchmaking Type Not Found.\n");
 
       std::vector<std::vector<std::vector<std::string> > > games = std::get<0>(result);
       std::vector<std::string> overflow = std::get<1>(result);

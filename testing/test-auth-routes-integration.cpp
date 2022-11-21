@@ -92,14 +92,6 @@ TEST_F(AuthRouteTestFixture, Authenticate_Token_Test) {
 TEST_F(AuthRouteTestFixture, Post_SignUp_Tests) {
   APIEndPoints api = APIEndPoints(&DB, &auth);
 
-  Developer valid_developer;
-  valid_developer.developer_email = "some_email@gmail.com";
-  valid_developer.developer_password = "some_password";
-  valid_developer.is_valid = true;
-
-  Developer invalid_developer;
-  invalid_developer.is_valid = false;
-
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
@@ -149,14 +141,6 @@ TEST_F(AuthRouteTestFixture, Post_SignUp_Tests) {
 
 TEST_F(AuthRouteTestFixture, Post_Login_Tests) {
   APIEndPoints api = APIEndPoints(&DB, &auth);
-
-  Developer valid_developer;
-  valid_developer.is_valid = true;
-  valid_developer.developer_email = "some_email@gmail.com";
-  valid_developer.developer_password = "some_password";
-
-  Developer invalid_developer;
-  invalid_developer.is_valid = false;
 
   crow::request req;
   crow::response res;
@@ -220,15 +204,7 @@ TEST_F(AuthRouteTestFixture, Post_Login_Tests) {
 
 TEST_F(AuthRouteTestFixture, Delete_Login_Tests) {
   APIEndPoints api = APIEndPoints(&DB, &auth);
-
-  Developer valid_developer;
-  valid_developer.is_valid = true;
-  valid_developer.developer_email = "some_email@gmail.com";
-  valid_developer.developer_password = "some_password";
-
-  Developer invalid_developer;
-  invalid_developer.is_valid = false;
-
+  
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
