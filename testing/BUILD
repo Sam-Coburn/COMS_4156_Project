@@ -1,7 +1,6 @@
 cc_library(
     name = "mock-libs",
-    hdrs = ["MockDBService.h",
-    "MockAuthService.h"],
+    hdrs = ["MockDBService.h", "MockAuthService.h"],
 )
 
 """ one giant test with everything """
@@ -14,7 +13,8 @@ cc_test(
           "test-auth-routes-integration.cpp",
           "test-matchmaking.cpp",
           "test-matchmaking-integration.cpp",
-          "test-get-post-games-routes.cc"],
+          "test-get-post-games-routes.cc",
+          "test-player-endpoints.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",

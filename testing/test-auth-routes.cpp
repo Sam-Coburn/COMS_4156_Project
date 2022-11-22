@@ -121,6 +121,45 @@ TEST(AuthRouteTest, Authenticate_Token_Test) {
   ASSERT_EQ(result.first, true);
 }
 
+TEST(AuthRouteTest, Developer_Owns_Game_Tests) {
+  MockDBService DB;
+  MockAuthService auth;
+  APIEndPoints api = APIEndPoints(&DB, &auth);
+  bool res;
+
+  Game_Details game1;
+  Game_Details game2;
+  Game_Details game_invalid;
+
+  game1.developer_email = "dev1@gmail.com";
+  game1.game_id = 1;
+  game1.is_valid = true;
+  game2.developer_email = "dev2@gmail.com";
+  game2.game_id = 2;
+  game2.is_valid = true;
+  game_invalid.developer_email = "dev3@gmail.com";
+  game_invalid.game_id = 3;
+  game_invalid.is_valid = false;
+
+  // Invalid Game_Details object
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game_invalid));
+  res = api.developerOwnsGame(game_invalid.developer_email, game_invalid.game_id);
+  EXPECT_EQ(res, false);
+
+  // Developer does not own game
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game2));
+  res = api.developerOwnsGame(game1.developer_email, game2.game_id);
+  EXPECT_EQ(res, false);
+
+  // Developer owns game
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game1));
+  res = api.developerOwnsGame(game1.developer_email, game1.game_id);
+  EXPECT_EQ(res, true);
+}
+
 TEST(AuthRouteTest, Post_SignUp_Tests) {
   MockDBService DB;
   MockAuthService auth;
