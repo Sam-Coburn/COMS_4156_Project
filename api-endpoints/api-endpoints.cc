@@ -554,8 +554,6 @@ crow::response APIEndPoints::updatePlayersStats(const crow::request& req, int ga
         }
 
         std::vector<std::string> req_emails = user_req.keys();
-        // remove(req_emails.begin(), req_emails.end(), "developer_email");
-        // remove(req_emails.begin(), req_emails.end(), "developer_password");
 
         std::string players_invalid_stats = "";
         crow::json::rvalue player_info;

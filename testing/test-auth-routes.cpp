@@ -23,7 +23,8 @@ class MockDBService : public DBService {
   MOCK_METHOD(Developer, get_developer, (std::string developer_email), (override));
   MOCK_METHOD(Game_Details, get_game_details, (int game_id), (override));
   MOCK_METHOD(Player_Game_Ratings, get_player_game_rating, (std::string player_email, int game_id), (override));
-  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating, (std::string player_email, int game_id), (override));
+  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating,
+    (std::string player_email, int game_id), (override));
 
   MOCK_METHOD(std::vector<Player>, get_all_players, (), (override));
   MOCK_METHOD(std::vector<Developer>, get_all_developers, (), (override));
@@ -44,7 +45,8 @@ class MockDBService : public DBService {
   MOCK_METHOD(Player, update_player, (std::string player_email, Player P), (override));
   MOCK_METHOD(Developer, update_developer, (std::string developer_email, Developer D), (override));
   MOCK_METHOD(Game_Details, update_game_details, (int game_id, Game_Details GD), (override));
-  MOCK_METHOD(Player_Game_Ratings, update_player_rating, (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
+  MOCK_METHOD(Player_Game_Ratings, update_player_rating,
+    (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
 };
 
 TEST(AuthRouteTest, Authenticate_Token_Test) {
@@ -110,11 +112,50 @@ TEST(AuthRouteTest, Authenticate_Token_Test) {
   req.add_header("Authorization", "Expired Token");
   result = api.authenticateToken(req);
   ASSERT_EQ(result.first, false);
-  
+
   // Valid token
   req.add_header("Authorization", "Valid Token");
   result = api.authenticateToken(req);
   ASSERT_EQ(result.first, true);
+}
+
+TEST(AuthRouteTest, Developer_Owns_Game_Tests) {
+  MockDBService DB;
+  MockAuthService auth;
+  APIEndPoints api = APIEndPoints(&DB, &auth);
+  bool res;
+
+  Game_Details game1;
+  Game_Details game2;
+  Game_Details game_invalid;
+
+  game1.developer_email = "dev1@gmail.com";
+  game1.game_id = 1;
+  game1.is_valid = true;
+  game2.developer_email = "dev2@gmail.com";
+  game2.game_id = 2;
+  game2.is_valid = true;
+  game_invalid.developer_email = "dev3@gmail.com";
+  game_invalid.game_id = 3;
+  game_invalid.is_valid = false;
+
+  // Invalid Game_Details object
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game_invalid));
+  res = api.developerOwnsGame(game_invalid.developer_email, game_invalid.game_id);
+  EXPECT_EQ(res, false);
+
+  // Developer does not own game
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game2));
+  res = api.developerOwnsGame(game1.developer_email, game2.game_id);
+  EXPECT_EQ(res, false);
+
+  // Developer owns game
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game1));
+  res = api.developerOwnsGame(game1.developer_email, game1.game_id);
+  EXPECT_EQ(res, true);
 }
 
 TEST(AuthRouteTest, Post_SignUp_Tests) {
@@ -175,7 +216,7 @@ TEST(AuthRouteTest, Post_SignUp_Tests) {
   ASSERT_EQ(res.code, 200);
 
   // Invalid Body (developer already exists)
-  body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}} ;
+  body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
   res = api.postSignUp(req);
   ASSERT_EQ(res.code, 400);
@@ -337,7 +378,7 @@ TEST(AuthRouteTest, Delete_Login_Tests) {
   req.add_header("Authorization", "Expired Token");
   res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 401);
-  
+
   // Valid Delete
   req.add_header("Authorization", "Valid Token");
   res = api.deleteLogin(req);

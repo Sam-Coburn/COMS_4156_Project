@@ -645,16 +645,16 @@ TEST_F(PlayerTestFixture, GetPlayersStatsMissingStatsTest) {
     player_emails.push_back(pgr_invalid2.player_email);
     player_emails.push_back(pgr2.player_email);
 
-    body = {
-        {"developer_email", valid_developer1.developer_email},
-        {"developer_password", valid_developer1.developer_password}
-    };
     body["player_emails"] = player_emails;
     req.body = body.dump();
     res = api.getPlayersStats(req, game1.game_id);
     EXPECT_EQ(res.code, 204);
-    std::string missing_players = pgr_invalid1.player_email + ", "  + pgr_invalid2.player_email;
-    EXPECT_EQ(res.body, "The following players do not exist " + missing_players);
+    // Players can be listed in any order as long as both players are stated as invalid
+    std::string missing_players1 = "The following players do not exist " + pgr_invalid1.player_email +
+        ", "  + pgr_invalid2.player_email;
+    std::string missing_players2 = "The following players do not exist " + pgr_invalid2.player_email +
+        ", "  + pgr_invalid1.player_email;
+    EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
 }
 
 /* Player game ratings are valid */
@@ -678,10 +678,6 @@ TEST_F(PlayerTestFixture, GetPlayersStatsValidTest) {
     player_emails.push_back(pgr2.player_email);
     player_emails.push_back(pgr3.player_email);
 
-    body = {
-        {"developer_email", valid_developer1.developer_email},
-        {"developer_password", valid_developer1.developer_password}
-    };
     body["player_emails"] = player_emails;
     req.body = body.dump();
 
@@ -761,8 +757,12 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingPlayersTest) {
     req.body = body.dump();
     res = api.deletePlayersStats(req, game1.game_id);
     EXPECT_EQ(res.code, 500);
-    std::string missing_players = pgr_invalid1.player_email + ", "  + pgr_invalid2.player_email;
-    EXPECT_EQ(res.body, "The following players do not exist: " + missing_players);
+    // Players can be listed in any order as long as both players are stated as invalid
+    std::string missing_players1 = "The following players do not exist: " + pgr_invalid1.player_email +
+        ", "  + pgr_invalid2.player_email;
+    std::string missing_players2 = "The following players do not exist: " + pgr_invalid2.player_email +
+        ", "  + pgr_invalid1.player_email;
+    EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
 }
 
 /* Player game ratings are valid */
