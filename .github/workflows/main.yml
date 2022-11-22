@@ -49,7 +49,9 @@ jobs:
       - name: Install JSONCPP
         run: sudo apt-get install libjsoncpp-dev
       - name: Install glog
-        run: sudo apt install libgoogle-glog-dev
+        run: |
+          sudo apt-get -y install aptitude
+          sudo aptitude -y install libgoogle-glog-dev
       - name: Install Auth Libraries
         run: sudo apt-get install libssl-dev
       - name: Setup MySQL
@@ -79,5 +81,6 @@ jobs:
       # - name: Integration Test - Player Endpoints
       #   run: | 
       #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-integration
+      #sudo apt-get -y install aptitude
       - name: Test Project (all the tests at once)
         run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
