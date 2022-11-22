@@ -61,23 +61,23 @@ jobs:
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
-      - name: Unit Test - Authentication
-        run: | 
-          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-units
-      - name: Unit Test - Get/Post Games
-        run: | 
-          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-get-post-games-routes-units
-      - name: Unit Test - Matchmaking
-        run: | 
-          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-matchmaking-route-units 
-      - name: Unit Test - Player Endpoints
-        run: | 
-          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-units
-      - name: Integration Test - Authentication
-        run: |
-          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-integration
-      - name: Integration Test - Player Endpoints
-        run: | 
-          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-integration
-      # - name: Test Project (all the tests at once)
-      #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
+      # - name: Unit Test - Authentication
+      #   run: | 
+      #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-units
+      # - name: Unit Test - Get/Post Games
+      #   run: | 
+      #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-get-post-games-routes-units
+      # - name: Unit Test - Matchmaking
+      #   run: | 
+      #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-matchmaking-route-units 
+      # - name: Unit Test - Player Endpoints
+      #   run: | 
+      #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-units
+      # - name: Integration Test - Authentication
+      #   run: |
+      #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-integration
+      # - name: Integration Test - Player Endpoints
+      #   run: | 
+      #     bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-integration
+      - name: Test Project (all the tests at once)
+        run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
