@@ -300,7 +300,7 @@ TEST_F(AuthRouteTestFixture, Post_Login_Tests) {
 
 TEST_F(AuthRouteTestFixture, Delete_Login_Tests) {
   APIEndPoints api = APIEndPoints(&DB, &auth);
-  
+
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
