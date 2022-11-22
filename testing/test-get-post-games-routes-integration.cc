@@ -11,6 +11,38 @@
 using ::testing::_;
 using ::testing::Return;
 
+class PostGetGamesTestFixture: public testing::Test {
+ public:
+    static DBService DB;
+    static AuthService auth;
+    static APIEndPoints api;
+    std::string token;
+
+    virtual void SetUp() {
+      DB.tearDownDatabase();
+      DB.setUpDatabase();
+    }
+
+    virtual void TearDown() {
+      DB.tearDownDatabase();
+    }
+
+    static void SetUpTestCase() {
+      DB = DBService("tcp://127.0.0.1:3306", "dbuser", "123", "test_matchmaking_api_db");
+      auth = AuthService();
+      api = APIEndPoints(&DB, &auth);
+    }
+
+    static void TearDownTestCase() {
+      DB.tearDownDatabase();
+    }
+};
+
+// make test fixture fields visible inside test macros
+AuthService PostGetGamesTestFixture::auth;
+DBService PostGetGamesTestFixture::DB;
+APIEndPoints PostGetGamesTestFixture::api;
+
 // what kind of input body for the postGames request do we want to use?
 enum POST_GAME_BODY_KIND { COPY, EMPTY, BAD_JSON, ROOT_NULL, NOT_NAME_VAL_PAIRS,
                            INVALID_NAME, INVALID_PARAMS, INVALID_PARAMS_ELT,
@@ -22,6 +54,7 @@ static std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
 
 // test desired response from PostGames vs actual response
 static void testAgainstBody(APIEndPoints* api,
+                     std::string token,
                      POST_GAME_BODY_KIND kind,
                      std::string want,
                      Game_Details gm = defaultVal(),
@@ -29,7 +62,7 @@ static void testAgainstBody(APIEndPoints* api,
                      bool noBody = false) {
      std::pair <int, std::string> res;
      crow::request req;
-     req.add_header("Authorization", "a-very-nice-placeholder-token");
+     req.add_header("Authorization", token);
      req.body = genPostGamesBody(kind, gm);
      res = api->postGames(req);
      ASSERT_EQ(code, res.first);
@@ -42,6 +75,7 @@ static void testAgainstBody(APIEndPoints* api,
 
 // test desired response from getGames vs actual response
 static void testAgainstBodyGet(APIEndPoints* api,
+                               std::string token,
                                POST_GAME_BODY_KIND kind,
                                std::string want,
                                std::string reqBdy,
@@ -50,7 +84,7 @@ static void testAgainstBodyGet(APIEndPoints* api,
      std::pair <int, std::string> res;
      crow::request req;
      req.body = reqBdy;
-     req.add_header("Authorization", "a-very-nice-placeholder-token");
+     req.add_header("Authorization", token);
      res = api->getGames(req);
      ASSERT_EQ(code, res.first);
      if (!noBody) {
@@ -60,52 +94,41 @@ static void testAgainstBodyGet(APIEndPoints* api,
      }
 }
 
-TEST(Get_Post_Games_Suite, Post_Games_Tests) {
-  MockDBService DB;
-  MockAuthService auth;
-  APIEndPoints api = APIEndPoints(&DB, &auth);
+static void signUpAndLogIn(APIEndPoints* api, std::string* token) {
+  std::stringstream ss;
+  Json::StreamWriterBuilder builder;
+  const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+  Json::Value root;
+  // create sign up body
+  root["developer_email"] = "gamedev42@awesomeCardGames.com";
+  root["developer_password"] = "some_password";
+  writer->write(root, &ss);
+  // sign up
+  crow::request req;
+  crow::response rsp;
+  req.body = ss.str();
+  rsp = api->postSignUp(req);
+  ASSERT_EQ(rsp.code, 200);
+  // Logging in
+  rsp = api->postLogin(req);
+  ASSERT_EQ(rsp.code, 200);
+  (*token) = rsp.body.substr(rsp.body.find(":") + 2);
+}
 
+TEST_F(PostGetGamesTestFixture, Post_Games_Integration_Tests) {
+  std::string token;
+  signUpAndLogIn(&api, &token);
   // input value
   Game_Details gm;
 
   // expected output body
   std::string bdy;
 
-  // mock return values
-  Game_Details invalid_game_details;
-  Game_Details valid_game_details;
-  Game_Details valid_game_details2;
-  Developer valid_developer;
-
-  // initialize mock return values
-  valid_game_details.is_valid = true;
-  valid_game_details.game_id = 5;
-  valid_game_details2.is_valid = true;
-  valid_game_details2.game_id = 6;
-  invalid_game_details.is_valid = false;
-  valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
-  valid_developer.developer_password = "some_password";
-  valid_developer.is_valid = true;
-
-  // specify mocked call behavior
-
-  EXPECT_CALL(auth, decodeAndVerifyJWT(_))
-  .WillOnce(Return(std::make_pair(false, "Invalid token")))
-  .WillRepeatedly(Return(std::make_pair(true, "gamedev42@awesomeCardGames.com")));
-
-  EXPECT_CALL(DB, get_developer(_))
-  .WillRepeatedly(Return(valid_developer));
-
-  EXPECT_CALL(DB, add_game_details(_)).Times(3)
-  .WillOnce(Return(valid_game_details))
-  .WillOnce(Return(invalid_game_details))
-  .WillOnce(Return(valid_game_details2));
-
   // set input as valid game
   gm.category = "cards";
   gm.game_name = "poker";
   gm.developer_email = "gamedev42@awesomeCardGames.com";
-  gm.game_id = 5;
+  gm.game_id = 1;
   gm.game_parameter1_name = "wins";
   gm.game_parameter2_name = "losses";
   gm.game_parameter3_name = "totalMoneyWon";
@@ -118,91 +141,80 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
   gm.teams_per_match = 100;
   gm.is_valid = true;
 
-
   // test with invalid developer
-  bdy = "Invalid token";
-  testAgainstBody(&api, COPY, bdy, gm, 401);
+  bdy = "invalid json";  // how do I prompt an "Invalid token" error?
+  std::string badTok = std::string(token);
+  if (badTok[20] == 'h') {
+    badTok[20] = 'g';
+  } else {
+    badTok[20] = 'h';
+  }
+  testAgainstBody(&api, badTok, COPY, bdy, gm, 401);
 
   // rest of the tests are with valid developer
 
   // valid game, so add it.
-  bdy = "5";
-  testAgainstBody(&api, COPY, bdy, gm, 200, false);
+  bdy = "1";
+  testAgainstBody(&api, token, COPY, bdy, gm, 200, false);
 
   // DB error, so can't add it.
-  bdy = "DB error adding game.";
-  testAgainstBody(&api, COPY, bdy, gm);
+  // how to get DB to return an invalid game??
+  // bdy = "DB error adding game.";
+  // testAgainstBody(&api, token, COPY, bdy, gm, 401);
 
   bdy = "Empty body.";
-  testAgainstBody(&api, EMPTY, bdy);
+  testAgainstBody(&api, token, EMPTY, bdy);
 
   bdy = "Malformed json.";
-  testAgainstBody(&api, BAD_JSON, bdy);
+  testAgainstBody(&api, token, BAD_JSON, bdy);
 
   bdy = "Root of json is null";
-  testAgainstBody(&api, ROOT_NULL, bdy);
+  testAgainstBody(&api, token, ROOT_NULL, bdy);
 
   bdy = "Expecting collection of name:value pairs.";
-  testAgainstBody(&api, NOT_NAME_VAL_PAIRS, bdy);
+  testAgainstBody(&api, token, NOT_NAME_VAL_PAIRS, bdy);
 
   bdy = "invalid name field";
-  testAgainstBody(&api, INVALID_NAME, bdy);
+  testAgainstBody(&api, token, INVALID_NAME, bdy);
 
   bdy = "invalid params field";
-  testAgainstBody(&api, INVALID_PARAMS, bdy);
+  testAgainstBody(&api, token, INVALID_PARAMS, bdy);
 
   bdy = "params elt is invalid string";
-  testAgainstBody(&api, INVALID_PARAMS_ELT, bdy);
+  testAgainstBody(&api, token, INVALID_PARAMS_ELT, bdy);
 
   bdy = "invalid weights field";
-  testAgainstBody(&api, INVALID_WEIGHTS, bdy);
+  testAgainstBody(&api, token, INVALID_WEIGHTS, bdy);
 
   bdy = "weights elt is invalid float";
-  testAgainstBody(&api, INVALID_WEIGHTS_ELT, bdy);
+  testAgainstBody(&api, token, INVALID_WEIGHTS_ELT, bdy);
 
   // valid game with negative weight
-  bdy = "6";
-  gm.game_id = 6;
+  bdy = "2";
+  gm.game_id = 3;
   gm.game_parameter1_weight = -0.2;
-  testAgainstBody(&api, COPY, bdy, gm, 200, false);
+  testAgainstBody(&api, token, COPY, bdy, gm, 200, false);
 
   bdy = "invalid category";
-  testAgainstBody(&api, INVALID_CATEGORY, bdy);
+  testAgainstBody(&api, token, INVALID_CATEGORY, bdy);
 
   bdy = "teams_per_match must be > 0";
   gm.teams_per_match = -5;
-  testAgainstBody(&api, COPY, bdy, gm);
+  testAgainstBody(&api, token, COPY, bdy, gm);
 
   bdy = "players_per_team must be > 0";
   gm.teams_per_match = 8;
   gm.players_per_team = 0;
-  testAgainstBody(&api, COPY, bdy, gm);
+  testAgainstBody(&api, token, COPY, bdy, gm);
 }
 
-TEST(Get_Post_Games_Suite, Get_Games_Tests) {
-  MockDBService DB;
-  MockAuthService auth;
-  APIEndPoints api = APIEndPoints(&DB, &auth);
-
-  // input value
-  Game_Details gm;
-
+TEST_F(PostGetGamesTestFixture, Get_Games_Integration_Tests) {
+  std::string token;
+  signUpAndLogIn(&api, &token);
   // expected output body
   std::string bdy;
-
-  // mock return values
-  Game_Details invalid_game_details;
-  Game_Details valid_game_details;
-  Developer valid_developer;
-  Developer invalid_developer;
-  std::vector<Game_Details> empty;
+  // build up input peices
   std::vector<Game_Details> games;
-
-  // initialize mock return values
-  valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
-  valid_developer.is_valid = true;
-  invalid_developer.is_valid = false;
-  empty = std::vector<Game_Details>();
   games.push_back(Game_Details());
   games.push_back(Game_Details());
   games.push_back(Game_Details());
@@ -212,7 +224,7 @@ TEST(Get_Post_Games_Suite, Get_Games_Tests) {
     games[i].category = "cards";
     games[i].game_name = names[i];
     games[i].developer_email = "gamedev42@awesomeCardGames.com";
-    games[i].game_id = 5;
+    games[i].game_id = i+1;
     games[i].game_parameter1_name = "wins";
     games[i].game_parameter2_name = "losses";
     games[i].game_parameter3_name = "totalMoneyWon";
@@ -255,31 +267,33 @@ TEST(Get_Post_Games_Suite, Get_Games_Tests) {
     const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
     writer->write(root, &ss);
 
-  // specify mocked call behavior
-  EXPECT_CALL(auth, decodeAndVerifyJWT(_))
-  .WillOnce(Return(std::make_pair(false, "Invalid token")))
-  .WillRepeatedly(Return(std::make_pair(true, "gamedev42@awesomeCardGames.com")));
-
-  EXPECT_CALL(DB, get_developer(_))
-  .WillOnce(Return(invalid_developer))
-  .WillRepeatedly(Return(valid_developer));
-
-  EXPECT_CALL(DB, get_all_games_for_developer(_))
-  .WillOnce(Return(empty))
-  .WillOnce(Return(games));
-
   // test with invalid developer
-  bdy = "Invalid token";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  bdy = "invalid json";
+  std::string badTok = std::string(token);
+  if (badTok[20] == 'h') {
+    badTok[20] = 'g';
+  } else {
+    badTok[20] = 'h';
+  }
+  testAgainstBodyGet(&api, badTok, COPY, bdy, "", 401);
 
-  bdy = "Developer does not exist";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  // how would I force the DB to return an invalid developer?
+  // bdy = "Developer does not exist";
+  // testAgainstBodyGet(&api, COPY, bdy, "", 401);
 
   bdy = "Error Accessing Games: none found!";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, token, COPY, bdy, "", 401);
 
-  bdy = ss.str();  // case success
-  testAgainstBodyGet(&api, COPY, bdy, "", 200);
+  for (size_t i = 0; i < 4; i++) {
+    // valid game, so add it.
+    std::stringstream bdy;
+    bdy << i+1;
+    testAgainstBody(&api, token, COPY, bdy.str(), games[i], 200, false);
+    bdy.str(std::string());  // clear the string stream
+  }
+
+  // case success
+  testAgainstBodyGet(&api, token, COPY, ss.str(), "", 200);
 }
 
 Game_Details static defaultVal() {

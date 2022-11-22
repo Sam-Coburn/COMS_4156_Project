@@ -81,5 +81,8 @@ jobs:
       - name: Integration Test - Player Endpoints
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-integration
+      - name: Integration Test - Get/Post Games
+        run: | 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-get-post-games-routes-integration
       # - name: Test Project (all the tests at once)
       #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
