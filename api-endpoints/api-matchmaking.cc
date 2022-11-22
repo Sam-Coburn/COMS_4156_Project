@@ -3,7 +3,8 @@
 
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > Matchmaking::matchmakingBackendBasic(int game_id, std::vector<std::string> player_emails, DBService* DB) {
+std::vector<std::string> >
+Matchmaking::matchmakingBackendBasic(int game_id, std::vector<std::string> player_emails, DBService* DB) {
   // Step 0: Retrieve Game Details by Game ID
   Game_Details details = DB->get_game_details(game_id);
 
@@ -83,7 +84,8 @@ std::vector<std::string> > Matchmaking::matchmakingBackendBasic(int game_id, std
 
 std::tuple<
 std::vector<std::vector<std::vector<std::string> > >,
-std::vector<std::string> > Matchmaking::matchmakingBackendAdvanced(int game_id, std::vector<std::string> player_emails, DBService* DB) {
+std::vector<std::string> >
+Matchmaking::matchmakingBackendAdvanced(int game_id, std::vector<std::string> player_emails, DBService* DB) {
   // Step 0: Retrieve Game Details by Game ID
   Game_Details details = DB->get_game_details(game_id);
   std::string category = details.category;
@@ -117,8 +119,9 @@ std::vector<std::string> > Matchmaking::matchmakingBackendAdvanced(int game_id, 
       std::vector<std::tuple<int, std::string> > current_ranked_players_int;
       for (uint64_t j = 0; j < current_ranked_players.size(); j++) {
         if (std::get<0>(current_ranked_players.at(j)) == 0)
-          current_ranked_players_int.push_back(make_tuple(current_ranked_players.size(), std::get<1>(current_ranked_players.at(j))));
-        else 
+          current_ranked_players_int.push_back(make_tuple(current_ranked_players.size(),
+          std::get<1>(current_ranked_players.at(j))));
+        else
           current_ranked_players_int.push_back(make_tuple(j + 1, std::get<1>(current_ranked_players.at(j))));
       }
 

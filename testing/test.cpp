@@ -134,7 +134,6 @@ TEST_F(DBServiceTestFixture, Game_Details_Tests) {
 }
 
 TEST_F(DBServiceTestFixture, Player_Game_Ratings_Tests) {
-
   Player_Game_Ratings PGR;
   PGR.player_email = "fake_player@gmail.com";
   PGR.game_id = -1;
