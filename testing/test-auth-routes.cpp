@@ -221,7 +221,7 @@ TEST(AuthRouteTest, Post_SignUp_Tests) {
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
   res = api.postSignUp(req);
-  ASSERT_EQ(res.code, 400);
+  ASSERT_EQ(res.code, 409);
   ASSERT_EQ(res.body, "Developer already exists");
 }
 
@@ -297,7 +297,7 @@ TEST(AuthRouteTest, Post_Login_Tests) {
   body = {{"developer_email", "fake_email@gmail.com"}, {"developer_password", "wrong_password"}};
   req.body = body.dump();
   res = api.postLogin(req);
-  ASSERT_EQ(res.code, 400);
+  ASSERT_EQ(res.code, 404);
   ASSERT_EQ(res.body, "Developer does not exist");
 
   // Invalid Login (Invalid Credentials)

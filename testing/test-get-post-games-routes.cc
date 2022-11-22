@@ -276,7 +276,7 @@ TEST(Get_Post_Games_Suite, Get_Games_Tests) {
   testAgainstBodyGet(&api, COPY, bdy, "", 401);
 
   bdy = "Error Accessing Games: none found!";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, COPY, bdy, "", 204);
 
   bdy = ss.str();  // case success
   testAgainstBodyGet(&api, COPY, bdy, "", 200);

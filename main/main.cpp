@@ -7,10 +7,8 @@
 #include "crow/crow_all.h"
 #include "main/db-service.h"
 #include "api-endpoints/api-endpoints-lib.h"
-#include "api-endpoints/api-endpoints-bandaid-lib.h"
 
 #define CREATE_API_ENDPOINTS_OBJECT APIEndPoints api = APIEndPoints()
-// #define CREATE_API_ENDPOINTS_OBJECT APIEndPointsBandaid api = APIEndPointsBandaid()
 
 APIEndPoints api = APIEndPoints();
 
@@ -80,55 +78,55 @@ int main(int argc, char* argv[]) {
   });
 
   // Get all players for the requested game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::GET)
+  CROW_ROUTE(app, "/games/<int>/players").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.getGamePlayers(req, game_id);
   });
 
   // Add player stats for a game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::POST)
+  CROW_ROUTE(app, "/games/<int>/players").methods(crow::HTTPMethod::POST)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.addPlayersStats(req, game_id);
   });
 
   // Get specific players' stats for a game
-  CROW_ROUTE(app, "/game/<int>/players/<string>").methods(crow::HTTPMethod::GET)
+  CROW_ROUTE(app, "/games/<int>/players/<string>").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req, int game_id, std::string player_email) {
     CREATE_API_ENDPOINTS_OBJECT;
     return api.getPlayersStats(req, game_id);
   });
 
   // Delete requested players' stats for a given game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::DELETE)
+  CROW_ROUTE(app, "/games/<int>/players").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.deletePlayersStats(req, game_id);
   });
 
   // Update requested players' stats for a given game
-  CROW_ROUTE(app, "/game/<int>/players").methods(crow::HTTPMethod::PUT)
+  CROW_ROUTE(app, "/games/<int>/players").methods(crow::HTTPMethod::PUT)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.updatePlayersStats(req, game_id);
   });
 
 // return everything about the game details to the user except game_id and developer_email
-  CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::GET)
+  CROW_ROUTE(app, "/games/<int>").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.getGame(req, game_id);
   });
 
   // create set for PUT request to not reset all elements and to catch errors
-  CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::PUT)
+  CROW_ROUTE(app, "/games/<int>").methods(crow::HTTPMethod::PUT)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.putGame(req, game_id);
   });
 
-  CROW_ROUTE(app, "/game/<int>").methods(crow::HTTPMethod::DELETE)
+  CROW_ROUTE(app, "/games/<int>").methods(crow::HTTPMethod::DELETE)
   ([](const crow::request& req, int game_id){
     CREATE_API_ENDPOINTS_OBJECT;
     return api.deleteGame(req, game_id);

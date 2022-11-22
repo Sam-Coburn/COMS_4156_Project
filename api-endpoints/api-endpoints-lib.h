@@ -27,9 +27,6 @@ class APIEndPoints {
     DBService* DB;  // a DB service to use for api calls
     AuthService* auth;  // an auth service to use for api calls
     bool onHeap;    // whether the DB service object is allocated on heap
-    // Checks whether supplied username and password are valid
-    // helper for all API calls that require authentication before proceeding
-    std::pair<int, std::string> authenticateBadly(const crow::request& req);
 
     // Authenticates JWT token in header of request. The token must be passed in
     // the Authorization header and must be of the form: "Bearer <token>" where
@@ -68,7 +65,7 @@ class APIEndPoints {
     crow::response postSignUp(const crow::request& req);
     crow::response postLogin(const crow::request& req);
     crow::response deleteLogin(const crow::request& req);
-    virtual crow::response matchmake(const crow::request& req, Matchmaking *M);
+    crow::response matchmake(const crow::request& req, Matchmaking *M);
     crow::response getGamePlayers(const crow::request& req, int game_id);
     crow::response addPlayersStats(const crow::request& req, int game_id);
     crow::response getPlayersStats(const crow::request& req, int game_id);
@@ -77,9 +74,9 @@ class APIEndPoints {
 
     // Maryam, go ahead and change these method names/signatures
     //  if they don't match what you want for your endpoint methods
-    virtual crow::response getGame(const crow::request& req, int game_id);
-    virtual crow::response putGame(const crow::request& req, int game_id);
-    virtual crow::response deleteGame(const crow::request& req, int game_id);
+    crow::response getGame(const crow::request& req, int game_id);
+    crow::response putGame(const crow::request& req, int game_id);
+    crow::response deleteGame(const crow::request& req, int game_id);
 };
 
 #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_

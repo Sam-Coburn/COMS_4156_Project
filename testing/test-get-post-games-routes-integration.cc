@@ -282,7 +282,7 @@ TEST_F(PostGetGamesTestFixture, Get_Games_Integration_Tests) {
   // testAgainstBodyGet(&api, COPY, bdy, "", 401);
 
   bdy = "Error Accessing Games: none found!";
-  testAgainstBodyGet(&api, token, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, token, COPY, bdy, "", 204);
 
   for (size_t i = 0; i < 4; i++) {
     // valid game, so add it.
