@@ -14,7 +14,8 @@ cc_test(
           "test-matchmaking.cpp",
           "test-matchmaking-integration.cpp",
           "test-get-post-games-routes.cc",
-          "test-player-endpoints.cpp"],
+          "test-player-endpoints.cpp",
+          "test-get-post-games-routes-integration.cc"],
   deps = [
     "//main:main",
     "//main:db-service",
@@ -95,6 +96,19 @@ cc_test(
   name = "test-player-endpoints-integration",
   size = "medium",
   srcs = ["test-player-endpoints-integration.cpp"],
+  deps = [
+    "//main:main",
+    "//main:db-service",
+    "//api-endpoints:api-endpoints",
+    "//authentication:auth-service",
+    "@com_google_googletest//:gtest_main",
+    "//testing:mock-libs"],
+)
+
+cc_test(
+  name = "test-get-post-games-routes-integration",
+  size = "medium",
+  srcs = ["test-get-post-games-routes-integration.cc"],
   deps = [
     "//main:main",
     "//main:db-service",
