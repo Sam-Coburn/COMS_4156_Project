@@ -74,7 +74,7 @@ class APIEndPoints {
     crow::response getPlayersStats(const crow::request& req, int game_id);
     crow::response deletePlayersStats(const crow::request& req, int game_id);
     crow::response updatePlayersStats(const crow::request& req, int game_id);
-    
+
     // Maryam, go ahead and change these method names/signatures
     //  if they don't match what you want for your endpoint methods
     virtual crow::response getGame(const crow::request& req, int game_id);
