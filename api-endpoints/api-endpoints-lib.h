@@ -53,6 +53,7 @@ class APIEndPoints {
     // Validates if developer owns requested game
     virtual bool developerOwnsGame(std::string developer_email, int game_id);
     FRIEND_TEST(AuthRouteTest, Developer_Owns_Game_Tests);
+    FRIEND_TEST(AuthRouteTestFixture, Developer_Owns_Game_Tests);
 
  public:
     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor
