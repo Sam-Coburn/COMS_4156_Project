@@ -199,7 +199,7 @@ class PlayerTestIntegrationFixture : public testing::Test {
         body["parameters"] = parms;
         body["weights"] = weights;
         req.body = body.dump();
-        std::pair <int, std::string> res_pair = api.postGame(req);
+        std::pair <int, std::string> res_pair = api.postGames(req);
         ASSERT_EQ(res.code, res_pair.first);
         *game_id = std::stoi(res_pair.second);
     }
