@@ -70,8 +70,14 @@ jobs:
       - name: Unit Test - Matchmaking
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-matchmaking-route-units 
+      - name: Unit Test - Player Endpoints
+        run: | 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-units
       - name: Integration Test - Authentication
         run: |
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-integration
+      - name: Integration Test - Player Endpoints
+        run: | 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-player-endpoints-integration
       # - name: Test Project (all the tests at once)
       #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test

@@ -64,11 +64,37 @@ cc_test(
     "//testing:mock-libs"],
 )
 
+cc_test(
+  name = "test-player-endpoints-units",
+  size = "small",
+  srcs = ["test-player-endpoints.cpp"],
+  deps = [
+    "//main:main",
+    "//main:db-service",
+    "//api-endpoints:api-endpoints",
+    "//authentication:auth-service",
+    "@com_google_googletest//:gtest_main",
+    "//testing:mock-libs"],
+)
+
 """ integration tests """
 cc_test(
   name = "test-auth-routes-integration",
-  size = "small",
+  size = "medium",
   srcs = ["test-auth-routes-integration.cpp"],
+  deps = [
+    "//main:main",
+    "//main:db-service",
+    "//api-endpoints:api-endpoints",
+    "//authentication:auth-service",
+    "@com_google_googletest//:gtest_main",
+    "//testing:mock-libs"],
+)
+
+cc_test(
+  name = "test-player-endpoints-integration",
+  size = "medium",
+  srcs = ["test-player-endpoints-integration.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
