@@ -232,47 +232,60 @@ exit
   ```
 ## Install Remaining Dependencies + Dev Tools
 **Platform: Debian 11**
-1. Install Boost for Crow\
+1. Install Git
+  ```sudo apt-get install git```
+
+2. Install Boost for Crow
 	```sudo apt-get install libboost-all-dev```
 
-2. Install JSONCPP
+3. Install JSONCPP
   ```sudo apt-get install libjsoncpp-dev```
 
-3. Install Auth Libraries
-  ```  
-  sudo apt-get install libssl-dev
-  ```
-4. Install glog for logging
+4. Install Auth Libraries
+  ```sudo apt-get install libssl-dev```
+
+5. Install glog for logging
 ```sudo apt install libgoogle-glog-dev```
-5. Install cpplint StyleChecker
+
+6. Install cpplint StyleChecker
 ```
 sudo apt install -y python3-pip
 pip3 install cpplint
 ```
-6. Install flawchecker security checker
+7. Install flawchecker security checker
 ```pip install flawfinder```
-7. Install cppcheck static analysis checker
+
+8. Install cppcheck static analysis checker
 ```sudo apt-get -y install cppcheck```
-8. Restart the VM
+
+9. Restart the VM
 
 **Platform: Ubuntu 22.04**
-1. Install JSONCPP
+1. Install Git
+  ```sudo apt-get install git```
+
+2. Install Boost for Crow
+	```sudo apt-get install libboost-all-dev```
+
+3. Install JSONCPP
   ```sudo apt-get install libjsoncpp-dev```
 
-2. Install Auth Libraries
-  ```  sudo apt-get install libssl-dev
-       sudo apt-get install libcrypto
-  ```
-3. Install glog for logging
+4. Install Auth Libraries
+  ```sudo apt-get install libssl-dev```
+
+5. Install glog for logging
 ```sudo apt install libgoogle-glog-dev```
-4. Install cpplint StyleChecker
+
+6. Install cpplint StyleChecker
 ```
 sudo apt install -y python3-pip
 pip3 install cpplint
 ```
-5. Install flawchecker security checker
+
+7. Install flawchecker security checker
 ```pip install flawfinder```
-6. Install cppcheck static analysis checker
+
+8. Install cppcheck static analysis checker
 ```sudo apt-get -y install cppcheck```
 
 ## Example Run of Project

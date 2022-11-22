@@ -257,7 +257,7 @@ TEST_F(PlayerTestIntegrationFixture, GetGamePlayersAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.getGamePlayers(req, game1.game_id);
-    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.code, 401);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -334,7 +334,7 @@ TEST_F(PlayerTestIntegrationFixture, AddPlayerStatsAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.addPlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.code, 401);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -420,7 +420,7 @@ TEST_F(PlayerTestIntegrationFixture, GetPlayersStatsAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.getPlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.code, 401);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -505,7 +505,7 @@ TEST_F(PlayerTestIntegrationFixture, DeletePlayersStatsAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.deletePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.code, 401);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -577,7 +577,7 @@ TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.updatePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.code, 401);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);

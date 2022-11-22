@@ -86,7 +86,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set1) {
     .WillRepeatedly(Return(games));
 
     EXPECT_CALL(auth, decodeAndVerifyJWT(_))
-    .WillRepeatedly(Return(std::make_pair(true, "some_email@gmail.com")));
+    .WillRepeatedly(Return(std::make_pair(200, "some_email@gmail.com")));
 
     // Test: Empty Request Body
     body = {};
@@ -167,7 +167,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     .WillRepeatedly(Return(valid_developer));
 
     EXPECT_CALL(auth, decodeAndVerifyJWT(_))
-    .WillRepeatedly(Return(std::make_pair(true, "developer@gmail.com")));
+    .WillRepeatedly(Return(std::make_pair(200, "developer@gmail.com")));
 
     EXPECT_CALL(DB, get_all_games_for_developer(_))
     .WillRepeatedly(Return(good_developer_games));

@@ -1,82 +1,6 @@
 // Copyright [2022] RaisingCanesFanClub
 #include "api-endpoints/api-endpoints-lib.h"
 
-// helper function
-// Checks whether supplied username and password are valid; insecure!
-// helper for all API calls that require authentication before proceeding
-std::pair<int, std::string> APIEndPoints::authenticateBadly(const crow::request& req) {
-    std::string errs;
-    Json::Value root;
-    std::string s = req.body;
-    Json::CharReaderBuilder builder;
-    const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-
-    // json validity checking
-    if (req.body.length() == 0) {
-        return std::make_pair(400, std::string("Empty body."));
-    }
-    if (!reader->parse(s.c_str(), s.c_str() + s.length(), &root,
-                       &errs)) {
-      return std::make_pair(400, std::string("Malformed json."));
-    }
-    if (root.isNull()) {
-        return std::make_pair(400, std::string("Root of json is null"));
-    }
-    if (root.type() != Json::objectValue) {
-        return std::make_pair(400, std::string("Expecting collection of name:value pairs."));
-    }
-    if (root["developer_email"].isNull() || !root["developer_email"].isString()) {
-        return std::make_pair(400, std::string("invalid developer_email field"));
-    }
-    if (root["developer_password"].isNull() || !root["developer_password"].isString()) {
-        return std::make_pair(400, std::string("invalid developer_password field"));
-    }
-
-    // check credentials
-    Developer d = DB->get_developer(root["developer_email"].asString());
-    if (!d.is_valid) {
-        return std::make_pair(401, std::string("developer not found."));
-    }
-    if (d.developer_password.compare(root["developer_password"].asString()) != 0) {
-        return std::make_pair(401, std::string("password doesn't match."));
-    }
-
-    return std::make_pair(200, root["developer_email"].asString());
-}
-
-std::pair<bool, std::string> APIEndPoints::authenticateToken(const crow::request& req) {
-  std::string header;
-  std::string token;
-  Developer D;
-
-  // To catch missing token or header
-  try {
-    header = req.get_header_value("Authorization");
-    token = header.substr(7);
-  } catch (...) {
-    return std::make_pair(false, "Invalid Header");
-  }
-
-  // Validation logic
-  try {
-    std::pair<bool, std::string> decodedToken = auth->decodeAndVerifyJWT(token);
-    if (decodedToken.first == false) {
-      return std::make_pair(false, decodedToken.second);
-    }
-
-    D = DB->get_developer(decodedToken.second);
-    if (!D.is_valid) {
-      // Developer might have been deleted
-      return std::make_pair(false, "Developer does not exist");
-    }
-
-    return std::make_pair(true, D.developer_email);
-  } catch (...) {
-    // Should never be hit unless something really goes wrong
-    return std::make_pair(false, "Internal Server Error");
-  }
-}
-
 /*
     Authenticating developer's token to ensure they are authorized to use the service
 */
@@ -90,7 +14,7 @@ std::pair<int, std::string> APIEndPoints::authenticateTokenGetErrorCode(const cr
     header = req.get_header_value("Authorization");
     token = header.substr(7);
   } catch (...) {
-    return std::make_pair(400, "Invalid Header");
+    return std::make_pair(401, "Invalid Header");
   }
 
   // Validation logic
@@ -103,7 +27,7 @@ std::pair<int, std::string> APIEndPoints::authenticateTokenGetErrorCode(const cr
     D = DB->get_developer(decodedToken.second);
     if (!D.is_valid) {
       // Developer might have been deleted
-      return std::make_pair(401, "Developer does not exist");
+      return std::make_pair(404, "Developer does not exist");
     }
 
     return std::make_pair(200, D.developer_email);
@@ -152,7 +76,7 @@ std::pair <int, std::string> APIEndPoints::getGames(const crow::request& req) {
     // get games from database
     games = DB->get_all_games_for_developer(tokenInfo.second);
     if (games.empty()) {
-        return std::make_pair(401, std::string("Error Accessing Games: none found!"));
+        return std::make_pair(204, std::string("Error Accessing Games: none found!"));
     }
 
     // define a lambda function for outputting a game to a json...
@@ -670,7 +594,7 @@ crow::response APIEndPoints::postSignUp(const crow::request& req) {
 
     D = DB->add_developer(D);
     if (!D.is_valid) {
-      return crow::response(400, "Developer already exists");
+      return crow::response(409, "Developer already exists");
     }
     return crow::response(200, "Succesfully signed up, please login to get your API key.");
   } catch(...) {
@@ -689,7 +613,7 @@ crow::response APIEndPoints::postLogin(const crow::request& req) {
     developer_password = x["developer_password"].s();
     D = DB->get_developer(developer_email);
     if (!D.is_valid) {
-      return crow::response(400, "Developer does not exist");
+      return crow::response(404, "Developer does not exist");
     }
 
     if (!auth->validatePassword(developer_password, D.developer_password)) {
@@ -710,16 +634,16 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   Developer D;
 
   try {
-    std::pair<int, std::string> tokenInfo = authenticateToken(req);
-    if (tokenInfo.first == false) {
-      return crow::response(401, tokenInfo.second);
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+    if (tokenInfo.first != 200) {
+      return crow::response(tokenInfo.first, tokenInfo.second);
     }
 
     std::string developer_email = tokenInfo.second;
 
     D = DB->remove_developer(developer_email);
     if (!D.is_valid) {
-      return crow::response(500, "Developer does not exist");
+      return crow::response(404, "Developer does not exist");
     }
 
     return crow::response(200, "Succesfully deleted account");
@@ -740,9 +664,9 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
       crow::json::wvalue json_result;
 
       // Authentication
-      std::pair<bool, std::string> tokenInfo = authenticateToken(req);
-      if (tokenInfo.first == false) {
-        return crow::response(401, tokenInfo.second);;
+      std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+      if (tokenInfo.first != 200) {
+        return crow::response(tokenInfo.first, tokenInfo.second);;
       }
 
       developer_email = tokenInfo.second;
@@ -849,3 +773,138 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
       return crow::response(400, "Incorrect Request Format.\n");
     }
 }
+
+// return everything about the game details to the user except game_id and developer_email
+crow::response APIEndPoints::getGame(const crow::request& req, int game_id) {
+  // authentication from bandaid
+  std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+  if (tokenInfo.first != 200) {
+    return crow::response(tokenInfo.first, tokenInfo.second);
+  }
+  std::string developer_email = tokenInfo.second;
+  // ^^ added by bandaid ^^
+      Game_Details game_details;
+    try {
+      crow::json::rvalue user = crow::json::load(req.body);
+      if (!developerOwnsGame(developer_email, game_id)) {
+        return crow::response(403, "Invalid authentication");
+      }
+
+
+      game_details = DB->get_game_details(game_id);
+      crow::json::wvalue game_json;
+      if (game_details.is_valid) {
+        game_json["game_id"] = game_details.game_id;
+        game_json["game_name"] = game_details.game_name;
+        game_json["game_parameter1_name"] = game_details.game_parameter1_name;
+        game_json["game_parameter1_weight"] = game_details.game_parameter1_weight;
+        game_json["game_parameter2_name"] = game_details.game_parameter2_name;
+        game_json["game_parameter2_weight"] = game_details.game_parameter2_weight;
+        game_json["game_parameter3_name"] = game_details.game_parameter3_name;
+        game_json["game_parameter3_weight"] = game_details.game_parameter3_weight;
+        game_json["game_parameter4_name"] = game_details.game_parameter4_name;
+        game_json["game_parameter4_weight"] = game_details.game_parameter4_weight;
+        game_json["category"] = game_details.category;
+        game_json["players_per_team"] = game_details.players_per_team;
+        game_json["teams_per_match"] = game_details.teams_per_match;
+
+      } else {
+        return crow::response(404, "Game not found");
+      }
+
+      return crow::response(200, game_json);
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+}
+
+
+
+
+// create set for PUT request to not reset all elements and to catch errors
+crow::response APIEndPoints::putGame(const crow::request& req, int game_id) {
+  // authentication from bandaid
+  std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+  if (tokenInfo.first != 200) {
+    return crow::response(tokenInfo.first, tokenInfo.second);
+  }
+  std::string developer_email = tokenInfo.second;
+  // ^^ added by bandaid ^^
+  try {
+      crow::json::rvalue game_body = crow::json::load(req.body);
+      if (!developerOwnsGame(developer_email, game_id)) {
+        return crow::response(403, "Invalid authentication");
+      }
+      std::set<std::string> all_keys = {"game_name",
+      "game_parameter1_name", "game_parameter1_weight",
+      "game_parameter2_name", "game_parameter2_weight",
+      "game_parameter3_name", "game_parameter3_weight",
+      "game_parameter4_name", "game_parameter4_weight",
+      "category", "players_per_team", "teams_per_match"};
+
+      Game_Details game_details;
+      for (std::string p : game_body.keys()) {
+        game_details.game_id = game_id;
+        if (p == "game_name") {
+          game_details.game_name = game_body["game_name"].s();
+        } else if (p == "game_parameter1_name") {
+          game_details.game_parameter1_name = game_body["game_parameter1_name"].s();
+        } else if (p == "game_parameter1_weight") {
+          game_details.game_parameter1_weight = game_body["game_parameter1_weight"].d();
+        } else if (p == "game_parameter2_name") {
+          game_details.game_parameter2_name = game_body["game_parameter2_name"].s();
+        } else if (p == "game_parameter2_weight") {
+          game_details.game_parameter2_weight = game_body["game_parameter2_weight"].d();
+        } else if (p == "game_parameter3_name") {
+          game_details.game_parameter3_name = game_body["game_parameter3_name"].s();
+        } else if (p == "game_parameter3_weight") {
+          game_details.game_parameter3_weight = game_body["game_parameter3_weight"].d();
+        } else if (p == "game_parameter4_name") {
+          game_details.game_parameter4_name = game_body["game_parameter4_name"].s();
+        } else if (p == "game_parameter4_weight") {
+          game_details.game_parameter4_weight = game_body["game_parameter4_weight"].d();
+        } else if (p == "category") {
+          game_details.category = game_body["category"].s();
+        } else if (p == "players_per_team") {
+          game_details.players_per_team = game_body["players_per_team"].i();
+        } else if (p == "teams_per_match") {
+          game_details.teams_per_match = game_body["teams_per_match"].i();
+        }
+      }
+      game_details.developer_email = developer_email;
+      DB->update_game_details(game_id, game_details);
+      return crow::response(200, "Added requested game details");
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+}
+
+
+crow::response APIEndPoints::deleteGame(const crow::request& req, int game_id) {
+  // authentication from bandaid
+  std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+  if (tokenInfo.first != 200) {
+    return crow::response(tokenInfo.first, tokenInfo.second);
+  }
+  std::string developer_email = tokenInfo.second;
+  // ^^ added by bandaid ^^
+      Game_Details game_details;
+    try {
+      crow::json::rvalue x = crow::json::load(req.body);
+      if (!developerOwnsGame(developer_email, game_id)) {
+        return crow::response(403, "Invalid authentication");
+      }
+      game_details = DB->get_game_details(game_id);
+      if (game_details.is_valid) {
+        DB->remove_game_details(game_details.game_id);
+      } else {
+        return crow::response(400, "Invalid request body");
+      }
+      return crow::response(200, "Succesfully deleted game details");
+    } catch(...) {
+      return crow::response(400, "Invalid request body");
+    }
+}
+
+
+
