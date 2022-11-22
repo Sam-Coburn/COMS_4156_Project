@@ -1,38 +1,6 @@
 // Copyright [2022] RaisingCanesFanClub
 #include "api-endpoints/api-endpoints-lib.h"
 
-std::pair<bool, std::string> APIEndPoints::authenticateToken(const crow::request& req) {
-  std::string header;
-  std::string token;
-  Developer D;
-
-  // To catch missing token or header
-  try {
-    header = req.get_header_value("Authorization");
-    token = header.substr(7);
-  } catch (...) {
-    return std::make_pair(false, "Invalid Header");
-  }
-
-  // Validation logic
-  try {
-    std::pair<bool, std::string> decodedToken = auth->decodeAndVerifyJWT(token);
-    if (decodedToken.first == false) {
-      return std::make_pair(false, decodedToken.second);
-    }
-
-    D = DB->get_developer(decodedToken.second);
-    if (!D.is_valid) {
-      // Developer might have been deleted
-      return std::make_pair(false, "Developer does not exist");
-    }
-
-    return std::make_pair(true, D.developer_email);
-  } catch (...) {
-    // Should never be hit unless something really goes wrong
-    return std::make_pair(false, "Internal Server Error");
-  }
-}
 
 /*
     Authenticating developer's token to ensure they are authorized to use the service
@@ -47,7 +15,7 @@ std::pair<int, std::string> APIEndPoints::authenticateTokenGetErrorCode(const cr
     header = req.get_header_value("Authorization");
     token = header.substr(7);
   } catch (...) {
-    return std::make_pair(400, "Invalid Header");
+    return std::make_pair(401, "Invalid Header");
   }
 
   // Validation logic
@@ -60,7 +28,7 @@ std::pair<int, std::string> APIEndPoints::authenticateTokenGetErrorCode(const cr
     D = DB->get_developer(decodedToken.second);
     if (!D.is_valid) {
       // Developer might have been deleted
-      return std::make_pair(401, "Developer does not exist");
+      return std::make_pair(404, "Developer does not exist");
     }
 
     return std::make_pair(200, D.developer_email);
@@ -667,9 +635,9 @@ crow::response APIEndPoints::deleteLogin(const crow::request& req) {
   Developer D;
 
   try {
-    std::pair<int, std::string> tokenInfo = authenticateToken(req);
-    if (tokenInfo.first == false) {
-      return crow::response(401, tokenInfo.second);
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+    if (tokenInfo.first != 200) {
+      return crow::response(tokenInfo.first, tokenInfo.second);
     }
 
     std::string developer_email = tokenInfo.second;
@@ -697,9 +665,9 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
       crow::json::wvalue json_result;
 
       // Authentication
-      std::pair<bool, std::string> tokenInfo = authenticateToken(req);
-      if (tokenInfo.first == false) {
-        return crow::response(401, tokenInfo.second);;
+      std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+      if (tokenInfo.first != 200) {
+        return crow::response(tokenInfo.first, tokenInfo.second);;
       }
 
       developer_email = tokenInfo.second;

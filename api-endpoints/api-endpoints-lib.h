@@ -31,21 +31,15 @@ class APIEndPoints {
     // Authenticates JWT token in header of request. The token must be passed in
     // the Authorization header and must be of the form: "Bearer <token>" where
     // <token> is the JWT token. The return value is a pair where the first
-    // element is a boolean indicating if the authentication was successful.
-    // If the first element of the pair is true then the authentication was
+    // element is a status code indicating if the authentication was successful.
+    // If the first element of the pair is 200 then the authentication was
     // successful and the second element of the pair will be the email of
     // the developer just authenticated. If the first element of the pair
-    // is false the authentication failed, and the second element of the
+    // is not 200 the authentication failed, and the second element of the
     // pair will be an error message.
-    [[deprecated("Replaced by AuthenticateTokenGetErrorCode, which returns helpful error codes on failure")]]
-    std::pair<bool, std::string> authenticateToken(const crow::request& req);
+    virtual std::pair<int, std::string> authenticateTokenGetErrorCode(const crow::request& req);
     FRIEND_TEST(AuthRouteTest, Authenticate_Token_Test);
     FRIEND_TEST(AuthRouteTestFixture, Authenticate_Token_Test);
-
-    // works exactly the same as authenticateToken except
-    // - on success 200 is returned as first elt of tuple
-    // - failure, specific failure error code is returned as first elt of tuple
-    virtual std::pair<int, std::string> authenticateTokenGetErrorCode(const crow::request& req);
 
     // Validates if developer owns requested game
     virtual bool developerOwnsGame(std::string developer_email, int game_id);

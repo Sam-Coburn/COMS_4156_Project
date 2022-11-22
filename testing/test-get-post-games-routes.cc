@@ -273,7 +273,7 @@ TEST(Get_Post_Games_Suite, Get_Games_Tests) {
   testAgainstBodyGet(&api, COPY, bdy, "", 401);
 
   bdy = "Developer does not exist";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, COPY, bdy, "", 404);
 
   bdy = "Error Accessing Games: none found!";
   testAgainstBodyGet(&api, COPY, bdy, "", 204);

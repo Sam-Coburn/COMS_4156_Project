@@ -42,7 +42,7 @@ TEST_F(AuthRouteTestFixture, Authenticate_Token_Test) {
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
-  std::pair<bool, std::string> result;
+  std::pair<int, std::string> result;
 
   Developer valid_developer;
   valid_developer.developer_email = "some_email@gmail.com";
@@ -68,24 +68,24 @@ TEST_F(AuthRouteTestFixture, Authenticate_Token_Test) {
   token = res.body.substr(res.body.find(":") + 2);
 
   // No Authorization Header
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
   ASSERT_EQ(result.second, "Invalid Header");
 
   // Invalid token
   req.add_header("Authorization", "Random String");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
 
   // Expired token
   req.add_header("Authorization", "Expired Token");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
 
   // Valid token
   req.add_header("Authorization", token);
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, true);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 200);
 }
 
 TEST_F(AuthRouteTestFixture, Developer_Owns_Game_Tests) {
