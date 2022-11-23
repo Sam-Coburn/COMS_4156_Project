@@ -175,7 +175,7 @@ TEST_F(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
     createGame(chess, token, &chess.game_id);
 
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -214,7 +214,6 @@ TEST_F(MatchmakingTestFixture,  Matchmaking_Endpoint_Tests_Set2) {
 
 
     addPlayersStats(pgrs, token, chess.game_id);
-    
 
     // Test: No Player Emails Given
     body = {
@@ -336,7 +335,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set1) {
     createGame(chess, token, &chess.game_id);
 
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -422,7 +421,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set2) {
     createGame(chess, token, &chess.game_id);
 
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -489,7 +488,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set3) {
     createGame(chess, token, &chess.game_id);
 
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -607,7 +606,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
     checkers.category = "Strategy";
     createGame(checkers, token, &checkers.game_id);
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -709,7 +708,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
     checkers.category = "Strategy";
     createGame(checkers, token, &checkers.game_id);
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -741,7 +740,6 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
 
     addPlayersStats(pgrs, token, checkers.game_id);
 
-    
     std::tuple<
     std::vector<std::vector<std::vector<std::string> > >,
     std::vector<std::string> > backend_result;
@@ -823,7 +821,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
     checkers.category = "Strategy";
     createGame(checkers, token, &checkers.game_id);
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -936,7 +934,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
     checkers.category = "Strategy";
     createGame(checkers, token, &checkers.game_id);
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -1057,7 +1055,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
     checkers.category = "Strategy";
     createGame(checkers, token, &checkers.game_id);
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
@@ -1152,7 +1150,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
 }
 
 TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set9) {
-   crow::request req;
+    crow::request req;
     crow::response res;
     crow::json::wvalue body;
     std::string token;
@@ -1202,7 +1200,7 @@ TEST_F(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set9) {
     checkers.category = "Strategy";
     createGame(checkers, token, &checkers.game_id);
 
-    std::vector<Player_Game_Ratings> pgrs; 
+    std::vector<Player_Game_Ratings> pgrs;
     Player_Game_Ratings pgr1;
     pgr1.player_email = "player_1@gmail.com";
     pgr1.game_id = chess.game_id;
