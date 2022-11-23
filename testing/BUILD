@@ -43,7 +43,7 @@ cc_test(
 cc_test(
   name = "test-matchmaking-route-units",
   size = "small",
-  srcs = ["test-matchmaking.cpp", "test-matchmaking-integration.cpp"],
+  srcs = ["test-matchmaking.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
@@ -81,6 +81,19 @@ cc_test(
 
 """ integration tests """
 cc_test(
+  name = "test-db-integration",
+  size = "small",
+  srcs = ["test-db-integration.cpp"],
+  deps = [
+    "//main:main",
+    "//main:db-service",
+    "//api-endpoints:api-endpoints",
+    "//authentication:auth-service",
+    "@com_google_googletest//:gtest_main",
+    "//testing:mock-libs"],
+)
+
+cc_test(
   name = "test-auth-routes-integration",
   size = "medium",
   srcs = ["test-auth-routes-integration.cpp"],
@@ -110,6 +123,19 @@ cc_test(
   name = "test-get-post-games-routes-integration",
   size = "medium",
   srcs = ["test-get-post-games-routes-integration.cc"],
+  deps = [
+    "//main:main",
+    "//main:db-service",
+    "//api-endpoints:api-endpoints",
+    "//authentication:auth-service",
+    "@com_google_googletest//:gtest_main",
+    "//testing:mock-libs"],
+)
+
+cc_test(
+  name = "test-matchmaking-route-integration",
+  size = "small",
+  srcs = ["test-matchmaking-integration.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
