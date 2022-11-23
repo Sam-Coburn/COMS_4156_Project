@@ -43,7 +43,7 @@ cc_test(
 cc_test(
   name = "test-matchmaking-route-units",
   size = "small",
-  srcs = ["test-matchmaking.cpp"],
+  srcs = ["test-matchmaking.cpp", "test-matchmaking-integration.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
