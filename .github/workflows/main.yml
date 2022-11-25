@@ -19,16 +19,6 @@ jobs:
           pip3 install cpplint
       - name: cpplint
         run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
-   static-analysis-flawfinder-and-cppcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install cpplint format checker
-        run: |
-          sudo apt install -y python3-pip
-          pip3 install cpplint
-      - name: cpplint
-        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
    static-analysis:
     runs-on: ubuntu-latest
     env:
@@ -66,13 +56,24 @@ jobs:
         run: sudo apt -y install default-jre
       - name: Run build-wrapper
         run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel --batch build --spawn_strategy=local --strategy=Genrule=local --linkopt="-ljsoncpp" //main:main
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel \
+            --batch build \
+            --spawn_strategy=local \
+            --strategy=Genrule=local \
+            --linkopt="-ljsoncpp" \
+            //main:main
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+      - name: Install cpplint format checker
+        run: |
+          sudo apt install -y python3-pip
+          pip3 install cpplint
+      - name: cpplint
+        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
    build-and-test:
     runs-on: ubuntu-latest
     steps:
