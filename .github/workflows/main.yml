@@ -52,6 +52,8 @@ jobs:
           root-password: 123
       - name: Setup Database
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
+      - name: Install java for sonar cloud
+        run: sudo apt -y install default-jre
       - name: Run build-wrapper
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel build --linkopt="-ljsoncpp" //main:main
