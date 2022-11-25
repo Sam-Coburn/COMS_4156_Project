@@ -10,9 +10,15 @@ using ::testing::NiceMock;
 
 class MockAPIEndPoints : public APIEndPoints {
  public:
-    MockAPIEndPoints(DBService* db, AuthService* auth) : APIEndPoints(db, auth) {}
-    MOCK_METHOD((std::pair<int, std::string>), authenticateTokenGetErrorCode, (const crow::request& req), (override));
-    MOCK_METHOD(bool, developerOwnsGame, (std::string developer_email, int game_id), (override));
+    MockAPIEndPoints(DBService* db, AuthService* auth)
+     : APIEndPoints(db, auth) {}
+    MOCK_METHOD((std::pair<int, std::string>),
+    authenticateTokenGetErrorCode,
+    (const crow::request& req),
+    (override));
+    MOCK_METHOD(bool, developerOwnsGame,
+    (std::string developer_email, int game_id),
+    (override));
 };
 
 /*Get Tests*/
@@ -49,7 +55,8 @@ TEST(GameTesting, GameTest) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> invalid_dev = std::make_pair(404, "Developer does not exist");
+    std::pair<int, std::string> invalid_dev
+     = std::make_pair(404, "Developer does not exist");
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(invalid_dev));
 
@@ -91,7 +98,8 @@ TEST(GameTesting, GameTest2) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> valid_dev = std::make_pair(200, valid_developer.developer_email);
+    std::pair<int, std::string> valid_dev
+     = std::make_pair(200, valid_developer.developer_email);
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(valid_dev));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
@@ -135,13 +143,14 @@ TEST(GameTesting, GameTest3) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> valid_dev = std::make_pair(200, valid_developer.developer_email);
+    std::pair<int, std::string> valid_dev
+     = std::make_pair(200, valid_developer.developer_email);
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(valid_dev));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
-    .WillOnce(Return(true));    
+    .WillOnce(Return(true));
     EXPECT_CALL(DB, get_game_details(_)).Times(1)
-    .WillOnce(Return(game1)); 
+    .WillOnce(Return(game1));
 
     return_body["game_id"] = game1.game_id;
     return_body["game_name"] = game1.game_name;
@@ -195,13 +204,14 @@ TEST(GameTesting, GameTest4) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> valid_dev = std::make_pair(200, valid_developer.developer_email);
+    std::pair<int, std::string> valid_dev
+     = std::make_pair(200, valid_developer.developer_email);
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(valid_dev));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
-    .WillOnce(Return(true));    
+    .WillOnce(Return(true));
     EXPECT_CALL(DB, get_game_details(_)).Times(1)
-    .WillOnce(Return(game1)); 
+    .WillOnce(Return(game1));
 
     res = api.getGame(req, game1.game_id);
     EXPECT_EQ(res.code, 404);
@@ -242,8 +252,8 @@ TEST(GameTesting, GameTest5) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    //testing first if branch
-    std::pair<int, std::string> invalid_dev = std::make_pair(404, "Developer does not exist");
+    std::pair<int, std::string> invalid_dev
+     = std::make_pair(404, "Developer does not exist");
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(invalid_dev));
 
@@ -285,7 +295,8 @@ TEST(GameTesting, GameTest6) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> valid_dev = std::make_pair(200, valid_developer.developer_email);
+    std::pair<int, std::string> valid_dev
+     = std::make_pair(200, valid_developer.developer_email);
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(valid_dev));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
@@ -329,15 +340,16 @@ TEST(GameTesting, GameTest7) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> valid_dev = std::make_pair(200, valid_developer.developer_email);
+    std::pair<int, std::string> valid_dev
+     = std::make_pair(200, valid_developer.developer_email);
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(valid_dev));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
-    .WillOnce(Return(true));    
+    .WillOnce(Return(true));
     EXPECT_CALL(DB, get_game_details(_)).Times(1)
-    .WillOnce(Return(game1)); 
+    .WillOnce(Return(game1));
     EXPECT_CALL(DB, remove_game_details(_)).Times(1)
-    .WillOnce(Return(game1)); 
+    .WillOnce(Return(game1));
 
     res = api.deleteGame(req, game1.game_id);
     EXPECT_EQ(res.code, 200);
@@ -377,11 +389,12 @@ TEST(GameTesting, GameTest8) {
     crow::json::wvalue body;
     crow::json::wvalue return_body;
 
-    std::pair<int, std::string> valid_dev = std::make_pair(200, valid_developer.developer_email);
+    std::pair<int, std::string> valid_dev =
+     std::make_pair(200, valid_developer.developer_email);
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(valid_dev));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
-    .WillOnce(Return(true));    
+    .WillOnce(Return(true));
     EXPECT_CALL(DB, get_game_details(_)).Times(1)
     .WillOnce(Return(game1));
 
