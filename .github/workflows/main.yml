@@ -68,12 +68,18 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
-      - name: Install cpplint format checker
+      - name: Install flawchecker security checker
+        run: pip install flawfinder
+      - name: Install cppcheck static analysis checker
+        run: sudo apt-get -y install cppcheck
+      - name: flawfinder
+        run: flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*
+      - name: cppcheck
         run: |
-          sudo apt install -y python3-pip
-          pip3 install cpplint
-      - name: cpplint
-        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
+          cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h	      #     cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h
+          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp	      #     cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp
+          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h	      #     cppcheck --language=c++ main/*.cc main/*.cpp main/*.h
+          cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
    build-and-test:
     runs-on: ubuntu-latest
     steps:
