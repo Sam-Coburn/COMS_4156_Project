@@ -5,6 +5,7 @@ on:
     branches: [main]
 
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [main]
 
 jobs:
@@ -20,8 +21,46 @@ jobs:
         run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
    static-analysis:
     runs-on: ubuntu-latest
+    env:
+      BUILD_WRAPPER_OUT_DIR: sonarCloud_build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install sonar-scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-c-cpp@v1
+      - name: Setup Bazel
+        uses: ngalaiko/bazel-action/1.2.1@master
+      - name: Install C++ Connector to MySQL
+        run: sudo apt install libmysqlcppconn-dev
+      - name: Install Boost for Crow
+        run: sudo apt-get install libboost-all-dev
+      - name: Install Git
+        run: sudo apt-get install git
+      - name: Install JSONCPP
+        run: sudo apt-get install libjsoncpp-dev
+      - name: Install glog
+        run: |
+          sudo apt-get -y install aptitude
+          sudo aptitude -y install libgoogle-glog-dev
+      - name: Install Auth Libraries
+        run: sudo apt-get install libssl-dev
+      - name: Setup MySQL
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '8.0'
+          root-password: 123
+      - name: Setup Database
+        run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
+      - name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel build --linkopt="-ljsoncpp" //main:main
+      - name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
       - name: Install flawchecker security checker
         run: pip install flawfinder
       - name: Install cppcheck static analysis checker
