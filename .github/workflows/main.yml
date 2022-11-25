@@ -69,6 +69,9 @@ jobs:
       - name: Unit Test - Get/Post Games
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-get-post-games-routes-units
+      - name: Unit Test - Get/Delete Game
+        run: | 
+          bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-get-delete-game-units
       - name: Unit Test - Matchmaking
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-matchmaking-route-units 

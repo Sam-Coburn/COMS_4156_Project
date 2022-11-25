@@ -81,7 +81,7 @@ cc_test(
 )
 
 cc_test(
-  name = "test-gdp",
+  name = "test-get-delete-game-units",
   size = "small",
   srcs = ["test-gdp.cpp"],
   deps = [
