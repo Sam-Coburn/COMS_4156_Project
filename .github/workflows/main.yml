@@ -23,19 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install flawchecker security checker
-        run: pip install flawfinder
-      - name: Install cppcheck static analysis checker
-        run: sudo apt-get -y install cppcheck
-      - name: flawfinder
-        run: flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*
-      - name: cppcheck
+      - name: Install cpplint format checker
         run: |
-          cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h
-          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp
-          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h
-          cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
-   static-analysis-sonar-cloud:
+          sudo apt install -y python3-pip
+          pip3 install cpplint
+      - name: cpplint
+        run: cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*
+   static-analysis:
     runs-on: ubuntu-latest
     env:
       BUILD_WRAPPER_OUT_DIR: sonarCloud_build_wrapper_output_directory # Directory where build-wrapper output will be placed
@@ -45,24 +39,22 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v1
-      - name: Install java for sonar cloud
-        run: sudo apt -y install default-jre
-      - name: Install Other Dependencies
+      - name: Setup Bazel
         uses: ngalaiko/bazel-action/1.2.1@master
+      - name: Install C++ Connector to MySQL
+        run: sudo apt install libmysqlcppconn-dev
+      - name: Install Boost for Crow
+        run: sudo apt-get install libboost-all-dev
+      - name: Install Git
+        run: sudo apt-get install git
+      - name: Install JSONCPP
+        run: sudo apt-get install libjsoncpp-dev
+      - name: Install glog
         run: |
-          echo "Install C++ Connector to MySQL"
-          sudo apt install libmysqlcppconn-dev
-          echo "Install Boost for Crow"
-          sudo apt-get install libboost-all-dev
-          echo "Install Git"
-          sudo apt-get install git
-          echo "Install JSONCPP"
-          sudo apt-get install libjsoncpp-dev
-          echo "Install glog"
           sudo apt-get -y install aptitude
           sudo aptitude -y install libgoogle-glog-dev
-          echo "Install Auth Libraries"
-          sudo apt-get install libssl-dev
+      - name: Install Auth Libraries
+        run: sudo apt-get install libssl-dev
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
         with:
@@ -70,6 +62,8 @@ jobs:
           root-password: 123
       - name: Setup Database
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
+      - name: Install java for sonar cloud
+        run: sudo apt -y install default-jre
       - name: Run build-wrapper
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel --batch build --spawn_strategy=local --strategy=Genrule=local --linkopt="-ljsoncpp" //main:main
