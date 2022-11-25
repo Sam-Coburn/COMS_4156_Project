@@ -56,7 +56,7 @@ jobs:
         run: sudo apt -y install default-jre
       - name: Run build-wrapper
         run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel --batch build --spawn_strategy=local --strategy=Genrule=local --bazelrc=/dev/null --linkopt="-ljsoncpp" //main:main
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} bazel --batch build --spawn_strategy=local --strategy=Genrule=local --linkopt="-ljsoncpp" //main:main
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
