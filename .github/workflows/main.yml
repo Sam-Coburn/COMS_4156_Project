@@ -49,7 +49,7 @@ jobs:
         run: sudo apt -y install default-jre
       - name: Install Other Dependencies
         uses: ngalaiko/bazel-action/1.2.1@master
-        run:|
+        run: |
           echo "Install C++ Connector to MySQL"
           sudo apt install libmysqlcppconn-dev
           echo "Install Boost for Crow"
