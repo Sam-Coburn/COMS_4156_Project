@@ -138,6 +138,12 @@ We use [glog](https://github.com/google/glog#severity-levels) for our logging ou
 Once cpplint is installed run:
 `cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/* &> style-check.txt`
 
+### Static Analysis
+We use two command line tools for static analysis,
+flawfinder and cppchecker (See main.yaml file for details)
+as well as Sonar Cloud with github actions.
+Results from Sonar Cloud CI are here: https://sonarcloud.io/summary/overall?id=EmilySillars_COMS_4156_Project
+
 ## Install Bazel
 **Platform: Debian 11**
 Reference instructions: https://bazel.build/install/ubuntu
