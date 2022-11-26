@@ -606,7 +606,7 @@ TEST_F(PlayerTestFixture, GetPlayersStatsAuthTest) {
     // Invalid header
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(auth_code_invalid_header));
-    res = api.getPlayersStats(req, 1);
+    res = api.getPlayerStats(req, 1, "");
     EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
@@ -616,13 +616,13 @@ TEST_F(PlayerTestFixture, GetPlayersStatsAuthTest) {
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(false));
 
-    res = api.getPlayersStats(req, game1.game_id);
+    res = api.getPlayerStats(req, game1.game_id, "");
     std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
     EXPECT_EQ(res.body, error);
 }
 
-/* Player game rating is missing for multiple players */
+/* Player game rating is missing */
 TEST_F(PlayerTestFixture, GetPlayersStatsMissingStatsTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -631,30 +631,14 @@ TEST_F(PlayerTestFixture, GetPlayersStatsMissingStatsTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr_invalid1));
 
-    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(4)
-    .WillOnce(Return(pgr1))
-    .WillOnce(Return(pgr_invalid1))
-    .WillOnce(Return(pgr_invalid2))
-    .WillOnce(Return(pgr2));
-
-    // Performing test
-    std::vector<std::string> player_emails;
-    player_emails.push_back(pgr1.player_email);
-    player_emails.push_back(pgr_invalid1.player_email);
-    player_emails.push_back(pgr_invalid2.player_email);
-    player_emails.push_back(pgr2.player_email);
-
-    body["player_emails"] = player_emails;
-    req.body = body.dump();
-    res = api.getPlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 204);
+    res = api.getPlayerStats(req, game1.game_id, pgr_invalid1.player_email);
+    EXPECT_EQ(res.code, 404);
     // Players can be listed in any order as long as both players are stated as invalid
-    std::string missing_players1 = "The following players do not exist " + pgr_invalid1.player_email +
-        ", "  + pgr_invalid2.player_email;
-    std::string missing_players2 = "The following players do not exist " + pgr_invalid2.player_email +
-        ", "  + pgr_invalid1.player_email;
-    EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
+    std::string missing_players1 = "The given player does not have ratings for this game";
+    EXPECT_TRUE(res.body == missing_players1);
 }
 
 /* Player game ratings are valid */
@@ -666,37 +650,17 @@ TEST_F(PlayerTestFixture, GetPlayersStatsValidTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
 
-    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(3)
-    .WillOnce(Return(pgr1))
-    .WillOnce(Return(pgr2))
-    .WillOnce(Return(pgr3));
-
-    // Performing test
-    std::vector<std::string> player_emails;
-    player_emails.push_back(pgr1.player_email);
-    player_emails.push_back(pgr2.player_email);
-    player_emails.push_back(pgr3.player_email);
-
-    body["player_emails"] = player_emails;
-    req.body = body.dump();
-
-    return_body[pgr1.player_email]["game_parameter1_value"] = pgr1.game_parameter1_value;
-    return_body[pgr1.player_email]["game_parameter2_value"] = pgr1.game_parameter2_value;
-    return_body[pgr1.player_email]["game_parameter3_value"] = pgr1.game_parameter3_value;
-    return_body[pgr1.player_email]["game_parameter4_value"] = pgr1.game_parameter4_value;
-    return_body[pgr2.player_email]["game_parameter1_value"] = pgr2.game_parameter1_value;
-    return_body[pgr2.player_email]["game_parameter2_value"] = pgr2.game_parameter2_value;
-    return_body[pgr2.player_email]["game_parameter3_value"] = pgr2.game_parameter3_value;
-    return_body[pgr2.player_email]["game_parameter4_value"] = pgr2.game_parameter4_value;
-    return_body[pgr3.player_email]["game_parameter1_value"] = pgr3.game_parameter1_value;
-    return_body[pgr3.player_email]["game_parameter2_value"] = pgr3.game_parameter2_value;
-    return_body[pgr3.player_email]["game_parameter3_value"] = pgr3.game_parameter3_value;
-    return_body[pgr3.player_email]["game_parameter4_value"] = pgr3.game_parameter4_value;
-
-    res = api.getPlayersStats(req, game1.game_id);
+    crow::json::wvalue expected_return = {
+        {"game_parameter1_value", pgr1.game_parameter1_value},
+        {"game_parameter2_value", pgr1.game_parameter2_value},
+        {"game_parameter3_value", pgr1.game_parameter3_value},
+        {"game_parameter4_value", pgr1.game_parameter4_value},
+    };
+    res = api.getPlayerStats(req, game1.game_id, pgr1.player_email);
     EXPECT_EQ(res.code, 200);
-    EXPECT_EQ(res.body, return_body.dump());
 }
 
 /*
@@ -713,7 +677,7 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsAuthTest) {
     // Invalid header
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(auth_code_invalid_header));
-    res = api.deletePlayersStats(req, 1);
+    res = api.deletePlayerStats(req, 1, "");
     EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
@@ -723,13 +687,13 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsAuthTest) {
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(false));
 
-    res = api.deletePlayersStats(req, game1.game_id);
+    res = api.deletePlayerStats(req, game1.game_id, "");
     std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
     EXPECT_EQ(res.body, error);
 }
 
-/* Attempting to delete multiple players that don't exist */
+/* Attempting to delete player rating that doesn't exist */
 TEST_F(PlayerTestFixture, DeletePlayersStatsMissingPlayersTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -738,31 +702,13 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingPlayersTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr_invalid1));
 
-    EXPECT_CALL(DB, remove_player_rating(_, _)).Times(4)
-    .WillOnce(Return(pgr1))
-    .WillOnce(Return(pgr_invalid1))
-    .WillOnce(Return(pgr_invalid2))
-    .WillOnce(Return(pgr2));
-
-    // Performing test
-    std::vector<std::string> player_emails;
-    player_emails.push_back(pgr1.player_email);
-    player_emails.push_back(pgr_invalid1.player_email);
-    player_emails.push_back(pgr_invalid2.player_email);
-    player_emails.push_back(pgr2.player_email);
-
-    body = {};
-    body["player_emails"] = player_emails;
-    req.body = body.dump();
-    res = api.deletePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 500);
-    // Players can be listed in any order as long as both players are stated as invalid
-    std::string missing_players1 = "The following players do not exist: " + pgr_invalid1.player_email +
-        ", "  + pgr_invalid2.player_email;
-    std::string missing_players2 = "The following players do not exist: " + pgr_invalid2.player_email +
-        ", "  + pgr_invalid1.player_email;
-    EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
+    res = api.deletePlayerStats(req, game1.game_id, pgr_invalid1.player_email);
+    EXPECT_EQ(res.code, 404);
+    std::string missing_players1 = "The given player does not have ratings for this game";
+    EXPECT_TRUE(res.body == missing_players1);
 }
 
 /* Player game ratings are valid */
@@ -774,22 +720,12 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingStatsTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
+    EXPECT_CALL(DB, remove_player_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
 
-    EXPECT_CALL(DB, remove_player_rating(_, _)).Times(3)
-    .WillOnce(Return(pgr1))
-    .WillOnce(Return(pgr2))
-    .WillOnce(Return(pgr3));
-
-    // Performing test
-    std::vector<std::string> player_emails;
-    player_emails.push_back(pgr1.player_email);
-    player_emails.push_back(pgr2.player_email);
-    player_emails.push_back(pgr3.player_email);
-
-    body = {};
-    body["player_emails"] = player_emails;
-    req.body = body.dump();
-    res = api.deletePlayersStats(req, game1.game_id);
+    res = api.deletePlayerStats(req, game1.game_id, pgr1.player_email);
     EXPECT_EQ(res.code, 200);
     EXPECT_EQ(res.body, "Player stats were removed");
 }
@@ -808,7 +744,7 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsAuthTest) {
     // Invalid header
     EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
     .WillOnce(Return(auth_code_invalid_header));
-    res = api.updatePlayersStats(req, 1);
+    res = api.updatePlayerStats(req, 1, "");
     EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
@@ -818,13 +754,14 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsAuthTest) {
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(false));
 
-    res = api.updatePlayersStats(req, game1.game_id);
+    res = api.updatePlayerStats(req, game1.game_id, "");
     std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
     EXPECT_EQ(res.body, error);
 }
 
-/* Not giving any stats to update */
+
+/* Player rating does not exist */
 TEST_F(PlayerTestFixture, UpdatePlayersStatsMissingStatsTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -833,13 +770,42 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsMissingStatsTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr_invalid1));
+
+    // Performing test
+    body = {
+        {"game_parameter1_value", pgr1.game_parameter1_value},
+        {"game_parameter2_value", pgr1.game_parameter2_value},
+        {"game_parameter3_value", pgr1.game_parameter3_value},
+        {"game_parameter4_value", pgr1.game_parameter4_value}
+    };
+    req.body = body.dump();
+    res = api.updatePlayerStats(req, game1.game_id, pgr_invalid1.player_email);
+    EXPECT_EQ(res.code, 404);
+    std::string missing_players1 = "The given player does not have ratings for this game";
+    EXPECT_TRUE(res.body == missing_players1);
+}
+
+
+/* Not giving any stats to update */
+TEST_F(PlayerTestFixture, UpdatePlayersStatsEmptyBodyTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
 
     // Performing test
     body = {};
     req.body = body.dump();
-    res = api.updatePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 200);
-    EXPECT_EQ(res.body, "No player stats added due to empty request");
+    res = api.updatePlayerStats(req, game1.game_id, pgr1.player_email);
+    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.body, "Invalid request body");
 }
 
 /* Attempting to update players stats with invalid stats */
@@ -851,68 +817,20 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsInvalidStatsTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
 
     // Performing test
     body = {
-        {pgr1.player_email, {
-            {"game_parameter1_value", pgr1.game_parameter1_value},
-            {"game_parameter2_value", pgr1.game_parameter2_value},
-            {"game_parameter3_value", pgr1.game_parameter3_value},
-            {"game_parameter4_value", pgr1.game_parameter4_value}
-        }},
-        {pgr_invalid1.player_email, {
-            {"game_parameter2_value", pgr_invalid1.game_parameter2_value}
-        }},
-        {pgr_invalid2.player_email, {
-            {"game_parameter4_value", pgr_invalid2.game_parameter4_value}
-        }},
-        {pgr4.player_email, {
-            {"game_parameter1_value", pgr4.game_parameter1_value},
-            {"game_parameter2_value", pgr4.game_parameter2_value},
-            {"game_parameter3_value", pgr4.game_parameter3_value},
-            {"game_parameter4_value", pgr4.game_parameter4_value}
-        }},
+        {"game_parameter1_value", "abc"},
+        {"game_parameter2_value", pgr1.game_parameter2_value},
+        {"game_parameter3_value", pgr1.game_parameter3_value},
+        {"game_parameter4_value", pgr1.game_parameter4_value}
     };
     req.body = body.dump();
-    res = api.updatePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 204);
-    // Players can be listed in any order as long as both players are stated as invalid
-    std::string invalid_player_stats1 = "The following players have invalid stats: " + pgr_invalid1.player_email +
-        ", "  + pgr_invalid2.player_email;
-    std::string invalid_player_stats2 = "The following players have invalid stats: " + pgr_invalid2.player_email +
-        ", "  + pgr_invalid1.player_email;
-    EXPECT_TRUE((res.body ==  invalid_player_stats1) || (res.body == invalid_player_stats2));
-}
-
-/* Attempting to update stats for new player -- But cannot add player */
-TEST_F(PlayerTestFixture, UpdatePlayersStatsCannotAddPlayerTest) {
-    NiceMock<MockAPIEndPoints> api(&DB, &auth);
-
-    // Mocking
-    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
-    .WillOnce(Return(auth_code_valid));
-    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
-    .WillOnce(Return(true));
-
-    EXPECT_CALL(DB, get_player(_)).Times(1)
-    .WillOnce(Return(p7_new));
-
-    EXPECT_CALL(DB, add_player(_)).Times(1)
-    .WillOnce(Return(p7_new));
-
-    // Performing test
-    body = {
-        {pgr7.player_email, {
-            {"game_parameter1_value", pgr7.game_parameter1_value},
-            {"game_parameter2_value", pgr7.game_parameter2_value},
-            {"game_parameter3_value", pgr7.game_parameter3_value},
-            {"game_parameter4_value", pgr7.game_parameter4_value}
-        }}
-    };
-    req.body = body.dump();
-    res = api.updatePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 500);
-    EXPECT_EQ(res.body, "Internal Server Error due to player " + p7_new.player_email);
+    res = api.updatePlayerStats(req, game1.game_id, pgr1.player_email);
+    EXPECT_EQ(res.code, 400);
+    EXPECT_TRUE(res.body ==  "Invalid request body");
 }
 
 /* Unable to update player rating */
@@ -924,29 +842,22 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsCannotUpdateStatsTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
-
-    EXPECT_CALL(DB, get_player(_)).Times(1)
-    .WillOnce(Return(p7_new));
-
-    EXPECT_CALL(DB, add_player(_)).Times(1)
-    .WillOnce(Return(p7_created));
-
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
     EXPECT_CALL(DB, update_player_rating(_, _, _)).Times(1)
-    .WillOnce(Return(pgr7_created_error));
+    .WillOnce(Return(pgr_invalid1));
 
     // Performing test
     body = {
-        {pgr7.player_email, {
-            {"game_parameter1_value", pgr7.game_parameter1_value},
-            {"game_parameter2_value", pgr7.game_parameter2_value},
-            {"game_parameter3_value", pgr7.game_parameter3_value},
-            {"game_parameter4_value", pgr7.game_parameter4_value}
-        }}
+        {"game_parameter1_value", pgr7.game_parameter1_value},
+        {"game_parameter2_value", pgr7.game_parameter2_value},
+        {"game_parameter3_value", pgr7.game_parameter3_value},
+        {"game_parameter4_value", pgr7.game_parameter4_value}
     };
     req.body = body.dump();
-    res = api.updatePlayersStats(req, game1.game_id);
+    res = api.updatePlayerStats(req, game1.game_id, pgr7.player_email);
     EXPECT_EQ(res.code, 500);
-    EXPECT_EQ(res.body, "Internal Server Error due to player " + pgr7_created_error.player_email);
+    EXPECT_EQ(res.body, "Something went wrong");
 }
 
 /* Valid update */
@@ -958,41 +869,21 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsValidTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
-
-    EXPECT_CALL(DB, get_player(_)).Times(3)
-    .WillOnce(Return(p1))
-    .WillOnce(Return(p2))
-    .WillOnce(Return(p3));
-
-    EXPECT_CALL(DB, update_player_rating(_, _, _)).Times(3)
-    .WillOnce(Return(pgr1))
-    .WillOnce(Return(pgr2))
-    .WillOnce(Return(pgr3));
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(1)
+    .WillOnce(Return(pgr1));
+    EXPECT_CALL(DB, update_player_rating(_, _, _)).Times(1)
+    .WillOnce(Return(pgr1));
 
     // Performing test
     body = {
-        {pgr1.player_email, {
-            {"game_parameter1_value", pgr1.game_parameter1_value},
-            {"game_parameter2_value", pgr1.game_parameter2_value},
-            {"game_parameter3_value", pgr1.game_parameter3_value},
-            {"game_parameter4_value", pgr1.game_parameter4_value}
-        }},
-        {pgr2.player_email, {
-            {"game_parameter1_value", pgr2.game_parameter1_value},
-            {"game_parameter2_value", pgr2.game_parameter2_value},
-            {"game_parameter3_value", pgr2.game_parameter3_value},
-            {"game_parameter4_value", pgr2.game_parameter4_value}
-        }},
-        {pgr3.player_email, {
-            {"game_parameter1_value", pgr3.game_parameter1_value},
-            {"game_parameter2_value", pgr3.game_parameter2_value},
-            {"game_parameter3_value", pgr3.game_parameter3_value},
-            {"game_parameter4_value", pgr3.game_parameter4_value}
-        }}
+        {"game_parameter1_value", pgr1.game_parameter1_value},
+        {"game_parameter2_value", pgr1.game_parameter2_value},
+        {"game_parameter3_value", pgr1.game_parameter3_value},
+        {"game_parameter4_value", pgr1.game_parameter4_value}
     };
     req.body = body.dump();
-    res = api.updatePlayersStats(req, game1.game_id);
+    res = api.updatePlayerStats(req, game1.game_id, pgr1.player_email);
     EXPECT_EQ(res.code, 200);
-    EXPECT_EQ(res.body, "Player stats were added");
+    EXPECT_EQ(res.body, "Player stats were updated");
 }
 }  // namespace

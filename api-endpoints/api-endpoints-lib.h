@@ -50,8 +50,7 @@ class APIEndPoints {
     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor
     APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) :
         DB(db), auth(auth), onHeap(dbOnHeap) {}
-    ~APIEndPoints() {if (onHeap) { delete DB;
-                                delete auth;}}
+    ~APIEndPoints() {if (onHeap) { delete DB; delete auth;}}
 
     // All API Endpoints
     std::pair <int, std::string> getGames(const crow::request& req);  // Gets all client's games
@@ -62,9 +61,9 @@ class APIEndPoints {
     crow::response matchmake(const crow::request& req, Matchmaking *M);
     crow::response getGamePlayers(const crow::request& req, int game_id);
     crow::response addPlayersStats(const crow::request& req, int game_id);
-    crow::response getPlayersStats(const crow::request& req, int game_id);
-    crow::response deletePlayersStats(const crow::request& req, int game_id);
-    crow::response updatePlayersStats(const crow::request& req, int game_id);
+    crow::response getPlayerStats(const crow::request& req, int game_id, std::string player_email);
+    crow::response deletePlayerStats(const crow::request& req, int game_id, std::string player_email);
+    crow::response updatePlayerStats(const crow::request& req, int game_id, std::string player_email);
 
     // Maryam, go ahead and change these method names/signatures
     //  if they don't match what you want for your endpoint methods
