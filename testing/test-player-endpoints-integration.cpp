@@ -596,7 +596,7 @@ TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsInvalidStatsTest) {
     req.body = body.dump();
     res = api.updatePlayerStats(req, game1.game_id, pgr1.pgr.player_email);
     EXPECT_EQ(res.code, 400);
-    EXPECT_TRUE(res.body ==  "Invalid request body");
+    EXPECT_EQ(res.body, "Invalid request body");
 }
 
 /* Valid update */
