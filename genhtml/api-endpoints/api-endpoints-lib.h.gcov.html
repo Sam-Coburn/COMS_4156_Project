@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-26 11:51:00</td>
+            <td class="headerValue">2022-11-26 12:47:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -109,10 +109,10 @@
 <a name="47"><span class="lineNum">      47 </span>            :     FRIEND_TEST(AuthRouteTestFixture, Developer_Owns_Game_Tests);</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span>            :  public:</a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          3 :     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         47 :     APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) :</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         47 :         DB(db), auth(auth), onHeap(dbOnHeap) {}</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         50 :     ~APIEndPoints() {if (onHeap) { delete DB;</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          4 :     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         48 :     APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) :</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         48 :         DB(db), auth(auth), onHeap(dbOnHeap) {}</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         52 :     ~APIEndPoints() {if (onHeap) { delete DB;</span></a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :                                 delete auth;}}</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     // All API Endpoints</a>

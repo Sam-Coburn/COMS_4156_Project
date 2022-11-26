@@ -2,15 +2,15 @@ Loading:
 Loading: 0 packages loaded
 INFO: Build options --collect_code_coverage, --instrumentation_filter, and --test_env have changed, discarding analysis cache.
 Analyzing: target //testing:test (0 packages loaded, 0 targets configured)
-INFO: Analyzed target //testing:test (0 packages loaded, 781 targets configured).
+INFO: Analyzed target //testing:test (0 packages loaded, 782 targets configured).
 INFO: Found 1 test target...
-[0 / 4] [Prepa] BazelWorkspaceStatusAction stable-status.txt
-[16 / 47] Compiling src/lib_json/json_reader.cpp; 1s linux-sandbox ... (8 actions, 7 running)
-[50 / 88] Compiling googletest/src/gtest-test-part.cc; 0s linux-sandbox ... (8 actions, 7 running)
-[62 / 99] Compiling googletest/src/gtest.cc; 1s linux-sandbox ... (8 actions, 7 running)
-[64 / 99] Compiling googletest/src/gtest.cc; 2s linux-sandbox ... (8 actions, 7 running)
-[66 / 99] Compiling main/main.cpp; 3s linux-sandbox ... (8 actions running)
-[67 / 99] Compiling main/main.cpp; 5s linux-sandbox ... (8 actions, 7 running)
+[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[33 / 50] Compiling googletest/src/gtest.cc; 0s linux-sandbox ... (8 actions, 7 running)
+[44 / 65] Compiling googletest/src/gtest.cc; 2s linux-sandbox ... (8 actions, 7 running)
+[56 / 77] Compiling api-endpoints/api-endpoints.cc; 1s linux-sandbox ... (8 actions, 7 running)
+[76 / 100] Compiling api-endpoints/api-endpoints.cc; 2s linux-sandbox ... (8 actions, 7 running)
+[82 / 100] Compiling api-endpoints/api-endpoints.cc; 4s linux-sandbox ... (8 actions running)
+[83 / 100] Compiling api-endpoints/api-endpoints.cc; 5s linux-sandbox ... (8 actions, 7 running)
 INFO: From Compiling api-endpoints/api-endpoints.cc:
 api-endpoints/api-endpoints.cc: In lambda function:
 api-endpoints/api-endpoints.cc:156:14: warning: statement has no effect [-Wunused-value]
@@ -20,28 +20,29 @@ api-endpoints/api-endpoints.cc: In member function 'crow::response APIEndPoints:
 api-endpoints/api-endpoints.cc:525:17: warning: variable 'temp' set but not used [-Wunused-but-set-variable]
   525 |             int temp;
       |                 ^~~~
-[69 / 99] Compiling main/main.cpp; 7s linux-sandbox ... (8 actions running)
-[71 / 99] Compiling main/main.cpp; 9s linux-sandbox ... (8 actions running)
-[94 / 99] Testing //testing:test [4s, 6s (4 actions)] ... (4 actions running)
-[97 / 99] Compiling testing/test-player-endpoints.cpp; 9s linux-sandbox
-[99 / 100] Testing //testing:test; 5s linux-sandbox
-[99 / 100] Testing //testing:test; 11s linux-sandbox
-[99 / 100] 1 / 1 tests; Testing //testing:test; 26s linux-sandbox
+[86 / 100] Compiling main/main.cpp; 5s linux-sandbox ... (8 actions running)
+[88 / 100] Compiling main/main.cpp; 7s linux-sandbox ... (8 actions, 7 running)
+[91 / 100] Testing //testing:test [6s, 9s (8 actions)] ... (8 actions running)
+[97 / 100] Testing //testing:test [6s, 8s] ... (2 actions running)
+[99 / 100] [Prepa] Linking testing/test
+[100 / 101] Testing //testing:test; 5s linux-sandbox
+[100 / 101] Testing //testing:test; 10s linux-sandbox
+[100 / 101] 1 / 1 tests; Testing //testing:test; 28s linux-sandbox
 INFO: From Testing //testing:test:
 ==================== Test output for //testing:test:
 Running main() from gmock_main.cc
-[==========] Running 88 tests from 11 test suites.
+[==========] Running 94 tests from 12 test suites.
 [----------] Global test environment set-up.
 [----------] 4 tests from DBServiceTestFixture
 [ RUN      ] DBServiceTestFixture.Player_Tests
-[       OK ] DBServiceTestFixture.Player_Tests (501 ms)
+[       OK ] DBServiceTestFixture.Player_Tests (561 ms)
 [ RUN      ] DBServiceTestFixture.Developer_Tests
-[       OK ] DBServiceTestFixture.Developer_Tests (477 ms)
+[       OK ] DBServiceTestFixture.Developer_Tests (459 ms)
 [ RUN      ] DBServiceTestFixture.Game_Details_Tests
-[       OK ] DBServiceTestFixture.Game_Details_Tests (508 ms)
+[       OK ] DBServiceTestFixture.Game_Details_Tests (593 ms)
 [ RUN      ] DBServiceTestFixture.Player_Game_Ratings_Tests
-[       OK ] DBServiceTestFixture.Player_Game_Ratings_Tests (810 ms)
-[----------] 4 tests from DBServiceTestFixture (2298 ms total)
+[       OK ] DBServiceTestFixture.Player_Game_Ratings_Tests (707 ms)
+[----------] 4 tests from DBServiceTestFixture (2321 ms total)
 
 [----------] 5 tests from AuthRouteTest
 [ RUN      ] AuthRouteTest.Authenticate_Token_Test
@@ -58,21 +59,21 @@ Running main() from gmock_main.cc
 
 [----------] 1 test from AuthTest
 [ RUN      ] AuthTest.Auth_Function_Tests
-[       OK ] AuthTest.Auth_Function_Tests (1563 ms)
-[----------] 1 test from AuthTest (1563 ms total)
+[       OK ] AuthTest.Auth_Function_Tests (1552 ms)
+[----------] 1 test from AuthTest (1552 ms total)
 
 [----------] 5 tests from AuthRouteTestFixture
 [ RUN      ] AuthRouteTestFixture.Authenticate_Token_Test
-[       OK ] AuthRouteTestFixture.Authenticate_Token_Test (566 ms)
+[       OK ] AuthRouteTestFixture.Authenticate_Token_Test (602 ms)
 [ RUN      ] AuthRouteTestFixture.Developer_Owns_Game_Tests
-[       OK ] AuthRouteTestFixture.Developer_Owns_Game_Tests (770 ms)
+[       OK ] AuthRouteTestFixture.Developer_Owns_Game_Tests (822 ms)
 [ RUN      ] AuthRouteTestFixture.Post_SignUp_Tests
-[       OK ] AuthRouteTestFixture.Post_SignUp_Tests (534 ms)
+[       OK ] AuthRouteTestFixture.Post_SignUp_Tests (533 ms)
 [ RUN      ] AuthRouteTestFixture.Post_Login_Tests
-[       OK ] AuthRouteTestFixture.Post_Login_Tests (621 ms)
+[       OK ] AuthRouteTestFixture.Post_Login_Tests (602 ms)
 [ RUN      ] AuthRouteTestFixture.Delete_Login_Tests
-[       OK ] AuthRouteTestFixture.Delete_Login_Tests (551 ms)
-[----------] 5 tests from AuthRouteTestFixture (3043 ms total)
+[       OK ] AuthRouteTestFixture.Delete_Login_Tests (512 ms)
+[----------] 5 tests from AuthRouteTestFixture (3074 ms total)
 
 [----------] 11 tests from MatchmakingTests
 [ RUN      ] MatchmakingTests.Matchmaking_Endpoint_Tests_Set1
@@ -80,7 +81,7 @@ Running main() from gmock_main.cc
 [ RUN      ] MatchmakingTests.Matchmaking_Endpoint_Tests_Set2
 0
 0
-[       OK ] MatchmakingTests.Matchmaking_Endpoint_Tests_Set2 (1 ms)
+[       OK ] MatchmakingTests.Matchmaking_Endpoint_Tests_Set2 (0 ms)
 [ RUN      ] MatchmakingTests.Matchmaking_Backend_Tests_Set1
 0
 0
@@ -105,47 +106,47 @@ Running main() from gmock_main.cc
 [       OK ] MatchmakingTests.Matchmaking_Backend_Tests_Set8 (0 ms)
 [ RUN      ] MatchmakingTests.Matchmaking_Backend_Tests_Set9
 [       OK ] MatchmakingTests.Matchmaking_Backend_Tests_Set9 (0 ms)
-[----------] 11 tests from MatchmakingTests (3 ms total)
+[----------] 11 tests from MatchmakingTests (1 ms total)
 
 [----------] 11 tests from MatchmakingTestFixture
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set1
-[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set1 (526 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set1 (516 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set2
 2000
 2000
-[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set2 (756 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set2 (713 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set1
 2000
 1000
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set1 (603 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set1 (602 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set2
 2000
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set2 (572 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set2 (570 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set3
 2000
 1000
 0
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set3 (632 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set3 (606 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set4
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set4 (627 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set4 (651 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set5
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set5 (672 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set5 (679 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set6
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set6 (707 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set6 (688 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set7
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set7 (762 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set7 (694 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set8
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set8 (768 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set8 (710 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set9
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set9 (610 ms)
-[----------] 11 tests from MatchmakingTestFixture (7241 ms total)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set9 (590 ms)
+[----------] 11 tests from MatchmakingTestFixture (7026 ms total)
 
 [----------] 2 tests from Get_Post_Games_Suite
 [ RUN      ] Get_Post_Games_Suite.Post_Games_Tests
 [       OK ] Get_Post_Games_Suite.Post_Games_Tests (5 ms)
 [ RUN      ] Get_Post_Games_Suite.Get_Games_Tests
 [       OK ] Get_Post_Games_Suite.Get_Games_Tests (1 ms)
-[----------] 2 tests from Get_Post_Games_Suite (6 ms total)
+[----------] 2 tests from Get_Post_Games_Suite (7 ms total)
 
 [----------] 22 tests from PlayerTestFixture
 [ RUN      ] PlayerTestFixture.GetGamePlayersAuthTest
@@ -196,47 +197,47 @@ Running main() from gmock_main.cc
 
 [----------] 2 tests from PostGetGamesTestFixture
 [ RUN      ] PostGetGamesTestFixture.Post_Games_Integration_Tests
-[       OK ] PostGetGamesTestFixture.Post_Games_Integration_Tests (605 ms)
+[       OK ] PostGetGamesTestFixture.Post_Games_Integration_Tests (555 ms)
 [ RUN      ] PostGetGamesTestFixture.Get_Games_Integration_Tests
-[       OK ] PostGetGamesTestFixture.Get_Games_Integration_Tests (596 ms)
-[----------] 2 tests from PostGetGamesTestFixture (1201 ms total)
+[       OK ] PostGetGamesTestFixture.Get_Games_Integration_Tests (603 ms)
+[----------] 2 tests from PostGetGamesTestFixture (1159 ms total)
 
 [----------] 17 tests from PlayerTestIntegrationFixture
 [ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersAuthTest
-[       OK ] PlayerTestIntegrationFixture.GetGamePlayersAuthTest (550 ms)
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersAuthTest (530 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersNoPlayersTest
-[       OK ] PlayerTestIntegrationFixture.GetGamePlayersNoPlayersTest (570 ms)
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersNoPlayersTest (546 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersDevOwnsMultipleGamesTest
-[       OK ] PlayerTestIntegrationFixture.GetGamePlayersDevOwnsMultipleGamesTest (785 ms)
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersDevOwnsMultipleGamesTest (775 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsAuthTest (551 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsAuthTest (508 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsNoPlayersTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsNoPlayersTest (548 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsNoPlayersTest (507 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsPlayersExistTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayersExistTest (617 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayersExistTest (595 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsPlayerDoesntExistTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayerDoesntExistTest (571 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayerDoesntExistTest (548 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetPlayersStatsAuthTest
 [       OK ] PlayerTestIntegrationFixture.GetPlayersStatsAuthTest (537 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetPlayersStatsMissingStatsTest
-[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsMissingStatsTest (658 ms)
+[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsMissingStatsTest (628 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetPlayersStatsValidTest
-[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsValidTest (706 ms)
+[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsValidTest (681 ms)
 [ RUN      ] PlayerTestIntegrationFixture.DeletePlayersStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsAuthTest (535 ms)
+[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsAuthTest (504 ms)
 [ RUN      ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingPlayersTest
-[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingPlayersTest (698 ms)
+[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingPlayersTest (695 ms)
 [ RUN      ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingStatsTest
-[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingStatsTest (776 ms)
+[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingStatsTest (724 ms)
 [ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsAuthTest (540 ms)
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsAuthTest (523 ms)
 [ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsMissingStatsTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsMissingStatsTest (569 ms)
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsMissingStatsTest (540 ms)
 [ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsInvalidStatsTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsInvalidStatsTest (658 ms)
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsInvalidStatsTest (643 ms)
 [ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsValidTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsValidTest (687 ms)
-[----------] 17 tests from PlayerTestIntegrationFixture (10563 ms total)
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsValidTest (651 ms)
+[----------] 17 tests from PlayerTestIntegrationFixture (10145 ms total)
 
 [----------] 8 tests from GameTesting
 [ RUN      ] GameTesting.GameTest
@@ -257,16 +258,31 @@ Running main() from gmock_main.cc
 [       OK ] GameTesting.GameTest8 (0 ms)
 [----------] 8 tests from GameTesting (1 ms total)
 
+[----------] 6 tests from GameGDPTestIntegrationFixture
+[ RUN      ] GameGDPTestIntegrationFixture.GameTest
+[       OK ] GameGDPTestIntegrationFixture.GameTest (300 ms)
+[ RUN      ] GameGDPTestIntegrationFixture.GameTest2
+[       OK ] GameGDPTestIntegrationFixture.GameTest2 (499 ms)
+[ RUN      ] GameGDPTestIntegrationFixture.GameTest3
+[       OK ] GameGDPTestIntegrationFixture.GameTest3 (556 ms)
+[ RUN      ] GameGDPTestIntegrationFixture.GameTest5
+[       OK ] GameGDPTestIntegrationFixture.GameTest5 (311 ms)
+[ RUN      ] GameGDPTestIntegrationFixture.GameTest6
+[       OK ] GameGDPTestIntegrationFixture.GameTest6 (503 ms)
+[ RUN      ] GameGDPTestIntegrationFixture.GameTest7
+[       OK ] GameGDPTestIntegrationFixture.GameTest7 (520 ms)
+[----------] 6 tests from GameGDPTestIntegrationFixture (2692 ms total)
+
 [----------] Global test environment tear-down
-[==========] 88 tests from 11 test suites ran. (26065 ms total)
-[  PASSED  ] 88 tests.
+[==========] 94 tests from 12 test suites ran. (28126 ms total)
+[  PASSED  ] 94 tests.
 ================================================================================
 Target //testing:test up-to-date:
   bazel-bin/testing/test
-INFO: Elapsed time: 46.703s, Critical Path: 36.82s
-INFO: 79 processes: 21 internal, 58 linux-sandbox.
-INFO: Build completed successfully, 79 total actions
-//testing:test                                                           PASSED in 26.1s
+INFO: Elapsed time: 49.174s, Critical Path: 38.82s
+INFO: 80 processes: 21 internal, 59 linux-sandbox.
+INFO: Build completed successfully, 80 total actions
+//testing:test                                                           PASSED in 28.2s
 
 Executed 1 out of 1 test: 1 test passes.
-INFO: Build completed successfully, 79 total actions
+INFO: Build completed successfully, 80 total actions

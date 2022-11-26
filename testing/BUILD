@@ -161,7 +161,7 @@ cc_test(
 )
 
 cc_test(
-  name = "test-gdp-integ",
+  name = "test-get-delete-game-integration",
   size = "medium",
   srcs = ["test-gdp-integ.cpp"],
   deps = [

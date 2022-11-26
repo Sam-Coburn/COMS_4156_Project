@@ -28,6 +28,6 @@ bazel test //testing:test --test_output=all --test_env=GLOG_minloglevel=1 &> ./r
 
 # bazel coverage report
 echo "gathering coverage info..."
-bazel coverage --instrumentation_filter=//api-endpoints:api-endpoints --combined_report=lcov //testing:test &> /dev/null
+bazel coverage --instrumentation_filter=-testing[/:],-crow[/:],-authentication/bcrypt[/:],-main[/:] --combined_report=lcov //testing:test &> /dev/null
 echo "generating coverage report..."
 genhtml bazel-out/_coverage/_coverage_report.dat -o genhtml &> ./reports/coverage.txt

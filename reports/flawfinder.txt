@@ -20,6 +20,7 @@ Examining testing/test-auth-routes.cpp
 Examining testing/test-auth-routes-integration.cpp
 Examining testing/test-db-integration.cpp
 Examining testing/test-gdp.cpp
+Examining testing/test-gdp-integ.cpp
 Examining testing/test-get-post-games-routes.cc
 Examining testing/test-get-post-games-routes-integration.cc
 Examining testing/test-matchmaking.cpp
@@ -33,8 +34,8 @@ FINAL RESULTS:
 ANALYSIS SUMMARY:
 
 No hits found.
-Lines analyzed = 9939 in approximately 0.07 seconds (142740 lines/second)
-Physical Source Lines of Code (SLOC) = 7663
+Lines analyzed = 10315 in approximately 0.07 seconds (149654 lines/second)
+Physical Source Lines of Code (SLOC) = 7967
 Hits@level = [0]   0 [1]   0 [2]   0 [3]   0 [4]   0 [5]   0
 Hits@level+ = [0+]   0 [1+]   0 [2+]   0 [3+]   0 [4+]   0 [5+]   0
 Hits/KSLOC@level+ = [0+]   0 [1+]   0 [2+]   0 [3+]   0 [4+]   0 [5+]   0
