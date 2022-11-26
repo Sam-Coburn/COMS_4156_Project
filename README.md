@@ -153,13 +153,14 @@ We also use Sonar Cloud with github actions.
 Results from Sonar Cloud CI are [here](https://sonarcloud.io/code?id=EmilySillars_COMS_4156_Project)
 
 ## Continuous Integration Reports
-We run `bash ./reports/generateCIReports.sh` to generate reports locally.
-[cpplint](./reports/style-check.txt)
-[flawfinder](./reports/flawfinder.txt)
-[cppcheck](./reports/cppcheck.txt)
-[sonar cloud](https://sonarcloud.io/code?id=EmilySillars_COMS_4156_Project)
-[regression tests](./reports/test-report.txt)
-[coverage](./genhtml/index.html)
+We run `bash ./reports/generateCIReports.sh` to generate reports and store them in the [reports](./reports/) directory. Links to individual reports below.
+- [cpplint report](./reports/style-check.txt)
+- [flawfinder report](./reports/flawfinder.txt)
+- [cppcheck report](./reports/cppcheck.txt)
+- [sonar cloud report](https://sonarcloud.io/code?id=EmilySillars_COMS_4156_Project) (ignore the `genhtml` directory)
+- [regression tests report](./reports/test-report.txt)
+- [coverage report](./reports/coverage.txt)
+- [coverage report as interactive webpage](./genhtml/index.html)
 
 ## Install Bazel
 **Platform: Debian 11**
