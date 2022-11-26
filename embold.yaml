@@ -5,10 +5,6 @@
 # We can talk more about if we want to do this, but I'm adding this file here
 # just in case!
 
-version: 1
-## Please visit https://docs.embold.io/v2-quick-start-guide/#update-configurations to know more
-#languages: 'JAVA,CPP'
-# Sources mention which Files/Dirs to be taken for Analysis
 languages: 'CPP'
 sources:
   #Files or Directories to be Excluded are mentioned in exclusions

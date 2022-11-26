@@ -16,9 +16,7 @@ cc_test(
           "test-get-post-games-routes.cc",
           "test-player-endpoints.cpp",
           "test-get-post-games-routes-integration.cc",
-          "test-player-endpoints-integration.cpp",
-          "test-gdp.cpp",
-          "test-gdp-integ.cpp"],
+          "test-player-endpoints-integration.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
@@ -72,19 +70,6 @@ cc_test(
   name = "test-player-endpoints-units",
   size = "small",
   srcs = ["test-player-endpoints.cpp"],
-  deps = [
-    "//main:main",
-    "//main:db-service",
-    "//api-endpoints:api-endpoints",
-    "//authentication:auth-service",
-    "@com_google_googletest//:gtest_main",
-    "//testing:mock-libs"],
-)
-
-cc_test(
-  name = "test-get-delete-game-units",
-  size = "small",
-  srcs = ["test-gdp.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",
@@ -160,16 +145,4 @@ cc_test(
     "//testing:mock-libs"],
 )
 
-cc_test(
-  name = "test-get-delete-game-integration",
-  size = "medium",
-  srcs = ["test-gdp-integ.cpp"],
-  deps = [
-    "//main:main",
-    "//main:db-service",
-    "//api-endpoints:api-endpoints",
-    "//authentication:auth-service",
-    "@com_google_googletest//:gtest_main",
-    "//testing:mock-libs"],
-)
 """ end-to-end system tests??? """

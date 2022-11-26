@@ -160,9 +160,6 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
   bdy = "weights elt is invalid float";
   testAgainstBody(&api, INVALID_WEIGHTS_ELT, bdy);
 
-//   bdy = "invalid teams_per_match field";  // TODO: add test for this!
-//   bdy = "invalid players_per_team field"; // TODO: add test for this!
-
   // valid game with negative weight
   bdy = "6";
   gm.game_id = 6;

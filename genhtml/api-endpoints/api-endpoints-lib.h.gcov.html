@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntryMed">80.0 %</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-26 12:47:16</td>
+            <td class="headerValue">2022-11-25 19:55:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -109,33 +109,32 @@
 <a name="47"><span class="lineNum">      47 </span>            :     FRIEND_TEST(AuthRouteTestFixture, Developer_Owns_Game_Tests);</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span>            :  public:</a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          4 :     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         48 :     APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) :</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         48 :         DB(db), auth(auth), onHeap(dbOnHeap) {}</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         52 :     ~APIEndPoints() {if (onHeap) { delete DB;</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :                                 delete auth;}}</span></a>
-<a name="55"><span class="lineNum">      55 </span>            : </a>
-<a name="56"><span class="lineNum">      56 </span>            :     // All API Endpoints</a>
-<a name="57"><span class="lineNum">      57 </span>            :     std::pair &lt;int, std::string&gt; getGames(const crow::request&amp; req);  // Gets all client's games</a>
-<a name="58"><span class="lineNum">      58 </span>            :     std::pair &lt;int, std::string&gt; postGames(const crow::request&amp; req);  // Adds a list of games to client's account</a>
-<a name="59"><span class="lineNum">      59 </span>            :     crow::response postSignUp(const crow::request&amp; req);</a>
-<a name="60"><span class="lineNum">      60 </span>            :     crow::response postLogin(const crow::request&amp; req);</a>
-<a name="61"><span class="lineNum">      61 </span>            :     crow::response deleteLogin(const crow::request&amp; req);</a>
-<a name="62"><span class="lineNum">      62 </span>            :     crow::response matchmake(const crow::request&amp; req, Matchmaking *M);</a>
-<a name="63"><span class="lineNum">      63 </span>            :     crow::response getGamePlayers(const crow::request&amp; req, int game_id);</a>
-<a name="64"><span class="lineNum">      64 </span>            :     crow::response addPlayersStats(const crow::request&amp; req, int game_id);</a>
-<a name="65"><span class="lineNum">      65 </span>            :     crow::response getPlayersStats(const crow::request&amp; req, int game_id);</a>
-<a name="66"><span class="lineNum">      66 </span>            :     crow::response deletePlayersStats(const crow::request&amp; req, int game_id);</a>
-<a name="67"><span class="lineNum">      67 </span>            :     crow::response updatePlayersStats(const crow::request&amp; req, int game_id);</a>
-<a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span>            :     // Maryam, go ahead and change these method names/signatures</a>
-<a name="70"><span class="lineNum">      70 </span>            :     //  if they don't match what you want for your endpoint methods</a>
-<a name="71"><span class="lineNum">      71 </span>            :     crow::response getGame(const crow::request&amp; req, int game_id);</a>
-<a name="72"><span class="lineNum">      72 </span>            :     crow::response putGame(const crow::request&amp; req, int game_id);</a>
-<a name="73"><span class="lineNum">      73 </span>            :     crow::response deleteGame(const crow::request&amp; req, int game_id);</a>
-<a name="74"><span class="lineNum">      74 </span>            : };</a>
-<a name="75"><span class="lineNum">      75 </span>            : </a>
-<a name="76"><span class="lineNum">      76 </span>            : #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_</a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          3 :     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         39 :     APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) :</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         39 :         DB(db), auth(auth), onHeap(dbOnHeap) {}</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         42 :     ~APIEndPoints() {if (onHeap) { delete DB; delete auth;}}</span></a>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<a name="55"><span class="lineNum">      55 </span>            :     // All API Endpoints</a>
+<a name="56"><span class="lineNum">      56 </span>            :     std::pair &lt;int, std::string&gt; getGames(const crow::request&amp; req);  // Gets all client's games</a>
+<a name="57"><span class="lineNum">      57 </span>            :     std::pair &lt;int, std::string&gt; postGames(const crow::request&amp; req);  // Adds a list of games to client's account</a>
+<a name="58"><span class="lineNum">      58 </span>            :     crow::response postSignUp(const crow::request&amp; req);</a>
+<a name="59"><span class="lineNum">      59 </span>            :     crow::response postLogin(const crow::request&amp; req);</a>
+<a name="60"><span class="lineNum">      60 </span>            :     crow::response deleteLogin(const crow::request&amp; req);</a>
+<a name="61"><span class="lineNum">      61 </span>            :     crow::response matchmake(const crow::request&amp; req, Matchmaking *M);</a>
+<a name="62"><span class="lineNum">      62 </span>            :     crow::response getGamePlayers(const crow::request&amp; req, int game_id);</a>
+<a name="63"><span class="lineNum">      63 </span>            :     crow::response addPlayersStats(const crow::request&amp; req, int game_id);</a>
+<a name="64"><span class="lineNum">      64 </span>            :     crow::response getPlayerStats(const crow::request&amp; req, int game_id, std::string player_email);</a>
+<a name="65"><span class="lineNum">      65 </span>            :     crow::response deletePlayerStats(const crow::request&amp; req, int game_id, std::string player_email);</a>
+<a name="66"><span class="lineNum">      66 </span>            :     crow::response updatePlayerStats(const crow::request&amp; req, int game_id, std::string player_email);</a>
+<a name="67"><span class="lineNum">      67 </span>            : </a>
+<a name="68"><span class="lineNum">      68 </span>            :     // Maryam, go ahead and change these method names/signatures</a>
+<a name="69"><span class="lineNum">      69 </span>            :     //  if they don't match what you want for your endpoint methods</a>
+<a name="70"><span class="lineNum">      70 </span>            :     crow::response getGame(const crow::request&amp; req, int game_id);</a>
+<a name="71"><span class="lineNum">      71 </span>            :     crow::response putGame(const crow::request&amp; req, int game_id);</a>
+<a name="72"><span class="lineNum">      72 </span>            :     crow::response deleteGame(const crow::request&amp; req, int game_id);</a>
+<a name="73"><span class="lineNum">      73 </span>            : };</a>
+<a name="74"><span class="lineNum">      74 </span>            : </a>
+<a name="75"><span class="lineNum">      75 </span>            : #endif  // API_ENDPOINTS_API_ENDPOINTS_LIB_H_</a>
 </pre>
       </td>
     </tr>

@@ -95,21 +95,21 @@ int main(int argc, char* argv[]) {
   CROW_ROUTE(app, "/games/<int>/players/<string>").methods(crow::HTTPMethod::GET)
   ([](const crow::request& req, int game_id, std::string player_email) {
     CREATE_API_ENDPOINTS_OBJECT;
-    return api.getPlayersStats(req, game_id);
+    return api.getPlayerStats(req, game_id, player_email);
   });
 
   // Delete requested players' stats for a given game
-  CROW_ROUTE(app, "/games/<int>/players").methods(crow::HTTPMethod::DELETE)
-  ([](const crow::request& req, int game_id){
+  CROW_ROUTE(app, "/games/<int>/players/<string>").methods(crow::HTTPMethod::DELETE)
+  ([](const crow::request& req, int game_id, std::string player_email){
     CREATE_API_ENDPOINTS_OBJECT;
-    return api.deletePlayersStats(req, game_id);
+    return api.deletePlayerStats(req, game_id, player_email);
   });
 
   // Update requested players' stats for a given game
-  CROW_ROUTE(app, "/games/<int>/players").methods(crow::HTTPMethod::PUT)
-  ([](const crow::request& req, int game_id){
+  CROW_ROUTE(app, "/games/<int>/players/<string>").methods(crow::HTTPMethod::PUT)
+  ([](const crow::request& req, int game_id, std::string player_email){
     CREATE_API_ENDPOINTS_OBJECT;
-    return api.updatePlayersStats(req, game_id);
+    return api.updatePlayerStats(req, game_id, player_email);
   });
 
 // return everything about the game details to the user except game_id and developer_email

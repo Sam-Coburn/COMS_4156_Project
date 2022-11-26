@@ -31,13 +31,13 @@
             <td class="headerValue">_coverage_report.dat</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">685</td>
-            <td class="headerCovTableEntry">877</td>
-            <td class="headerCovTableEntryMed">78.1 %</td>
+            <td class="headerCovTableEntry">695</td>
+            <td class="headerCovTableEntry">855</td>
+            <td class="headerCovTableEntryMed">81.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-26 12:42:14</td>
+            <td class="headerValue">2022-11-25 19:55:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">25</td>
@@ -74,16 +74,16 @@
 <a name="12"><span class="lineNum">      12 </span>            : </a>
 <a name="13"><span class="lineNum">      13 </span>            : #include &quot;main/db-service.h&quot;</a>
 <a name="14"><span class="lineNum">      14 </span>            : </a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">         64 : DBService::DBService</span></a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">         64 : (std::string host, std::string user, std::string pass, std::string db) {</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">         64 :   hostname = host;</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">         64 :   username = user;</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         64 :   password = pass;</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">         64 :   database = db;</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         64 : }</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">         53 : DBService::DBService</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">         53 : (std::string host, std::string user, std::string pass, std::string db) {</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">         53 :   hostname = host;</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">         53 :   username = user;</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         53 :   password = pass;</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">         53 :   database = db;</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         53 : }</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         45 : bool DBService::setUpDatabase() {</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">         45 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to set up database&quot;&lt;&lt; std::endl;</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         40 : bool DBService::setUpDatabase() {</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">         40 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to set up database&quot;&lt;&lt; std::endl;</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            :   try {</a>
 <a name="27"><span class="lineNum">      27 </span>            :     sql::Driver *driver;</a>
@@ -91,24 +91,24 @@
 <a name="29"><span class="lineNum">      29 </span>            :     sql::Statement *stmt;</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
 <a name="31"><span class="lineNum">      31 </span>            :     // Connect to database</a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         45 :     driver = get_driver_instance();</span></a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">         45 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         45 :     con-&gt;setSchema(database);</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         40 :     driver = get_driver_instance();</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">         40 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">         40 :     con-&gt;setSchema(database);</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span>            :     // Create tables</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         45 :     stmt = con-&gt;createStatement();</span></a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">         45 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         40 :     stmt = con-&gt;createStatement();</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">         40 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
 <a name="39"><span class="lineNum">      39 </span>            :     &quot;Developers (&quot;</a>
 <a name="40"><span class="lineNum">      40 </span>            :     &quot;developer_email varchar(255) NOT NULL, &quot;</a>
 <a name="41"><span class="lineNum">      41 </span>            :     &quot;developer_password varchar(255) NOT NULL, &quot;</a>
-<a name="42"><span class="lineNum">      42 </span>            :     &quot;PRIMARY KEY (developer_email));&quot;);</a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         80 :     &quot;PRIMARY KEY (developer_email));&quot;);</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">         45 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">         40 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :     &quot;Players (&quot;</a>
 <a name="46"><span class="lineNum">      46 </span>            :     &quot;player_email varchar(255) NOT NULL, &quot;</a>
-<a name="47"><span class="lineNum">      47 </span>            :     &quot;PRIMARY KEY (player_email));&quot;);</a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         80 :     &quot;PRIMARY KEY (player_email));&quot;);</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         45 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         40 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :     &quot;Game_Details (&quot;</a>
 <a name="51"><span class="lineNum">      51 </span>            :     &quot;game_id int NOT NULL auto_increment, &quot;</a>
 <a name="52"><span class="lineNum">      52 </span>            :     &quot;developer_email varchar(255) NOT NULL, &quot;</a>
@@ -126,9 +126,9 @@
 <a name="64"><span class="lineNum">      64 </span>            :     &quot;teams_per_match int, &quot;</a>
 <a name="65"><span class="lineNum">      65 </span>            :     &quot;PRIMARY KEY (game_id), &quot;</a>
 <a name="66"><span class="lineNum">      66 </span>            :     &quot;FOREIGN KEY (developer_email) REFERENCES Developers(developer_email) &quot;</a>
-<a name="67"><span class="lineNum">      67 </span>            :     &quot;ON DELETE CASCADE ON UPDATE CASCADE);&quot;);</a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         80 :     &quot;ON DELETE CASCADE ON UPDATE CASCADE);&quot;);</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">         45 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">         40 :     stmt-&gt;executeUpdate(&quot;CREATE TABLE IF NOT EXISTS &quot;</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :     &quot;Player_Game_Ratings (&quot;</a>
 <a name="71"><span class="lineNum">      71 </span>            :     &quot;player_email varchar(255) NOT NULL, &quot;</a>
 <a name="72"><span class="lineNum">      72 </span>            :     &quot;game_id int NOT NULL, &quot;</a>
@@ -140,13 +140,13 @@
 <a name="78"><span class="lineNum">      78 </span>            :     &quot;FOREIGN KEY (player_email) REFERENCES Players(player_email) &quot;</a>
 <a name="79"><span class="lineNum">      79 </span>            :     &quot;ON DELETE CASCADE ON UPDATE CASCADE, &quot;</a>
 <a name="80"><span class="lineNum">      80 </span>            :     &quot;FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) &quot;</a>
-<a name="81"><span class="lineNum">      81 </span>            :     &quot;ON DELETE CASCADE ON UPDATE CASCADE);&quot;);</a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">         80 :     &quot;ON DELETE CASCADE ON UPDATE CASCADE);&quot;);</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">         45 :     delete stmt;</span></a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">         45 :     delete con;</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">         40 :     delete stmt;</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">         40 :     delete con;</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">         45 :     LOG(INFO) &lt;&lt; &quot;Successfully set up database&quot;&lt;&lt; std::endl;</span></a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">         45 :     return true;</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">         40 :     LOG(INFO) &lt;&lt; &quot;Successfully set up database&quot;&lt;&lt; std::endl;</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">         40 :     return true;</span></a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error setting up database&quot; &lt;&lt; std::endl;</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
@@ -154,12 +154,12 @@
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="95"><span class="lineNum">      95 </span>            :   }</a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :   return false;</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : }</a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">         96 : bool DBService::tearDownDatabase() {</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">         96 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to tear down database&quot;&lt;&lt; std::endl;</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">         85 : bool DBService::tearDownDatabase() {</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">         85 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to tear down database&quot;&lt;&lt; std::endl;</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
 <a name="102"><span class="lineNum">     102 </span>            :   try {</a>
 <a name="103"><span class="lineNum">     103 </span>            :     sql::Driver *driver;</a>
@@ -167,22 +167,22 @@
 <a name="105"><span class="lineNum">     105 </span>            :     sql::Statement *stmt;</a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span>            :     // Connect to database</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">         96 :     driver = get_driver_instance();</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">         96 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">         96 :     con-&gt;setSchema(database);</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">         85 :     driver = get_driver_instance();</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">         85 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">         85 :     con-&gt;setSchema(database);</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
 <a name="112"><span class="lineNum">     112 </span>            :     // Create tables</a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         96 :     stmt = con-&gt;createStatement();</span></a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">         96 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Player_Game_Ratings&quot;);</span></a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">         96 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Game_Details&quot;);</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         96 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Developers&quot;);</span></a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">         96 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Players&quot;);</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         85 :     stmt = con-&gt;createStatement();</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">         85 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Player_Game_Ratings&quot;);</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">         85 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Game_Details&quot;);</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         85 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Developers&quot;);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">         85 :     stmt-&gt;executeUpdate(&quot;DROP TABLE IF EXISTS Players&quot;);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">         96 :     delete stmt;</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">         96 :     delete con;</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">         85 :     delete stmt;</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">         85 :     delete con;</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">         96 :     LOG(INFO) &lt;&lt; &quot;Successfully tore down database&quot;&lt;&lt; std::endl;</span></a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         96 :     return true;</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">         85 :     LOG(INFO) &lt;&lt; &quot;Successfully tore down database&quot;&lt;&lt; std::endl;</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         85 :     return true;</span></a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error tearing down database&quot; &lt;&lt; std::endl;</span></a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
@@ -190,7 +190,7 @@
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="131"><span class="lineNum">     131 </span>            :   }</a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :   return false;</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : }</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
@@ -213,15 +213,15 @@
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            :     // Create statement and fill in relevant variables</a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">         77 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Players P &quot;</span></a>
-<a name="154"><span class="lineNum">     154 </span>            :     &quot;WHERE P.player_email = ?;&quot;);</a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        154 :     &quot;WHERE P.player_email = ?;&quot;);</span></a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineCov">         77 :     prep_stmt-&gt;setString(1, player_email);</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :     // Execute query and get results</a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineCov">         77 :     res = prep_stmt-&gt;executeQuery();</span></a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        104 :     while (res-&gt;next()) {</span></a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">         27 :       P.player_email = res-&gt;getString(&quot;player_email&quot;);</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">         27 :       P.is_valid = true;</span></a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">         27 :       LOG(INFO) &lt;&lt; P.toString() &lt;&lt; std::endl;</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        101 :     while (res-&gt;next()) {</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">         24 :       P.player_email = res-&gt;getString(&quot;player_email&quot;);</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">         24 :       P.is_valid = true;</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">         24 :       LOG(INFO) &lt;&lt; P.toString() &lt;&lt; std::endl;</span></a>
 <a name="163"><span class="lineNum">     163 </span>            :     }</a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineCov">         77 :     delete prep_stmt;</span></a>
@@ -238,16 +238,16 @@
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="179"><span class="lineNum">     179 </span>            :   }</a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">         77 :   return P;</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="181"><span class="lineNum">     181 </span>            : }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">        158 : Developer DBService::get_developer(std::string developer_email) {</span></a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">        316 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get developer with email: &quot; +</span></a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        158 :   developer_email &lt;&lt; std::endl;</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">        152 : Developer DBService::get_developer(std::string developer_email) {</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">        304 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get developer with email: &quot; +</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        152 :   developer_email &lt;&lt; std::endl;</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">        158 :   Developer D;</span></a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        158 :   D.is_valid = false;</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">        152 :   Developer D;</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        152 :   D.is_valid = false;</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
 <a name="190"><span class="lineNum">     190 </span>            :   try {</a>
 <a name="191"><span class="lineNum">     191 </span>            :     sql::Driver *driver;</a>
@@ -256,30 +256,30 @@
 <a name="194"><span class="lineNum">     194 </span>            :     sql::ResultSet *res;</a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span>            :     // Connect to database</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">        158 :     driver = get_driver_instance();</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">        158 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">        158 :     con-&gt;setSchema(database);</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">        152 :     driver = get_driver_instance();</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">        152 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">        152 :     con-&gt;setSchema(database);</span></a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :     // Create statement and fill in relevant variables</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        158 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Developers D &quot;</span></a>
-<a name="203"><span class="lineNum">     203 </span>            :     &quot;WHERE D.developer_email = ?;&quot;);</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">        158 :     prep_stmt-&gt;setString(1, developer_email);</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        152 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Developers D &quot;</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">        304 :     &quot;WHERE D.developer_email = ?;&quot;);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">        152 :     prep_stmt-&gt;setString(1, developer_email);</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
 <a name="206"><span class="lineNum">     206 </span>            :     // Execute query and get results</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        158 :     res = prep_stmt-&gt;executeQuery();</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">        312 :     while (res-&gt;next()) {</span></a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        154 :         D.developer_email = res-&gt;getString(&quot;developer_email&quot;);</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">        154 :         D.developer_password = res-&gt;getString(&quot;developer_password&quot;);</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">        154 :         D.is_valid = true;</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">        154 :         LOG(INFO) &lt;&lt; D.toString() &lt;&lt; std::endl;</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        152 :     res = prep_stmt-&gt;executeQuery();</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">        300 :     while (res-&gt;next()) {</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        148 :         D.developer_email = res-&gt;getString(&quot;developer_email&quot;);</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">        148 :         D.developer_password = res-&gt;getString(&quot;developer_password&quot;);</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">        148 :         D.is_valid = true;</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">        148 :         LOG(INFO) &lt;&lt; D.toString() &lt;&lt; std::endl;</span></a>
 <a name="213"><span class="lineNum">     213 </span>            :     }</a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">        158 :     delete prep_stmt;</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        158 :     delete res;</span></a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">        158 :     delete con;</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">        152 :     delete prep_stmt;</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        152 :     delete res;</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">        152 :     delete con;</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">        316 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved developer with email: &quot; +</span></a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">        158 :     developer_email &lt;&lt; std::endl;</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">        304 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved developer with email: &quot; +</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">        152 :     developer_email &lt;&lt; std::endl;</span></a>
 <a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt;</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     &quot;Error getting developer with email: &quot; + developer_email &lt;&lt; std::endl;</span></a>
@@ -288,16 +288,16 @@
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :   }</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">        158 :   return D;</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="229"><span class="lineNum">     229 </span>            :   }</a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">        152 :   return D;</span></a>
+<a name="231"><span class="lineNum">     231 </span>            : }</a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">         68 : Game_Details DBService::get_game_details(int game_id) {</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">        204 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get game with game_id: &quot; +</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        204 :   std::to_string(game_id) &lt;&lt; std::endl;</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">         63 : Game_Details DBService::get_game_details(int game_id) {</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">        126 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get game with game_id: &quot; +</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        126 :   std::to_string(game_id) &lt;&lt; std::endl;</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">         68 :   Game_Details GD;</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">         68 :   GD.is_valid = false;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">         63 :   Game_Details GD;</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">         63 :   GD.is_valid = false;</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span>            :   try {</a>
 <a name="241"><span class="lineNum">     241 </span>            :     sql::Driver *driver;</a>
@@ -306,50 +306,50 @@
 <a name="244"><span class="lineNum">     244 </span>            :     sql::ResultSet *res;</a>
 <a name="245"><span class="lineNum">     245 </span>            : </a>
 <a name="246"><span class="lineNum">     246 </span>            :     // Connect to database</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         68 :     driver = get_driver_instance();</span></a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">         68 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">         68 :     con-&gt;setSchema(database);</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         63 :     driver = get_driver_instance();</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">         63 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">         63 :     con-&gt;setSchema(database);</span></a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
 <a name="251"><span class="lineNum">     251 </span>            :     // Create query and fill in relevant variables</a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">         68 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Game_Details GD &quot;</span></a>
-<a name="253"><span class="lineNum">     253 </span>            :     &quot;WHERE GD.game_id = ?;&quot;);</a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">         68 :     prep_stmt-&gt;setInt(1, game_id);</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">         63 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Game_Details GD &quot;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">        126 :     &quot;WHERE GD.game_id = ?;&quot;);</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">         63 :     prep_stmt-&gt;setInt(1, game_id);</span></a>
 <a name="255"><span class="lineNum">     255 </span>            : </a>
 <a name="256"><span class="lineNum">     256 </span>            :     // Execute query and get results</a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">         68 :     res = prep_stmt-&gt;executeQuery();</span></a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">        125 :     while (res-&gt;next()) {</span></a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">         57 :       GD.game_id = std::stoi(res-&gt;getString(&quot;game_id&quot;));</span></a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">         57 :       GD.developer_email = res-&gt;getString(&quot;developer_email&quot;);</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">         57 :       GD.game_name = res-&gt;getString(&quot;game_name&quot;);</span></a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">         57 :       GD.game_parameter1_name = res-&gt;getString(&quot;game_parameter1_name&quot;);</span></a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">         57 :       GD.game_parameter1_weight =</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">         57 :       std::stof(res-&gt;getString(&quot;game_parameter1_weight&quot;));</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">         63 :     res = prep_stmt-&gt;executeQuery();</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">        117 :     while (res-&gt;next()) {</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">         54 :       GD.game_id = std::stoi(res-&gt;getString(&quot;game_id&quot;));</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">         54 :       GD.developer_email = res-&gt;getString(&quot;developer_email&quot;);</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">         54 :       GD.game_name = res-&gt;getString(&quot;game_name&quot;);</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">         54 :       GD.game_parameter1_name = res-&gt;getString(&quot;game_parameter1_name&quot;);</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">         54 :       GD.game_parameter1_weight =</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">         54 :       std::stof(res-&gt;getString(&quot;game_parameter1_weight&quot;));</span></a>
 <a name="265"><span class="lineNum">     265 </span>            : </a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">         57 :       GD.game_parameter2_name = res-&gt;getString(&quot;game_parameter2_name&quot;);</span></a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">         57 :       GD.game_parameter2_weight =</span></a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">         57 :       std::stof(res-&gt;getString(&quot;game_parameter2_weight&quot;));</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">         54 :       GD.game_parameter2_name = res-&gt;getString(&quot;game_parameter2_name&quot;);</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">         54 :       GD.game_parameter2_weight =</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">         54 :       std::stof(res-&gt;getString(&quot;game_parameter2_weight&quot;));</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">         57 :       GD.game_parameter3_name = res-&gt;getString(&quot;game_parameter3_name&quot;);</span></a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         57 :       GD.game_parameter3_weight =</span></a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">         57 :       std::stof(res-&gt;getString(&quot;game_parameter3_weight&quot;));</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">         54 :       GD.game_parameter3_name = res-&gt;getString(&quot;game_parameter3_name&quot;);</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         54 :       GD.game_parameter3_weight =</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">         54 :       std::stof(res-&gt;getString(&quot;game_parameter3_weight&quot;));</span></a>
 <a name="273"><span class="lineNum">     273 </span>            : </a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">         57 :       GD.game_parameter4_name = res-&gt;getString(&quot;game_parameter4_name&quot;);</span></a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">         57 :       GD.game_parameter4_weight =</span></a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineCov">         57 :       std::stof(res-&gt;getString(&quot;game_parameter4_weight&quot;));</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">         54 :       GD.game_parameter4_name = res-&gt;getString(&quot;game_parameter4_name&quot;);</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">         54 :       GD.game_parameter4_weight =</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">         54 :       std::stof(res-&gt;getString(&quot;game_parameter4_weight&quot;));</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">         57 :       GD.category = res-&gt;getString(&quot;category&quot;);</span></a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineCov">         57 :       GD.players_per_team = std::stoi(res-&gt;getString(&quot;players_per_team&quot;));</span></a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">         57 :       GD.teams_per_match = std::stoi(res-&gt;getString(&quot;teams_per_match&quot;));</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">         57 :       GD.is_valid = true;</span></a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">         57 :       LOG(INFO) &lt;&lt; GD.toString() &lt;&lt; std::endl;</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">         54 :       GD.category = res-&gt;getString(&quot;category&quot;);</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineCov">         54 :       GD.players_per_team = std::stoi(res-&gt;getString(&quot;players_per_team&quot;));</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">         54 :       GD.teams_per_match = std::stoi(res-&gt;getString(&quot;teams_per_match&quot;));</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">         54 :       GD.is_valid = true;</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">         54 :       LOG(INFO) &lt;&lt; GD.toString() &lt;&lt; std::endl;</span></a>
 <a name="283"><span class="lineNum">     283 </span>            :     }</a>
 <a name="284"><span class="lineNum">     284 </span>            : </a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">         68 :     delete prep_stmt;</span></a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">         68 :     delete res;</span></a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">         68 :     delete con;</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">         63 :     delete prep_stmt;</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">         63 :     delete res;</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">         63 :     delete con;</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">        272 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved game with game_id: &quot; +</span></a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        204 :     std::to_string(game_id) &lt;&lt; std::endl;</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">        189 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved game with game_id: &quot; +</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        126 :     std::to_string(game_id) &lt;&lt; std::endl;</span></a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt;</span></a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     &quot;Error getting game with game_id: &quot; + std::to_string(game_id) &lt;&lt; std::endl;</span></a>
@@ -358,19 +358,19 @@
 <a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="299"><span class="lineNum">     299 </span>            :   }</a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         68 :   return GD;</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         63 :   return GD;</span></a>
+<a name="302"><span class="lineNum">     302 </span>            : }</a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
 <a name="304"><span class="lineNum">     304 </span>            : Player_Game_Ratings</a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineCov">         62 : DBService::get_player_game_rating(std::string player_email, int game_id) {</span></a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineCov">        124 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get rating in game with game_id: &quot; +</span></a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineCov">        186 :   std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineCov">         62 :   player_email&lt;&lt; std::endl;</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">         53 : DBService::get_player_game_rating(std::string player_email, int game_id) {</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">         53 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get rating in game with game_id: &quot; +</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineCov">        106 :   std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">         53 :   player_email&lt;&lt; std::endl;</span></a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineCov">         62 :   Player_Game_Ratings PGR;</span></a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineCov">         62 :   PGR.is_valid = false;</span></a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">         53 :   Player_Game_Ratings PGR;</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineCov">         53 :   PGR.is_valid = false;</span></a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
 <a name="313"><span class="lineNum">     313 </span>            :   try {</a>
 <a name="314"><span class="lineNum">     314 </span>            :     sql::Driver *driver;</a>
@@ -379,40 +379,40 @@
 <a name="317"><span class="lineNum">     317 </span>            :     sql::ResultSet *res;</a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
 <a name="319"><span class="lineNum">     319 </span>            :     // Connect to database</a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">         62 :     driver = get_driver_instance();</span></a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineCov">         62 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineCov">         62 :     con-&gt;setSchema(database);</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">         53 :     driver = get_driver_instance();</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">         53 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="322"><span class="lineNum">     322 </span><span class="lineCov">         53 :     con-&gt;setSchema(database);</span></a>
 <a name="323"><span class="lineNum">     323 </span>            : </a>
 <a name="324"><span class="lineNum">     324 </span>            :     // Create query and fill in relevant variables</a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineCov">         62 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Player_Game_Ratings PGR &quot;</span></a>
-<a name="326"><span class="lineNum">     326 </span>            :     &quot;WHERE PGR.player_email = ? AND PGR.game_id = ?;&quot;);</a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineCov">         62 :     prep_stmt-&gt;setString(1, player_email);</span></a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineCov">         62 :     prep_stmt-&gt;setInt(2, game_id);</span></a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">         53 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Player_Game_Ratings PGR &quot;</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineCov">        106 :     &quot;WHERE PGR.player_email = ? AND PGR.game_id = ?;&quot;);</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">         53 :     prep_stmt-&gt;setString(1, player_email);</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">         53 :     prep_stmt-&gt;setInt(2, game_id);</span></a>
 <a name="329"><span class="lineNum">     329 </span>            : </a>
 <a name="330"><span class="lineNum">     330 </span>            :     // Execute query and get results</a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         62 :     res = prep_stmt-&gt;executeQuery();</span></a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineCov">        110 :     while (res-&gt;next()) {</span></a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineCov">         48 :       PGR.player_email = res-&gt;getString(&quot;player_email&quot;);</span></a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineCov">         48 :       PGR.game_id = std::stoi(res-&gt;getString(&quot;game_id&quot;));</span></a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineCov">         48 :       PGR.game_parameter1_value =</span></a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         48 :       std::stoi(res-&gt;getString(&quot;game_parameter1_value&quot;));</span></a>
-<a name="337"><span class="lineNum">     337 </span><span class="lineCov">         48 :       PGR.game_parameter2_value =</span></a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">         48 :       std::stoi(res-&gt;getString(&quot;game_parameter2_value&quot;));</span></a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineCov">         48 :       PGR.game_parameter3_value =</span></a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineCov">         48 :       std::stoi(res-&gt;getString(&quot;game_parameter3_value&quot;));</span></a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineCov">         48 :       PGR.game_parameter4_value =</span></a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineCov">         48 :       std::stoi(res-&gt;getString(&quot;game_parameter4_value&quot;));</span></a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">         48 :       PGR.is_valid = true;</span></a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineCov">         48 :       LOG(INFO) &lt;&lt; PGR.toString() &lt;&lt; std::endl;</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         53 :     res = prep_stmt-&gt;executeQuery();</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">         93 :     while (res-&gt;next()) {</span></a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineCov">         40 :       PGR.player_email = res-&gt;getString(&quot;player_email&quot;);</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineCov">         40 :       PGR.game_id = std::stoi(res-&gt;getString(&quot;game_id&quot;));</span></a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineCov">         40 :       PGR.game_parameter1_value =</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         40 :       std::stoi(res-&gt;getString(&quot;game_parameter1_value&quot;));</span></a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineCov">         40 :       PGR.game_parameter2_value =</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">         40 :       std::stoi(res-&gt;getString(&quot;game_parameter2_value&quot;));</span></a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineCov">         40 :       PGR.game_parameter3_value =</span></a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineCov">         40 :       std::stoi(res-&gt;getString(&quot;game_parameter3_value&quot;));</span></a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineCov">         40 :       PGR.game_parameter4_value =</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineCov">         40 :       std::stoi(res-&gt;getString(&quot;game_parameter4_value&quot;));</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">         40 :       PGR.is_valid = true;</span></a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">         40 :       LOG(INFO) &lt;&lt; PGR.toString() &lt;&lt; std::endl;</span></a>
 <a name="345"><span class="lineNum">     345 </span>            :     }</a>
 <a name="346"><span class="lineNum">     346 </span>            : </a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineCov">         62 :     delete prep_stmt;</span></a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">         62 :     delete res;</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         62 :     delete con;</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineCov">         53 :     delete prep_stmt;</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">         53 :     delete res;</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         53 :     delete con;</span></a>
 <a name="350"><span class="lineNum">     350 </span>            : </a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">        186 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved rating in game with game_id: &quot; +</span></a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">        186 :     std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">         62 :     player_email &lt;&lt; std::endl;</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">        106 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved rating in game with game_id: &quot; +</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">        106 :     std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">         53 :     player_email &lt;&lt; std::endl;</span></a>
 <a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting rating in game with game_id: &quot; +</span></a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :     std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
@@ -423,16 +423,16 @@
 <a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="364"><span class="lineNum">     364 </span>            :   }</a>
 <a name="365"><span class="lineNum">     365 </span>            : </a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">         62 :   return PGR;</span></a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">         53 :   return PGR;</span></a>
+<a name="367"><span class="lineNum">     367 </span>            : }</a>
 <a name="368"><span class="lineNum">     368 </span>            : </a>
 <a name="369"><span class="lineNum">     369 </span>            : Joined_Player_Game_Ratings</a>
 <a name="370"><span class="lineNum">     370 </span><span class="lineCov">          4 : DBService::</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : get_joined_player_game_rating(std::string player_email, int game_id) {</a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">          8 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get rating in game with game_id: &quot; +</span></a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">         12 :   std::to_string(game_id) + &quot; for player with email: &quot; + player_email</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">          4 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get rating in game with game_id: &quot; +</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">          8 :   std::to_string(game_id) + &quot; for player with email: &quot; + player_email</span></a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineCov">          4 :   &lt;&lt; std::endl;</span></a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
 <a name="376"><span class="lineNum">     376 </span><span class="lineCov">          4 :   Joined_Player_Game_Ratings JPGR;</span></a>
@@ -453,7 +453,7 @@
 <a name="391"><span class="lineNum">     391 </span><span class="lineCov">          4 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT PGR.*, GD.* FROM Players P &quot;</span></a>
 <a name="392"><span class="lineNum">     392 </span>            :     &quot;JOIN Player_Game_Ratings PGR ON P.player_email = PGR.player_email &quot;</a>
 <a name="393"><span class="lineNum">     393 </span>            :     &quot;JOIN Game_Details GD ON PGR.game_id = GD.game_id &quot;</a>
-<a name="394"><span class="lineNum">     394 </span>            :     &quot;WHERE P.player_email = ? AND GD.game_id = ?;&quot;);</a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineCov">          8 :     &quot;WHERE P.player_email = ? AND GD.game_id = ?;&quot;);</span></a>
 <a name="395"><span class="lineNum">     395 </span><span class="lineCov">          4 :     prep_stmt-&gt;setString(1, player_email);</span></a>
 <a name="396"><span class="lineNum">     396 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(2, game_id);</span></a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
@@ -499,8 +499,8 @@
 <a name="437"><span class="lineNum">     437 </span><span class="lineCov">          4 :     delete res;</span></a>
 <a name="438"><span class="lineNum">     438 </span><span class="lineCov">          4 :     delete con;</span></a>
 <a name="439"><span class="lineNum">     439 </span>            : </a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineCov">         12 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved rating in game with game_id: &quot; +</span></a>
-<a name="441"><span class="lineNum">     441 </span><span class="lineCov">         12 :     std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineCov">          8 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved rating in game with game_id: &quot; +</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineCov">          8 :     std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
 <a name="442"><span class="lineNum">     442 </span><span class="lineCov">          4 :     player_email&lt;&lt; std::endl;</span></a>
 <a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting rating in game with game_id: &quot; +</span></a>
@@ -512,10 +512,10 @@
 <a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="453"><span class="lineNum">     453 </span>            :   }</a>
 <a name="454"><span class="lineNum">     454 </span>            : </a>
 <a name="455"><span class="lineNum">     455 </span><span class="lineCov">          4 :   return JPGR;</span></a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="456"><span class="lineNum">     456 </span>            : }</a>
 <a name="457"><span class="lineNum">     457 </span>            : </a>
 <a name="458"><span class="lineNum">     458 </span><span class="lineCov">          2 : std::vector&lt;Player&gt; DBService::get_all_players() {</span></a>
 <a name="459"><span class="lineNum">     459 </span><span class="lineCov">          2 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get all players&quot; &lt;&lt; std::endl;</span></a>
@@ -548,17 +548,17 @@
 <a name="486"><span class="lineNum">     486 </span><span class="lineCov">          2 :     delete con;</span></a>
 <a name="487"><span class="lineNum">     487 </span>            : </a>
 <a name="488"><span class="lineNum">     488 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved all players&quot; &lt;&lt; std::endl;</span></a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">          2 :   } catch (sql::SQLException &amp;e) {</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting all players&quot; &lt;&lt; std::endl;</span></a>
 <a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
 <a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;(&quot; &lt;&lt; __FUNCTION__ &lt;&lt; &quot;) on line &quot;&lt;&lt; __LINE__ &lt;&lt; std::endl;</span></a>
 <a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="496"><span class="lineNum">     496 </span>            :   }</a>
 <a name="497"><span class="lineNum">     497 </span>            : </a>
 <a name="498"><span class="lineNum">     498 </span><span class="lineCov">          2 :   return players;</span></a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="499"><span class="lineNum">     499 </span>            : }</a>
 <a name="500"><span class="lineNum">     500 </span>            : </a>
 <a name="501"><span class="lineNum">     501 </span><span class="lineCov">          2 : std::vector&lt;Developer&gt; DBService::get_all_developers() {</span></a>
 <a name="502"><span class="lineNum">     502 </span><span class="lineCov">          2 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get all developers&quot; &lt;&lt; std::endl;</span></a>
@@ -592,16 +592,16 @@
 <a name="530"><span class="lineNum">     530 </span><span class="lineCov">          2 :     delete con;</span></a>
 <a name="531"><span class="lineNum">     531 </span>            : </a>
 <a name="532"><span class="lineNum">     532 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved all developers&quot; &lt;&lt; std::endl;</span></a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineCov">          2 :   } catch (sql::SQLException &amp;e) {</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting all developers&quot; &lt;&lt; std::endl;</span></a>
 <a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
 <a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;(&quot; &lt;&lt; __FUNCTION__ &lt;&lt; &quot;) on line &quot;&lt;&lt; __LINE__ &lt;&lt; std::endl;</span></a>
 <a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="540"><span class="lineNum">     540 </span>            :   }</a>
 <a name="541"><span class="lineNum">     541 </span><span class="lineCov">          2 :   return developers;</span></a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="542"><span class="lineNum">     542 </span>            : }</a>
 <a name="543"><span class="lineNum">     543 </span>            : </a>
 <a name="544"><span class="lineNum">     544 </span><span class="lineCov">          8 : std::vector&lt;Game_Details&gt; DBService::get_all_games() {</span></a>
 <a name="545"><span class="lineNum">     545 </span><span class="lineCov">          8 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to get all game details&quot; &lt;&lt; std::endl;</span></a>
@@ -655,17 +655,17 @@
 <a name="593"><span class="lineNum">     593 </span><span class="lineCov">          8 :     delete con;</span></a>
 <a name="594"><span class="lineNum">     594 </span>            : </a>
 <a name="595"><span class="lineNum">     595 </span><span class="lineCov">          8 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved all game details&quot; &lt;&lt; std::endl;</span></a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineCov">          8 :   } catch (sql::SQLException &amp;e) {</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting all game details&quot; &lt;&lt; std::endl;</span></a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
 <a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;(&quot; &lt;&lt; __FUNCTION__ &lt;&lt; &quot;) on line &quot;&lt;&lt; __LINE__ &lt;&lt; std::endl;</span></a>
 <a name="600"><span class="lineNum">     600 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="601"><span class="lineNum">     601 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="603"><span class="lineNum">     603 </span>            :   }</a>
 <a name="604"><span class="lineNum">     604 </span>            : </a>
 <a name="605"><span class="lineNum">     605 </span><span class="lineCov">          8 :   return game_details;</span></a>
-<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="606"><span class="lineNum">     606 </span>            : }</a>
 <a name="607"><span class="lineNum">     607 </span>            : </a>
 <a name="608"><span class="lineNum">     608 </span>            : </a>
 <a name="609"><span class="lineNum">     609 </span>            : std::vector&lt;Joined_Player_Game_Ratings&gt;</a>
@@ -689,7 +689,7 @@
 <a name="627"><span class="lineNum">     627 </span>            :     // Create query and fill in relevant variables</a>
 <a name="628"><span class="lineNum">     628 </span><span class="lineCov">          5 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT PGR.*, GD.* FROM Players P &quot;</span></a>
 <a name="629"><span class="lineNum">     629 </span>            :     &quot;JOIN Player_Game_Ratings PGR ON P.player_email = PGR.player_email &quot;</a>
-<a name="630"><span class="lineNum">     630 </span>            :     &quot;JOIN Game_Details GD ON PGR.game_id = GD.game_id WHERE GD.game_id = ?;&quot;);</a>
+<a name="630"><span class="lineNum">     630 </span><span class="lineCov">         10 :     &quot;JOIN Game_Details GD ON PGR.game_id = GD.game_id WHERE GD.game_id = ?;&quot;);</span></a>
 <a name="631"><span class="lineNum">     631 </span><span class="lineCov">          5 :     prep_stmt-&gt;setInt(1, game_id);</span></a>
 <a name="632"><span class="lineNum">     632 </span>            : </a>
 <a name="633"><span class="lineNum">     633 </span>            :     // Execute query and get results</a>
@@ -736,17 +736,17 @@
 <a name="674"><span class="lineNum">     674 </span><span class="lineCov">          5 :     delete con;</span></a>
 <a name="675"><span class="lineNum">     675 </span>            : </a>
 <a name="676"><span class="lineNum">     676 </span><span class="lineCov">          5 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved all player game ratings&quot; &lt;&lt; std::endl;</span></a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">          5 :   } catch (sql::SQLException &amp;e) {</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting all player game ratings&quot; &lt;&lt; std::endl;</span></a>
 <a name="679"><span class="lineNum">     679 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
 <a name="680"><span class="lineNum">     680 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;(&quot; &lt;&lt; __FUNCTION__ &lt;&lt; &quot;) on line &quot;&lt;&lt; __LINE__ &lt;&lt; std::endl;</span></a>
 <a name="681"><span class="lineNum">     681 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="682"><span class="lineNum">     682 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="683"><span class="lineNum">     683 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="684"><span class="lineNum">     684 </span>            :   }</a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>
 <a name="686"><span class="lineNum">     686 </span><span class="lineCov">          5 :   return JPGR;</span></a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="687"><span class="lineNum">     687 </span>            : }</a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span>            : std::vector&lt;Game_Details&gt;</a>
 <a name="690"><span class="lineNum">     690 </span><span class="lineCov">         12 : DBService::get_all_games_for_developer(std::string developer_email) {</span></a>
@@ -769,7 +769,7 @@
 <a name="707"><span class="lineNum">     707 </span>            : </a>
 <a name="708"><span class="lineNum">     708 </span>            :     // Create query and fill in relevant variables</a>
 <a name="709"><span class="lineNum">     709 </span><span class="lineCov">         12 :     prep_stmt = con-&gt;prepareStatement(&quot;SELECT * FROM Game_Details GD &quot;</span></a>
-<a name="710"><span class="lineNum">     710 </span>            :     &quot;WHERE GD.developer_email = ?;&quot;);</a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineCov">         24 :     &quot;WHERE GD.developer_email = ?;&quot;);</span></a>
 <a name="711"><span class="lineNum">     711 </span><span class="lineCov">         12 :     prep_stmt-&gt;setString(1, developer_email);</span></a>
 <a name="712"><span class="lineNum">     712 </span>            : </a>
 <a name="713"><span class="lineNum">     713 </span>            :     // Execute query and get results</a>
@@ -808,7 +808,7 @@
 <a name="746"><span class="lineNum">     746 </span>            : </a>
 <a name="747"><span class="lineNum">     747 </span><span class="lineCov">         24 :     LOG(INFO) &lt;&lt; &quot;Successfully retrieved games for developer with email: &quot; +</span></a>
 <a name="748"><span class="lineNum">     748 </span><span class="lineCov">         12 :     developer_email &lt;&lt; std::endl;</span></a>
-<a name="749"><span class="lineNum">     749 </span><span class="lineCov">         12 :   } catch (sql::SQLException &amp;e) {</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="750"><span class="lineNum">     750 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error getting games for developer with email: &quot; +</span></a>
 <a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :     developer_email &lt;&lt; std::endl;</span></a>
 <a name="752"><span class="lineNum">     752 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
@@ -816,15 +816,15 @@
 <a name="754"><span class="lineNum">     754 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="755"><span class="lineNum">     755 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="756"><span class="lineNum">     756 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="757"><span class="lineNum">     757 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="757"><span class="lineNum">     757 </span>            :   }</a>
 <a name="758"><span class="lineNum">     758 </span>            : </a>
 <a name="759"><span class="lineNum">     759 </span><span class="lineCov">         12 :   return GD;</span></a>
-<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="760"><span class="lineNum">     760 </span>            : }</a>
 <a name="761"><span class="lineNum">     761 </span>            : </a>
-<a name="762"><span class="lineNum">     762 </span><span class="lineCov">         55 : Player DBService::add_player(Player P) {</span></a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineCov">        110 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to insert player with email: &quot; +</span></a>
-<a name="764"><span class="lineNum">     764 </span><span class="lineCov">         55 :   P.player_email &lt;&lt; std::endl;</span></a>
-<a name="765"><span class="lineNum">     765 </span><span class="lineCov">         55 :   P.is_valid = false;</span></a>
+<a name="762"><span class="lineNum">     762 </span><span class="lineCov">         58 : Player DBService::add_player(Player P) {</span></a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineCov">        116 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to insert player with email: &quot; +</span></a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineCov">         58 :   P.player_email &lt;&lt; std::endl;</span></a>
+<a name="765"><span class="lineNum">     765 </span><span class="lineCov">         58 :   P.is_valid = false;</span></a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
 <a name="767"><span class="lineNum">     767 </span>            :   try {</a>
 <a name="768"><span class="lineNum">     768 </span>            :     sql::Driver *driver;</a>
@@ -832,23 +832,23 @@
 <a name="770"><span class="lineNum">     770 </span>            :     sql::PreparedStatement  *prep_stmt;</a>
 <a name="771"><span class="lineNum">     771 </span>            : </a>
 <a name="772"><span class="lineNum">     772 </span>            :     // Connect to database</a>
-<a name="773"><span class="lineNum">     773 </span><span class="lineCov">         55 :     driver = get_driver_instance();</span></a>
-<a name="774"><span class="lineNum">     774 </span><span class="lineCov">         55 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineCov">         55 :     con-&gt;setSchema(database);</span></a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineCov">         58 :     driver = get_driver_instance();</span></a>
+<a name="774"><span class="lineNum">     774 </span><span class="lineCov">         58 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineCov">         58 :     con-&gt;setSchema(database);</span></a>
 <a name="776"><span class="lineNum">     776 </span>            : </a>
 <a name="777"><span class="lineNum">     777 </span>            :     // Create statement and fill in relevant variables</a>
-<a name="778"><span class="lineNum">     778 </span><span class="lineCov">         55 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Players VALUES(?);&quot;);</span></a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineCov">         55 :     prep_stmt-&gt;setString(1, P.player_email);</span></a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineCov">         58 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Players VALUES(?);&quot;);</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineCov">         58 :     prep_stmt-&gt;setString(1, P.player_email);</span></a>
 <a name="780"><span class="lineNum">     780 </span>            : </a>
 <a name="781"><span class="lineNum">     781 </span>            :     // Execute statament and set flag</a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineCov">         55 :     prep_stmt-&gt;executeUpdate();</span></a>
-<a name="783"><span class="lineNum">     783 </span><span class="lineCov">         54 :     P.is_valid = true;</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">         58 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="783"><span class="lineNum">     783 </span><span class="lineCov">         57 :     P.is_valid = true;</span></a>
 <a name="784"><span class="lineNum">     784 </span>            : </a>
-<a name="785"><span class="lineNum">     785 </span><span class="lineCov">         54 :     delete prep_stmt;</span></a>
-<a name="786"><span class="lineNum">     786 </span><span class="lineCov">         54 :     delete con;</span></a>
+<a name="785"><span class="lineNum">     785 </span><span class="lineCov">         57 :     delete prep_stmt;</span></a>
+<a name="786"><span class="lineNum">     786 </span><span class="lineCov">         57 :     delete con;</span></a>
 <a name="787"><span class="lineNum">     787 </span>            : </a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineCov">        108 :     LOG(INFO) &lt;&lt;</span></a>
-<a name="789"><span class="lineNum">     789 </span><span class="lineCov">         54 :     &quot;Successfully created player with email: &quot; + P.player_email &lt;&lt; std::endl;</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">        114 :     LOG(INFO) &lt;&lt;</span></a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineCov">         57 :     &quot;Successfully created player with email: &quot; + P.player_email &lt;&lt; std::endl;</span></a>
 <a name="790"><span class="lineNum">     790 </span><span class="lineCov">          1 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="791"><span class="lineNum">     791 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt;</span></a>
 <a name="792"><span class="lineNum">     792 </span><span class="lineCov">          1 :     &quot;Error creating player with email: &quot; + P.player_email &lt;&lt; std::endl;</span></a>
@@ -857,15 +857,15 @@
 <a name="795"><span class="lineNum">     795 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="796"><span class="lineNum">     796 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="797"><span class="lineNum">     797 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="798"><span class="lineNum">     798 </span><span class="lineCov">          1 :   }</span></a>
+<a name="798"><span class="lineNum">     798 </span>            :   }</a>
 <a name="799"><span class="lineNum">     799 </span>            : </a>
-<a name="800"><span class="lineNum">     800 </span><span class="lineCov">         55 :   return P;</span></a>
+<a name="800"><span class="lineNum">     800 </span><span class="lineCov">         58 :   return P;</span></a>
 <a name="801"><span class="lineNum">     801 </span>            : }</a>
 <a name="802"><span class="lineNum">     802 </span>            : </a>
-<a name="803"><span class="lineNum">     803 </span><span class="lineCov">         50 : Developer DBService::add_developer(Developer D) {</span></a>
-<a name="804"><span class="lineNum">     804 </span><span class="lineCov">        100 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to insert developer with email: &quot; +</span></a>
-<a name="805"><span class="lineNum">     805 </span><span class="lineCov">         50 :   D.developer_email &lt;&lt; std::endl;</span></a>
-<a name="806"><span class="lineNum">     806 </span><span class="lineCov">         50 :   D.is_valid = false;</span></a>
+<a name="803"><span class="lineNum">     803 </span><span class="lineCov">         47 : Developer DBService::add_developer(Developer D) {</span></a>
+<a name="804"><span class="lineNum">     804 </span><span class="lineCov">         94 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to insert developer with email: &quot; +</span></a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineCov">         47 :   D.developer_email &lt;&lt; std::endl;</span></a>
+<a name="806"><span class="lineNum">     806 </span><span class="lineCov">         47 :   D.is_valid = false;</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
 <a name="808"><span class="lineNum">     808 </span>            :   try {</a>
 <a name="809"><span class="lineNum">     809 </span>            :     sql::Driver *driver;</a>
@@ -873,24 +873,24 @@
 <a name="811"><span class="lineNum">     811 </span>            :     sql::PreparedStatement  *prep_stmt;</a>
 <a name="812"><span class="lineNum">     812 </span>            : </a>
 <a name="813"><span class="lineNum">     813 </span>            :     // Connect to database</a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">         50 :     driver = get_driver_instance();</span></a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineCov">         50 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineCov">         50 :     con-&gt;setSchema(database);</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">         47 :     driver = get_driver_instance();</span></a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineCov">         47 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineCov">         47 :     con-&gt;setSchema(database);</span></a>
 <a name="817"><span class="lineNum">     817 </span>            : </a>
 <a name="818"><span class="lineNum">     818 </span>            :     // Create statement and fill in relevant variables</a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineCov">         50 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Developers VALUES(?,?);&quot;);</span></a>
-<a name="820"><span class="lineNum">     820 </span><span class="lineCov">         50 :     prep_stmt-&gt;setString(1, D.developer_email);</span></a>
-<a name="821"><span class="lineNum">     821 </span><span class="lineCov">         50 :     prep_stmt-&gt;setString(2, D.developer_password);</span></a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">         47 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Developers VALUES(?,?);&quot;);</span></a>
+<a name="820"><span class="lineNum">     820 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(1, D.developer_email);</span></a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(2, D.developer_password);</span></a>
 <a name="822"><span class="lineNum">     822 </span>            : </a>
 <a name="823"><span class="lineNum">     823 </span>            :     // Execute statement and set flag</a>
-<a name="824"><span class="lineNum">     824 </span><span class="lineCov">         50 :     prep_stmt-&gt;executeUpdate();</span></a>
-<a name="825"><span class="lineNum">     825 </span><span class="lineCov">         48 :     D.is_valid = true;</span></a>
+<a name="824"><span class="lineNum">     824 </span><span class="lineCov">         47 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineCov">         45 :     D.is_valid = true;</span></a>
 <a name="826"><span class="lineNum">     826 </span>            : </a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         48 :     delete prep_stmt;</span></a>
-<a name="828"><span class="lineNum">     828 </span><span class="lineCov">         48 :     delete con;</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         45 :     delete prep_stmt;</span></a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineCov">         45 :     delete con;</span></a>
 <a name="829"><span class="lineNum">     829 </span>            : </a>
-<a name="830"><span class="lineNum">     830 </span><span class="lineCov">         96 :     LOG(INFO) &lt;&lt; &quot;Successfully created developer with email: &quot; +</span></a>
-<a name="831"><span class="lineNum">     831 </span><span class="lineCov">         48 :     D.developer_email &lt;&lt; std::endl;</span></a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineCov">         90 :     LOG(INFO) &lt;&lt; &quot;Successfully created developer with email: &quot; +</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineCov">         45 :     D.developer_email &lt;&lt; std::endl;</span></a>
 <a name="832"><span class="lineNum">     832 </span><span class="lineCov">          2 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="833"><span class="lineNum">     833 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt;</span></a>
 <a name="834"><span class="lineNum">     834 </span><span class="lineCov">          2 :     &quot;Error creating developer with email: &quot; + D.developer_email &lt;&lt; std::endl;</span></a>
@@ -899,13 +899,13 @@
 <a name="837"><span class="lineNum">     837 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="838"><span class="lineNum">     838 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="839"><span class="lineNum">     839 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineCov">          2 :   }</span></a>
-<a name="841"><span class="lineNum">     841 </span><span class="lineCov">         50 :   return D;</span></a>
+<a name="840"><span class="lineNum">     840 </span>            :   }</a>
+<a name="841"><span class="lineNum">     841 </span><span class="lineCov">         47 :   return D;</span></a>
 <a name="842"><span class="lineNum">     842 </span>            : }</a>
 <a name="843"><span class="lineNum">     843 </span>            : </a>
-<a name="844"><span class="lineNum">     844 </span><span class="lineCov">         47 : Game_Details DBService::add_game_details(Game_Details GD) {</span></a>
-<a name="845"><span class="lineNum">     845 </span><span class="lineCov">         47 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to insert new game&quot; &lt;&lt; std::endl;</span></a>
-<a name="846"><span class="lineNum">     846 </span><span class="lineCov">         47 :   GD.is_valid = false;</span></a>
+<a name="844"><span class="lineNum">     844 </span><span class="lineCov">         46 : Game_Details DBService::add_game_details(Game_Details GD) {</span></a>
+<a name="845"><span class="lineNum">     845 </span><span class="lineCov">         46 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to insert new game&quot; &lt;&lt; std::endl;</span></a>
+<a name="846"><span class="lineNum">     846 </span><span class="lineCov">         46 :   GD.is_valid = false;</span></a>
 <a name="847"><span class="lineNum">     847 </span>            : </a>
 <a name="848"><span class="lineNum">     848 </span>            :   try {</a>
 <a name="849"><span class="lineNum">     849 </span>            :     sql::Driver *driver;</a>
@@ -915,52 +915,52 @@
 <a name="853"><span class="lineNum">     853 </span>            :     sql::ResultSet *res;</a>
 <a name="854"><span class="lineNum">     854 </span>            : </a>
 <a name="855"><span class="lineNum">     855 </span>            :     // Connect to database</a>
-<a name="856"><span class="lineNum">     856 </span><span class="lineCov">         47 :     driver = get_driver_instance();</span></a>
-<a name="857"><span class="lineNum">     857 </span><span class="lineCov">         47 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">         47 :     con-&gt;setSchema(database);</span></a>
+<a name="856"><span class="lineNum">     856 </span><span class="lineCov">         46 :     driver = get_driver_instance();</span></a>
+<a name="857"><span class="lineNum">     857 </span><span class="lineCov">         46 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineCov">         46 :     con-&gt;setSchema(database);</span></a>
 <a name="859"><span class="lineNum">     859 </span>            : </a>
 <a name="860"><span class="lineNum">     860 </span>            :     // Create SQL statement</a>
-<a name="861"><span class="lineNum">     861 </span><span class="lineCov">         47 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Game_Details &quot;</span></a>
+<a name="861"><span class="lineNum">     861 </span><span class="lineCov">         46 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Game_Details &quot;</span></a>
 <a name="862"><span class="lineNum">     862 </span>            :     &quot;(game_name, developer_email, &quot;</a>
 <a name="863"><span class="lineNum">     863 </span>            :     &quot;game_parameter1_name, game_parameter1_weight, &quot;</a>
 <a name="864"><span class="lineNum">     864 </span>            :     &quot;game_parameter2_name, game_parameter2_weight, &quot;</a>
 <a name="865"><span class="lineNum">     865 </span>            :     &quot;game_parameter3_name, game_parameter3_weight, &quot;</a>
 <a name="866"><span class="lineNum">     866 </span>            :     &quot;game_parameter4_name, game_parameter4_weight, &quot;</a>
 <a name="867"><span class="lineNum">     867 </span>            :     &quot;category, players_per_team, teams_per_match) &quot;</a>
-<a name="868"><span class="lineNum">     868 </span>            :     &quot;VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);&quot;);</a>
+<a name="868"><span class="lineNum">     868 </span><span class="lineCov">         92 :     &quot;VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);&quot;);</span></a>
 <a name="869"><span class="lineNum">     869 </span>            : </a>
 <a name="870"><span class="lineNum">     870 </span>            :     // Fill in relevant variables in statement and execute</a>
-<a name="871"><span class="lineNum">     871 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(1, GD.game_name);</span></a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(2, GD.developer_email);</span></a>
-<a name="873"><span class="lineNum">     873 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(3, GD.game_parameter1_name);</span></a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">         47 :     prep_stmt-&gt;setDouble(4, GD.game_parameter1_weight);</span></a>
-<a name="875"><span class="lineNum">     875 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(5, GD.game_parameter2_name);</span></a>
-<a name="876"><span class="lineNum">     876 </span><span class="lineCov">         47 :     prep_stmt-&gt;setDouble(6, GD.game_parameter2_weight);</span></a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(7, GD.game_parameter3_name);</span></a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineCov">         47 :     prep_stmt-&gt;setDouble(8, GD.game_parameter3_weight);</span></a>
-<a name="879"><span class="lineNum">     879 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(9, GD.game_parameter4_name);</span></a>
-<a name="880"><span class="lineNum">     880 </span><span class="lineCov">         47 :     prep_stmt-&gt;setDouble(10, GD.game_parameter4_weight);</span></a>
-<a name="881"><span class="lineNum">     881 </span><span class="lineCov">         47 :     prep_stmt-&gt;setString(11, GD.category);</span></a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineCov">         47 :     prep_stmt-&gt;setInt(12, GD.players_per_team);</span></a>
-<a name="883"><span class="lineNum">     883 </span><span class="lineCov">         47 :     prep_stmt-&gt;setInt(13, GD.teams_per_match);</span></a>
-<a name="884"><span class="lineNum">     884 </span><span class="lineCov">         47 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="871"><span class="lineNum">     871 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(1, GD.game_name);</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(2, GD.developer_email);</span></a>
+<a name="873"><span class="lineNum">     873 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(3, GD.game_parameter1_name);</span></a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineCov">         46 :     prep_stmt-&gt;setDouble(4, GD.game_parameter1_weight);</span></a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(5, GD.game_parameter2_name);</span></a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineCov">         46 :     prep_stmt-&gt;setDouble(6, GD.game_parameter2_weight);</span></a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(7, GD.game_parameter3_name);</span></a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineCov">         46 :     prep_stmt-&gt;setDouble(8, GD.game_parameter3_weight);</span></a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(9, GD.game_parameter4_name);</span></a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineCov">         46 :     prep_stmt-&gt;setDouble(10, GD.game_parameter4_weight);</span></a>
+<a name="881"><span class="lineNum">     881 </span><span class="lineCov">         46 :     prep_stmt-&gt;setString(11, GD.category);</span></a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineCov">         46 :     prep_stmt-&gt;setInt(12, GD.players_per_team);</span></a>
+<a name="883"><span class="lineNum">     883 </span><span class="lineCov">         46 :     prep_stmt-&gt;setInt(13, GD.teams_per_match);</span></a>
+<a name="884"><span class="lineNum">     884 </span><span class="lineCov">         46 :     prep_stmt-&gt;executeUpdate();</span></a>
 <a name="885"><span class="lineNum">     885 </span>            : </a>
 <a name="886"><span class="lineNum">     886 </span>            :     // Create and execute a second statement to get id of object just created</a>
-<a name="887"><span class="lineNum">     887 </span><span class="lineCov">         46 :     stmt = con-&gt;createStatement();</span></a>
-<a name="888"><span class="lineNum">     888 </span><span class="lineCov">         46 :     res = stmt-&gt;executeQuery(&quot;SELECT LAST_INSERT_ID()&quot;);</span></a>
-<a name="889"><span class="lineNum">     889 </span><span class="lineCov">         92 :     while (res-&gt;next()) {</span></a>
-<a name="890"><span class="lineNum">     890 </span><span class="lineCov">         46 :       GD.game_id = res-&gt;getInt(&quot;LAST_INSERT_ID()&quot;);</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineCov">         45 :     stmt = con-&gt;createStatement();</span></a>
+<a name="888"><span class="lineNum">     888 </span><span class="lineCov">         45 :     res = stmt-&gt;executeQuery(&quot;SELECT LAST_INSERT_ID()&quot;);</span></a>
+<a name="889"><span class="lineNum">     889 </span><span class="lineCov">         90 :     while (res-&gt;next()) {</span></a>
+<a name="890"><span class="lineNum">     890 </span><span class="lineCov">         45 :       GD.game_id = res-&gt;getInt(&quot;LAST_INSERT_ID()&quot;);</span></a>
 <a name="891"><span class="lineNum">     891 </span>            :     }</a>
 <a name="892"><span class="lineNum">     892 </span>            : </a>
-<a name="893"><span class="lineNum">     893 </span><span class="lineCov">         46 :     GD.is_valid = true;</span></a>
+<a name="893"><span class="lineNum">     893 </span><span class="lineCov">         45 :     GD.is_valid = true;</span></a>
 <a name="894"><span class="lineNum">     894 </span>            : </a>
-<a name="895"><span class="lineNum">     895 </span><span class="lineCov">         46 :     delete prep_stmt;</span></a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">         46 :     delete stmt;</span></a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineCov">         46 :     delete res;</span></a>
-<a name="898"><span class="lineNum">     898 </span><span class="lineCov">         46 :     delete con;</span></a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineCov">         45 :     delete prep_stmt;</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">         45 :     delete stmt;</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineCov">         45 :     delete res;</span></a>
+<a name="898"><span class="lineNum">     898 </span><span class="lineCov">         45 :     delete con;</span></a>
 <a name="899"><span class="lineNum">     899 </span>            : </a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineCov">        184 :     LOG(INFO) &lt;&lt; &quot;Successfully created game with game_id: &quot; +</span></a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">        138 :     std::to_string(GD.game_id) &lt;&lt; std::endl;</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">        135 :     LOG(INFO) &lt;&lt; &quot;Successfully created game with game_id: &quot; +</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">         90 :     std::to_string(GD.game_id) &lt;&lt; std::endl;</span></a>
 <a name="902"><span class="lineNum">     902 </span><span class="lineCov">          1 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="903"><span class="lineNum">     903 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;Error creating game&quot; &lt;&lt; std::endl;</span></a>
 <a name="904"><span class="lineNum">     904 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;# ERR: SQLException in &quot; &lt;&lt; __FILE__;</span></a>
@@ -968,17 +968,17 @@
 <a name="906"><span class="lineNum">     906 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="907"><span class="lineNum">     907 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="908"><span class="lineNum">     908 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="909"><span class="lineNum">     909 </span><span class="lineCov">          1 :   }</span></a>
+<a name="909"><span class="lineNum">     909 </span>            :   }</a>
 <a name="910"><span class="lineNum">     910 </span>            : </a>
-<a name="911"><span class="lineNum">     911 </span><span class="lineCov">         47 :   return GD;</span></a>
+<a name="911"><span class="lineNum">     911 </span><span class="lineCov">         46 :   return GD;</span></a>
 <a name="912"><span class="lineNum">     912 </span>            : }</a>
 <a name="913"><span class="lineNum">     913 </span>            : </a>
-<a name="914"><span class="lineNum">     914 </span><span class="lineCov">         63 : Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {</span></a>
-<a name="915"><span class="lineNum">     915 </span><span class="lineCov">        126 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to create rating in game with game_id: &quot; +</span></a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">        126 :   std::to_string(PGR.game_id) + &quot; for player with email: &quot; +</span></a>
-<a name="917"><span class="lineNum">     917 </span><span class="lineCov">        126 :   PGR.player_email &lt;&lt; std::endl;</span></a>
+<a name="914"><span class="lineNum">     914 </span><span class="lineCov">         66 : Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {</span></a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineCov">         66 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to create rating in game with game_id: &quot; +</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">        132 :   std::to_string(PGR.game_id) + &quot; for player with email: &quot; +</span></a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineCov">        132 :   PGR.player_email &lt;&lt; std::endl;</span></a>
 <a name="918"><span class="lineNum">     918 </span>            : </a>
-<a name="919"><span class="lineNum">     919 </span><span class="lineCov">         63 :   PGR.is_valid = false;</span></a>
+<a name="919"><span class="lineNum">     919 </span><span class="lineCov">         66 :   PGR.is_valid = false;</span></a>
 <a name="920"><span class="lineNum">     920 </span>            : </a>
 <a name="921"><span class="lineNum">     921 </span>            :   try {</a>
 <a name="922"><span class="lineNum">     922 </span>            :     sql::Driver *driver;</a>
@@ -986,33 +986,33 @@
 <a name="924"><span class="lineNum">     924 </span>            :     sql::PreparedStatement  *prep_stmt;</a>
 <a name="925"><span class="lineNum">     925 </span>            : </a>
 <a name="926"><span class="lineNum">     926 </span>            :     // Connect to database</a>
-<a name="927"><span class="lineNum">     927 </span><span class="lineCov">         63 :     driver = get_driver_instance();</span></a>
-<a name="928"><span class="lineNum">     928 </span><span class="lineCov">         63 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="929"><span class="lineNum">     929 </span><span class="lineCov">         63 :     con-&gt;setSchema(database);</span></a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineCov">         66 :     driver = get_driver_instance();</span></a>
+<a name="928"><span class="lineNum">     928 </span><span class="lineCov">         66 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="929"><span class="lineNum">     929 </span><span class="lineCov">         66 :     con-&gt;setSchema(database);</span></a>
 <a name="930"><span class="lineNum">     930 </span>            : </a>
 <a name="931"><span class="lineNum">     931 </span>            :     // Create SQL statement</a>
-<a name="932"><span class="lineNum">     932 </span><span class="lineCov">         63 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Player_Game_Ratings &quot;</span></a>
-<a name="933"><span class="lineNum">     933 </span>            :     &quot;VALUES(?, ?, ?, ?, ?, ?);&quot;);</a>
+<a name="932"><span class="lineNum">     932 </span><span class="lineCov">         66 :     prep_stmt = con-&gt;prepareStatement(&quot;INSERT INTO Player_Game_Ratings &quot;</span></a>
+<a name="933"><span class="lineNum">     933 </span><span class="lineCov">        132 :     &quot;VALUES(?, ?, ?, ?, ?, ?);&quot;);</span></a>
 <a name="934"><span class="lineNum">     934 </span>            : </a>
 <a name="935"><span class="lineNum">     935 </span>            :     // Fill in relevant variables in statement and execute</a>
-<a name="936"><span class="lineNum">     936 </span><span class="lineCov">         63 :     prep_stmt-&gt;setString(1, PGR.player_email);</span></a>
-<a name="937"><span class="lineNum">     937 </span><span class="lineCov">         63 :     prep_stmt-&gt;setInt(2, PGR.game_id);</span></a>
-<a name="938"><span class="lineNum">     938 </span><span class="lineCov">         63 :     prep_stmt-&gt;setInt(3, PGR.game_parameter1_value);</span></a>
-<a name="939"><span class="lineNum">     939 </span><span class="lineCov">         63 :     prep_stmt-&gt;setInt(4, PGR.game_parameter2_value);</span></a>
-<a name="940"><span class="lineNum">     940 </span><span class="lineCov">         63 :     prep_stmt-&gt;setInt(5, PGR.game_parameter3_value);</span></a>
-<a name="941"><span class="lineNum">     941 </span><span class="lineCov">         63 :     prep_stmt-&gt;setInt(6, PGR.game_parameter4_value);</span></a>
-<a name="942"><span class="lineNum">     942 </span><span class="lineCov">         63 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="936"><span class="lineNum">     936 </span><span class="lineCov">         66 :     prep_stmt-&gt;setString(1, PGR.player_email);</span></a>
+<a name="937"><span class="lineNum">     937 </span><span class="lineCov">         66 :     prep_stmt-&gt;setInt(2, PGR.game_id);</span></a>
+<a name="938"><span class="lineNum">     938 </span><span class="lineCov">         66 :     prep_stmt-&gt;setInt(3, PGR.game_parameter1_value);</span></a>
+<a name="939"><span class="lineNum">     939 </span><span class="lineCov">         66 :     prep_stmt-&gt;setInt(4, PGR.game_parameter2_value);</span></a>
+<a name="940"><span class="lineNum">     940 </span><span class="lineCov">         66 :     prep_stmt-&gt;setInt(5, PGR.game_parameter3_value);</span></a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineCov">         66 :     prep_stmt-&gt;setInt(6, PGR.game_parameter4_value);</span></a>
+<a name="942"><span class="lineNum">     942 </span><span class="lineCov">         66 :     prep_stmt-&gt;executeUpdate();</span></a>
 <a name="943"><span class="lineNum">     943 </span>            : </a>
-<a name="944"><span class="lineNum">     944 </span><span class="lineCov">         60 :     PGR.is_valid = true;</span></a>
+<a name="944"><span class="lineNum">     944 </span><span class="lineCov">         63 :     PGR.is_valid = true;</span></a>
 <a name="945"><span class="lineNum">     945 </span>            : </a>
-<a name="946"><span class="lineNum">     946 </span><span class="lineCov">         60 :     delete prep_stmt;</span></a>
-<a name="947"><span class="lineNum">     947 </span><span class="lineCov">         60 :     delete con;</span></a>
+<a name="946"><span class="lineNum">     946 </span><span class="lineCov">         63 :     delete prep_stmt;</span></a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineCov">         63 :     delete con;</span></a>
 <a name="948"><span class="lineNum">     948 </span>            : </a>
-<a name="949"><span class="lineNum">     949 </span><span class="lineCov">        180 :     LOG(INFO) &lt;&lt; &quot;Successfully created rating in game with game_id: &quot; +</span></a>
-<a name="950"><span class="lineNum">     950 </span><span class="lineCov">        120 :     std::to_string(PGR.game_id) +&quot; for player with email: &quot; +</span></a>
-<a name="951"><span class="lineNum">     951 </span><span class="lineCov">        120 :     PGR.player_email&lt;&lt; std::endl;</span></a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineCov">        126 :     LOG(INFO) &lt;&lt; &quot;Successfully created rating in game with game_id: &quot; +</span></a>
+<a name="950"><span class="lineNum">     950 </span><span class="lineCov">        126 :     std::to_string(PGR.game_id) +&quot; for player with email: &quot; +</span></a>
+<a name="951"><span class="lineNum">     951 </span><span class="lineCov">        126 :     PGR.player_email&lt;&lt; std::endl;</span></a>
 <a name="952"><span class="lineNum">     952 </span><span class="lineCov">          3 :   } catch (sql::SQLException &amp;e) {</span></a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">          6 :     LOG(INFO) &lt;&lt; &quot;Error creating rating in game with game_id: &quot; +</span></a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">          3 :     LOG(INFO) &lt;&lt; &quot;Error creating rating in game with game_id: &quot; +</span></a>
 <a name="954"><span class="lineNum">     954 </span><span class="lineCov">          6 :     std::to_string(PGR.game_id) + &quot; for player with email: &quot; +</span></a>
 <a name="955"><span class="lineNum">     955 </span><span class="lineCov">          6 :     PGR.player_email&lt;&lt; std::endl;</span></a>
 <a name="956"><span class="lineNum">     956 </span>            : </a>
@@ -1021,9 +1021,9 @@
 <a name="959"><span class="lineNum">     959 </span><span class="lineCov">          3 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="960"><span class="lineNum">     960 </span><span class="lineCov">          3 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="961"><span class="lineNum">     961 </span><span class="lineCov">          3 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineCov">          3 :   }</span></a>
+<a name="962"><span class="lineNum">     962 </span>            :   }</a>
 <a name="963"><span class="lineNum">     963 </span>            : </a>
-<a name="964"><span class="lineNum">     964 </span><span class="lineCov">         63 :   return PGR;</span></a>
+<a name="964"><span class="lineNum">     964 </span><span class="lineCov">         66 :   return PGR;</span></a>
 <a name="965"><span class="lineNum">     965 </span>            : }</a>
 <a name="966"><span class="lineNum">     966 </span>            : </a>
 <a name="967"><span class="lineNum">     967 </span><span class="lineCov">          2 : Player DBService::remove_player(std::string player_email) {</span></a>
@@ -1049,7 +1049,7 @@
 <a name="987"><span class="lineNum">     987 </span><span class="lineCov">          1 :       return p;</span></a>
 <a name="988"><span class="lineNum">     988 </span>            : </a>
 <a name="989"><span class="lineNum">     989 </span><span class="lineCov">          1 :     prep_stmt = con-&gt;prepareStatement(&quot;DELETE FROM Players &quot;</span></a>
-<a name="990"><span class="lineNum">     990 </span>            :     &quot;WHERE player_email = ?;&quot;);</a>
+<a name="990"><span class="lineNum">     990 </span><span class="lineCov">          2 :     &quot;WHERE player_email = ?;&quot;);</span></a>
 <a name="991"><span class="lineNum">     991 </span><span class="lineCov">          1 :     prep_stmt-&gt;setString(1, player_email);</span></a>
 <a name="992"><span class="lineNum">     992 </span>            : </a>
 <a name="993"><span class="lineNum">     993 </span><span class="lineCov">          1 :     prep_stmt-&gt;executeUpdate();</span></a>
@@ -1068,10 +1068,10 @@
 <a name="1006"><span class="lineNum">    1006 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1008"><span class="lineNum">    1008 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1009"><span class="lineNum">    1009 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1009"><span class="lineNum">    1009 </span>            :   }</a>
 <a name="1010"><span class="lineNum">    1010 </span>            : </a>
 <a name="1011"><span class="lineNum">    1011 </span><span class="lineCov">          1 :   return p;</span></a>
-<a name="1012"><span class="lineNum">    1012 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1012"><span class="lineNum">    1012 </span>            : }</a>
 <a name="1013"><span class="lineNum">    1013 </span>            : </a>
 <a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">          3 : Developer DBService::remove_developer(std::string developer_email) {</span></a>
 <a name="1015"><span class="lineNum">    1015 </span><span class="lineCov">          6 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to delete developer with email: &quot; +</span></a>
@@ -1096,7 +1096,7 @@
 <a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">          1 :       return d;</span></a>
 <a name="1035"><span class="lineNum">    1035 </span>            : </a>
 <a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">          2 :     prep_stmt = con-&gt;prepareStatement(&quot;DELETE FROM Developers &quot;</span></a>
-<a name="1037"><span class="lineNum">    1037 </span>            :     &quot;WHERE developer_email = ?;&quot;);</a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">          4 :     &quot;WHERE developer_email = ?;&quot;);</span></a>
 <a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">          2 :     prep_stmt-&gt;setString(1, developer_email);</span></a>
 <a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">          2 :     prep_stmt-&gt;executeUpdate();</span></a>
 <a name="1040"><span class="lineNum">    1040 </span>            : </a>
@@ -1115,17 +1115,17 @@
 <a name="1053"><span class="lineNum">    1053 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1054"><span class="lineNum">    1054 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1055"><span class="lineNum">    1055 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1056"><span class="lineNum">    1056 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1056"><span class="lineNum">    1056 </span>            :   }</a>
 <a name="1057"><span class="lineNum">    1057 </span>            : </a>
 <a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">          2 :   return d;</span></a>
-<a name="1059"><span class="lineNum">    1059 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1059"><span class="lineNum">    1059 </span>            : }</a>
 <a name="1060"><span class="lineNum">    1060 </span>            : </a>
-<a name="1061"><span class="lineNum">    1061 </span><span class="lineCov">          3 : Game_Details DBService::remove_game_details(int game_id) {</span></a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">          9 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to delete game with game_id: &quot; +</span></a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">          9 :   std::to_string(game_id) &lt;&lt; std::endl;</span></a>
+<a name="1061"><span class="lineNum">    1061 </span><span class="lineCov">          2 : Game_Details DBService::remove_game_details(int game_id) {</span></a>
+<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">          4 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to delete game with game_id: &quot; +</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">          4 :   std::to_string(game_id) &lt;&lt; std::endl;</span></a>
 <a name="1064"><span class="lineNum">    1064 </span>            : </a>
-<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">          3 :   Game_Details GD;</span></a>
-<a name="1066"><span class="lineNum">    1066 </span><span class="lineCov">          3 :   GD.is_valid = false;</span></a>
+<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">          2 :   Game_Details GD;</span></a>
+<a name="1066"><span class="lineNum">    1066 </span><span class="lineCov">          2 :   GD.is_valid = false;</span></a>
 <a name="1067"><span class="lineNum">    1067 </span>            : </a>
 <a name="1068"><span class="lineNum">    1068 </span>            :   try {</a>
 <a name="1069"><span class="lineNum">    1069 </span>            :     sql::Driver *driver;</a>
@@ -1133,26 +1133,26 @@
 <a name="1071"><span class="lineNum">    1071 </span>            :     sql::PreparedStatement  *prep_stmt;</a>
 <a name="1072"><span class="lineNum">    1072 </span>            : </a>
 <a name="1073"><span class="lineNum">    1073 </span>            :     // Connect to database</a>
-<a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">          3 :     driver = get_driver_instance();</span></a>
-<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">          3 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">          3 :     con-&gt;setSchema(database);</span></a>
+<a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">          2 :     driver = get_driver_instance();</span></a>
+<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">          2 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">          2 :     con-&gt;setSchema(database);</span></a>
 <a name="1077"><span class="lineNum">    1077 </span>            : </a>
 <a name="1078"><span class="lineNum">    1078 </span>            :     // Check if object exists, return if it does not</a>
-<a name="1079"><span class="lineNum">    1079 </span><span class="lineCov">          3 :     GD = get_game_details(game_id);</span></a>
-<a name="1080"><span class="lineNum">    1080 </span><span class="lineCov">          3 :     if (!GD.is_valid)</span></a>
+<a name="1079"><span class="lineNum">    1079 </span><span class="lineCov">          2 :     GD = get_game_details(game_id);</span></a>
+<a name="1080"><span class="lineNum">    1080 </span><span class="lineCov">          2 :     if (!GD.is_valid)</span></a>
 <a name="1081"><span class="lineNum">    1081 </span><span class="lineCov">          1 :       return GD;</span></a>
 <a name="1082"><span class="lineNum">    1082 </span>            : </a>
-<a name="1083"><span class="lineNum">    1083 </span><span class="lineCov">          2 :     prep_stmt = con-&gt;prepareStatement(&quot;DELETE FROM Game_Details &quot;</span></a>
-<a name="1084"><span class="lineNum">    1084 </span>            :     &quot;WHERE game_id = ?;&quot;);</a>
-<a name="1085"><span class="lineNum">    1085 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(1, game_id);</span></a>
-<a name="1086"><span class="lineNum">    1086 </span><span class="lineCov">          2 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="1083"><span class="lineNum">    1083 </span><span class="lineCov">          1 :     prep_stmt = con-&gt;prepareStatement(&quot;DELETE FROM Game_Details &quot;</span></a>
+<a name="1084"><span class="lineNum">    1084 </span><span class="lineCov">          2 :     &quot;WHERE game_id = ?;&quot;);</span></a>
+<a name="1085"><span class="lineNum">    1085 </span><span class="lineCov">          1 :     prep_stmt-&gt;setInt(1, game_id);</span></a>
+<a name="1086"><span class="lineNum">    1086 </span><span class="lineCov">          1 :     prep_stmt-&gt;executeUpdate();</span></a>
 <a name="1087"><span class="lineNum">    1087 </span>            : </a>
-<a name="1088"><span class="lineNum">    1088 </span><span class="lineCov">          2 :     delete prep_stmt;</span></a>
-<a name="1089"><span class="lineNum">    1089 </span><span class="lineCov">          2 :     delete con;</span></a>
+<a name="1088"><span class="lineNum">    1088 </span><span class="lineCov">          1 :     delete prep_stmt;</span></a>
+<a name="1089"><span class="lineNum">    1089 </span><span class="lineCov">          1 :     delete con;</span></a>
 <a name="1090"><span class="lineNum">    1090 </span>            : </a>
-<a name="1091"><span class="lineNum">    1091 </span><span class="lineCov">          4 :     LOG(INFO) &lt;&lt;</span></a>
-<a name="1092"><span class="lineNum">    1092 </span><span class="lineCov">          4 :     &quot;Successfully deleted game with game_id: &quot; + std::to_string(game_id)</span></a>
-<a name="1093"><span class="lineNum">    1093 </span><span class="lineCov">          2 :     &lt;&lt; std::endl;</span></a>
+<a name="1091"><span class="lineNum">    1091 </span><span class="lineCov">          2 :     LOG(INFO) &lt;&lt;</span></a>
+<a name="1092"><span class="lineNum">    1092 </span><span class="lineCov">          2 :     &quot;Successfully deleted game with game_id: &quot; + std::to_string(game_id)</span></a>
+<a name="1093"><span class="lineNum">    1093 </span><span class="lineCov">          1 :     &lt;&lt; std::endl;</span></a>
 <a name="1094"><span class="lineNum">    1094 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="1095"><span class="lineNum">    1095 </span><span class="lineNoCov">          0 :     GD.is_valid = false;</span></a>
 <a name="1096"><span class="lineNum">    1096 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt;</span></a>
@@ -1164,19 +1164,19 @@
 <a name="1102"><span class="lineNum">    1102 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1103"><span class="lineNum">    1103 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1104"><span class="lineNum">    1104 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1105"><span class="lineNum">    1105 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1105"><span class="lineNum">    1105 </span>            :   }</a>
 <a name="1106"><span class="lineNum">    1106 </span>            : </a>
-<a name="1107"><span class="lineNum">    1107 </span><span class="lineCov">          2 :   return GD;</span></a>
-<a name="1108"><span class="lineNum">    1108 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1107"><span class="lineNum">    1107 </span><span class="lineCov">          1 :   return GD;</span></a>
+<a name="1108"><span class="lineNum">    1108 </span>            : }</a>
 <a name="1109"><span class="lineNum">    1109 </span>            : </a>
 <a name="1110"><span class="lineNum">    1110 </span>            : Player_Game_Ratings</a>
-<a name="1111"><span class="lineNum">    1111 </span><span class="lineCov">          9 : DBService::remove_player_rating(std::string player_email, int game_id) {</span></a>
-<a name="1112"><span class="lineNum">    1112 </span><span class="lineCov">         18 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to delete rating for player with email: &quot; +</span></a>
-<a name="1113"><span class="lineNum">    1113 </span><span class="lineCov">         18 :   player_email + &quot; for game with game_id: &quot; +</span></a>
-<a name="1114"><span class="lineNum">    1114 </span><span class="lineCov">         27 :   std::to_string(game_id) &lt;&lt; std::endl;</span></a>
+<a name="1111"><span class="lineNum">    1111 </span><span class="lineCov">          3 : DBService::remove_player_rating(std::string player_email, int game_id) {</span></a>
+<a name="1112"><span class="lineNum">    1112 </span><span class="lineCov">          3 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to delete rating for player with email: &quot; +</span></a>
+<a name="1113"><span class="lineNum">    1113 </span><span class="lineCov">          6 :   player_email + &quot; for game with game_id: &quot; +</span></a>
+<a name="1114"><span class="lineNum">    1114 </span><span class="lineCov">          9 :   std::to_string(game_id) &lt;&lt; std::endl;</span></a>
 <a name="1115"><span class="lineNum">    1115 </span>            : </a>
-<a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">          9 :   Player_Game_Ratings PGR;</span></a>
-<a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">          9 :   PGR.is_valid = false;</span></a>
+<a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">          3 :   Player_Game_Ratings PGR;</span></a>
+<a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">          3 :   PGR.is_valid = false;</span></a>
 <a name="1118"><span class="lineNum">    1118 </span>            : </a>
 <a name="1119"><span class="lineNum">    1119 </span>            :   try {</a>
 <a name="1120"><span class="lineNum">    1120 </span>            :     sql::Driver *driver;</a>
@@ -1184,27 +1184,27 @@
 <a name="1122"><span class="lineNum">    1122 </span>            :     sql::PreparedStatement  *prep_stmt;</a>
 <a name="1123"><span class="lineNum">    1123 </span>            : </a>
 <a name="1124"><span class="lineNum">    1124 </span>            :     // Connect to database</a>
-<a name="1125"><span class="lineNum">    1125 </span><span class="lineCov">          9 :     driver = get_driver_instance();</span></a>
-<a name="1126"><span class="lineNum">    1126 </span><span class="lineCov">          9 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="1127"><span class="lineNum">    1127 </span><span class="lineCov">          9 :     con-&gt;setSchema(database);</span></a>
+<a name="1125"><span class="lineNum">    1125 </span><span class="lineCov">          3 :     driver = get_driver_instance();</span></a>
+<a name="1126"><span class="lineNum">    1126 </span><span class="lineCov">          3 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="1127"><span class="lineNum">    1127 </span><span class="lineCov">          3 :     con-&gt;setSchema(database);</span></a>
 <a name="1128"><span class="lineNum">    1128 </span>            : </a>
 <a name="1129"><span class="lineNum">    1129 </span>            :     // Check if object exists, return otherwise</a>
-<a name="1130"><span class="lineNum">    1130 </span><span class="lineCov">          9 :     PGR = get_player_game_rating(player_email, game_id);</span></a>
-<a name="1131"><span class="lineNum">    1131 </span><span class="lineCov">          9 :     if (!PGR.is_valid)</span></a>
-<a name="1132"><span class="lineNum">    1132 </span><span class="lineCov">          3 :       return PGR;</span></a>
+<a name="1130"><span class="lineNum">    1130 </span><span class="lineCov">          3 :     PGR = get_player_game_rating(player_email, game_id);</span></a>
+<a name="1131"><span class="lineNum">    1131 </span><span class="lineCov">          3 :     if (!PGR.is_valid)</span></a>
+<a name="1132"><span class="lineNum">    1132 </span><span class="lineCov">          1 :       return PGR;</span></a>
 <a name="1133"><span class="lineNum">    1133 </span>            : </a>
-<a name="1134"><span class="lineNum">    1134 </span><span class="lineCov">          6 :     prep_stmt = con-&gt;prepareStatement(&quot;DELETE FROM Player_Game_Ratings &quot;</span></a>
-<a name="1135"><span class="lineNum">    1135 </span>            :     &quot;WHERE player_email = ? AND game_id = ?;&quot;);</a>
-<a name="1136"><span class="lineNum">    1136 </span><span class="lineCov">          6 :     prep_stmt-&gt;setString(1, player_email);</span></a>
-<a name="1137"><span class="lineNum">    1137 </span><span class="lineCov">          6 :     prep_stmt-&gt;setInt(2, game_id);</span></a>
-<a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">          6 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="1134"><span class="lineNum">    1134 </span><span class="lineCov">          2 :     prep_stmt = con-&gt;prepareStatement(&quot;DELETE FROM Player_Game_Ratings &quot;</span></a>
+<a name="1135"><span class="lineNum">    1135 </span><span class="lineCov">          4 :     &quot;WHERE player_email = ? AND game_id = ?;&quot;);</span></a>
+<a name="1136"><span class="lineNum">    1136 </span><span class="lineCov">          2 :     prep_stmt-&gt;setString(1, player_email);</span></a>
+<a name="1137"><span class="lineNum">    1137 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(2, game_id);</span></a>
+<a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">          2 :     prep_stmt-&gt;executeUpdate();</span></a>
 <a name="1139"><span class="lineNum">    1139 </span>            : </a>
-<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">          6 :     delete prep_stmt;</span></a>
-<a name="1141"><span class="lineNum">    1141 </span><span class="lineCov">          6 :     delete con;</span></a>
+<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">          2 :     delete prep_stmt;</span></a>
+<a name="1141"><span class="lineNum">    1141 </span><span class="lineCov">          2 :     delete con;</span></a>
 <a name="1142"><span class="lineNum">    1142 </span>            : </a>
-<a name="1143"><span class="lineNum">    1143 </span><span class="lineCov">         18 :     LOG(INFO) &lt;&lt; &quot;Successfully deleted rating for player with email: &quot; +</span></a>
-<a name="1144"><span class="lineNum">    1144 </span><span class="lineCov">         12 :     player_email + &quot; for game with game_id: &quot;+</span></a>
-<a name="1145"><span class="lineNum">    1145 </span><span class="lineCov">         18 :     std::to_string(game_id) &lt;&lt; std::endl;</span></a>
+<a name="1143"><span class="lineNum">    1143 </span><span class="lineCov">          4 :     LOG(INFO) &lt;&lt; &quot;Successfully deleted rating for player with email: &quot; +</span></a>
+<a name="1144"><span class="lineNum">    1144 </span><span class="lineCov">          4 :     player_email + &quot; for game with game_id: &quot;+</span></a>
+<a name="1145"><span class="lineNum">    1145 </span><span class="lineCov">          6 :     std::to_string(game_id) &lt;&lt; std::endl;</span></a>
 <a name="1146"><span class="lineNum">    1146 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="1147"><span class="lineNum">    1147 </span><span class="lineNoCov">          0 :     PGR.is_valid = false;</span></a>
 <a name="1148"><span class="lineNum">    1148 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error deleting rating for player with email: &quot; +</span></a>
@@ -1216,10 +1216,10 @@
 <a name="1154"><span class="lineNum">    1154 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1155"><span class="lineNum">    1155 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1156"><span class="lineNum">    1156 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1157"><span class="lineNum">    1157 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1157"><span class="lineNum">    1157 </span>            :   }</a>
 <a name="1158"><span class="lineNum">    1158 </span>            : </a>
-<a name="1159"><span class="lineNum">    1159 </span><span class="lineCov">          6 :   return PGR;</span></a>
-<a name="1160"><span class="lineNum">    1160 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1159"><span class="lineNum">    1159 </span><span class="lineCov">          2 :   return PGR;</span></a>
+<a name="1160"><span class="lineNum">    1160 </span>            : }</a>
 <a name="1161"><span class="lineNum">    1161 </span>            : </a>
 <a name="1162"><span class="lineNum">    1162 </span><span class="lineCov">          2 : Player DBService::update_player(std::string player_email, Player P) {</span></a>
 <a name="1163"><span class="lineNum">    1163 </span><span class="lineCov">          4 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to update player with email: &quot; +</span></a>
@@ -1267,10 +1267,10 @@
 <a name="1205"><span class="lineNum">    1205 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1206"><span class="lineNum">    1206 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1207"><span class="lineNum">    1207 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1208"><span class="lineNum">    1208 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1208"><span class="lineNum">    1208 </span>            :   }</a>
 <a name="1209"><span class="lineNum">    1209 </span>            : </a>
 <a name="1210"><span class="lineNum">    1210 </span><span class="lineCov">          1 :   return p;</span></a>
-<a name="1211"><span class="lineNum">    1211 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1211"><span class="lineNum">    1211 </span>            : }</a>
 <a name="1212"><span class="lineNum">    1212 </span>            : </a>
 <a name="1213"><span class="lineNum">    1213 </span><span class="lineCov">          2 : Developer DBService::update_developer(std::string developer_email, Developer D) {</span></a>
 <a name="1214"><span class="lineNum">    1214 </span><span class="lineCov">          4 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to update developer with email: &quot; +</span></a>
@@ -1297,7 +1297,7 @@
 <a name="1235"><span class="lineNum">    1235 </span>            : </a>
 <a name="1236"><span class="lineNum">    1236 </span>            :     // Create statement and fill in relevant variables</a>
 <a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">          1 :     prep_stmt = con-&gt;prepareStatement(</span></a>
-<a name="1238"><span class="lineNum">    1238 </span>            :       &quot;UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;&quot;);</a>
+<a name="1238"><span class="lineNum">    1238 </span><span class="lineCov">          2 :       &quot;UPDATE Developers SET developer_email=?, developer_password=? WHERE developer_email=?;&quot;);</span></a>
 <a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">          1 :     prep_stmt-&gt;setString(1, D.developer_email);</span></a>
 <a name="1240"><span class="lineNum">    1240 </span><span class="lineCov">          1 :     prep_stmt-&gt;setString(2, D.developer_password);</span></a>
 <a name="1241"><span class="lineNum">    1241 </span><span class="lineCov">          1 :     prep_stmt-&gt;setString(3, developer_email);</span></a>
@@ -1320,9 +1320,9 @@
 <a name="1258"><span class="lineNum">    1258 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1259"><span class="lineNum">    1259 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1260"><span class="lineNum">    1260 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1261"><span class="lineNum">    1261 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1261"><span class="lineNum">    1261 </span>            :   }</a>
 <a name="1262"><span class="lineNum">    1262 </span><span class="lineCov">          1 :   return d;</span></a>
-<a name="1263"><span class="lineNum">    1263 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1263"><span class="lineNum">    1263 </span>            : }</a>
 <a name="1264"><span class="lineNum">    1264 </span>            : </a>
 <a name="1265"><span class="lineNum">    1265 </span><span class="lineCov">          3 : Game_Details DBService::update_game_details(int game_id, Game_Details GD) {</span></a>
 <a name="1266"><span class="lineNum">    1266 </span><span class="lineCov">          3 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to update game&quot; &lt;&lt; std::endl;</span></a>
@@ -1354,7 +1354,7 @@
 <a name="1292"><span class="lineNum">    1292 </span>            :     &quot;game_parameter3_name=?, game_parameter3_weight=?, &quot;</a>
 <a name="1293"><span class="lineNum">    1293 </span>            :     &quot;game_parameter4_name=?, game_parameter4_weight=?, &quot;</a>
 <a name="1294"><span class="lineNum">    1294 </span>            :     &quot;category=?, players_per_team=?, teams_per_match=? &quot;</a>
-<a name="1295"><span class="lineNum">    1295 </span>            :     &quot;WHERE game_id=?;&quot;);</a>
+<a name="1295"><span class="lineNum">    1295 </span><span class="lineCov">          4 :     &quot;WHERE game_id=?;&quot;);</span></a>
 <a name="1296"><span class="lineNum">    1296 </span>            : </a>
 <a name="1297"><span class="lineNum">    1297 </span>            :     // Fill in relevant variables in statement and execute</a>
 <a name="1298"><span class="lineNum">    1298 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(1, GD.game_id);</span></a>
@@ -1379,8 +1379,8 @@
 <a name="1317"><span class="lineNum">    1317 </span><span class="lineCov">          1 :     delete prep_stmt;</span></a>
 <a name="1318"><span class="lineNum">    1318 </span><span class="lineCov">          1 :     delete con;</span></a>
 <a name="1319"><span class="lineNum">    1319 </span>            : </a>
-<a name="1320"><span class="lineNum">    1320 </span><span class="lineCov">          4 :     LOG(INFO) &lt;&lt; &quot;Successfully updated game with game_id: &quot; +</span></a>
-<a name="1321"><span class="lineNum">    1321 </span><span class="lineCov">          3 :     std::to_string(game_id) &lt;&lt; std::endl;</span></a>
+<a name="1320"><span class="lineNum">    1320 </span><span class="lineCov">          3 :     LOG(INFO) &lt;&lt; &quot;Successfully updated game with game_id: &quot; +</span></a>
+<a name="1321"><span class="lineNum">    1321 </span><span class="lineCov">          2 :     std::to_string(game_id) &lt;&lt; std::endl;</span></a>
 <a name="1322"><span class="lineNum">    1322 </span><span class="lineCov">          1 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="1323"><span class="lineNum">    1323 </span><span class="lineCov">          1 :     gd.is_valid = false;</span></a>
 <a name="1324"><span class="lineNum">    1324 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;Error updating game&quot; &lt;&lt; std::endl;</span></a>
@@ -1389,18 +1389,18 @@
 <a name="1327"><span class="lineNum">    1327 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1328"><span class="lineNum">    1328 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1329"><span class="lineNum">    1329 </span><span class="lineCov">          1 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1330"><span class="lineNum">    1330 </span><span class="lineCov">          1 :   }</span></a>
+<a name="1330"><span class="lineNum">    1330 </span>            :   }</a>
 <a name="1331"><span class="lineNum">    1331 </span><span class="lineCov">          2 :   return gd;</span></a>
-<a name="1332"><span class="lineNum">    1332 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1332"><span class="lineNum">    1332 </span>            : }</a>
 <a name="1333"><span class="lineNum">    1333 </span>            : </a>
-<a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">          6 : Player_Game_Ratings DBService::update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR) {</span></a>
-<a name="1335"><span class="lineNum">    1335 </span><span class="lineCov">         12 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to update rating in game with game_id: &quot; +</span></a>
-<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">         18 :   std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
-<a name="1337"><span class="lineNum">    1337 </span><span class="lineCov">          6 :   player_email &lt;&lt; std::endl;</span></a>
+<a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">          4 : Player_Game_Ratings DBService::update_player_rating(std::string player_email, int game_id, Player_Game_Ratings PGR) {</span></a>
+<a name="1335"><span class="lineNum">    1335 </span><span class="lineCov">          4 :   LOG(INFO) &lt;&lt; &quot;Connecting to MYSQL to update rating in game with game_id: &quot; +</span></a>
+<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">          8 :   std::to_string(game_id) + &quot; for player with email: &quot; +</span></a>
+<a name="1337"><span class="lineNum">    1337 </span><span class="lineCov">          4 :   player_email &lt;&lt; std::endl;</span></a>
 <a name="1338"><span class="lineNum">    1338 </span>            : </a>
 <a name="1339"><span class="lineNum">    1339 </span>            :   // Object to store updated object</a>
-<a name="1340"><span class="lineNum">    1340 </span><span class="lineCov">          6 :   Player_Game_Ratings pgr;</span></a>
-<a name="1341"><span class="lineNum">    1341 </span><span class="lineCov">          6 :   pgr.is_valid = false;</span></a>
+<a name="1340"><span class="lineNum">    1340 </span><span class="lineCov">          4 :   Player_Game_Ratings pgr;</span></a>
+<a name="1341"><span class="lineNum">    1341 </span><span class="lineCov">          4 :   pgr.is_valid = false;</span></a>
 <a name="1342"><span class="lineNum">    1342 </span>            : </a>
 <a name="1343"><span class="lineNum">    1343 </span>            :   try {</a>
 <a name="1344"><span class="lineNum">    1344 </span>            :     sql::Driver *driver;</a>
@@ -1408,40 +1408,40 @@
 <a name="1346"><span class="lineNum">    1346 </span>            :     sql::PreparedStatement  *prep_stmt;</a>
 <a name="1347"><span class="lineNum">    1347 </span>            : </a>
 <a name="1348"><span class="lineNum">    1348 </span>            :     // Connect to database</a>
-<a name="1349"><span class="lineNum">    1349 </span><span class="lineCov">          6 :     driver = get_driver_instance();</span></a>
-<a name="1350"><span class="lineNum">    1350 </span><span class="lineCov">          6 :     con = driver-&gt;connect(hostname, username, password);</span></a>
-<a name="1351"><span class="lineNum">    1351 </span><span class="lineCov">          6 :     con-&gt;setSchema(database);</span></a>
+<a name="1349"><span class="lineNum">    1349 </span><span class="lineCov">          4 :     driver = get_driver_instance();</span></a>
+<a name="1350"><span class="lineNum">    1350 </span><span class="lineCov">          4 :     con = driver-&gt;connect(hostname, username, password);</span></a>
+<a name="1351"><span class="lineNum">    1351 </span><span class="lineCov">          4 :     con-&gt;setSchema(database);</span></a>
 <a name="1352"><span class="lineNum">    1352 </span>            : </a>
 <a name="1353"><span class="lineNum">    1353 </span>            :     // Check if object exists, return otherwise</a>
-<a name="1354"><span class="lineNum">    1354 </span><span class="lineCov">          6 :     pgr = get_player_game_rating(player_email, game_id);</span></a>
-<a name="1355"><span class="lineNum">    1355 </span><span class="lineCov">          6 :     if (!pgr.is_valid)</span></a>
+<a name="1354"><span class="lineNum">    1354 </span><span class="lineCov">          4 :     pgr = get_player_game_rating(player_email, game_id);</span></a>
+<a name="1355"><span class="lineNum">    1355 </span><span class="lineCov">          4 :     if (!pgr.is_valid)</span></a>
 <a name="1356"><span class="lineNum">    1356 </span><span class="lineCov">          2 :       return pgr;</span></a>
 <a name="1357"><span class="lineNum">    1357 </span>            : </a>
 <a name="1358"><span class="lineNum">    1358 </span>            :     // Create SQL statement</a>
-<a name="1359"><span class="lineNum">    1359 </span><span class="lineCov">          4 :     prep_stmt = con-&gt;prepareStatement(&quot;UPDATE Player_Game_Ratings SET &quot;</span></a>
+<a name="1359"><span class="lineNum">    1359 </span><span class="lineCov">          2 :     prep_stmt = con-&gt;prepareStatement(&quot;UPDATE Player_Game_Ratings SET &quot;</span></a>
 <a name="1360"><span class="lineNum">    1360 </span>            :     &quot;player_email=?, game_id=?, game_parameter1_value=?, &quot;</a>
 <a name="1361"><span class="lineNum">    1361 </span>            :     &quot;game_parameter2_value=?, game_parameter3_value=?, &quot;</a>
 <a name="1362"><span class="lineNum">    1362 </span>            :     &quot;game_parameter4_value=? WHERE player_email=? AND &quot;</a>
-<a name="1363"><span class="lineNum">    1363 </span>            :     &quot;game_id=?;&quot;);</a>
+<a name="1363"><span class="lineNum">    1363 </span><span class="lineCov">          4 :     &quot;game_id=?;&quot;);</span></a>
 <a name="1364"><span class="lineNum">    1364 </span>            : </a>
 <a name="1365"><span class="lineNum">    1365 </span>            :     // Fill in relevant variables in statement and execute</a>
-<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">          4 :     prep_stmt-&gt;setString(1, PGR.player_email);</span></a>
-<a name="1367"><span class="lineNum">    1367 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(2, PGR.game_id);</span></a>
-<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(3, PGR.game_parameter1_value);</span></a>
-<a name="1369"><span class="lineNum">    1369 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(4, PGR.game_parameter2_value);</span></a>
-<a name="1370"><span class="lineNum">    1370 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(5, PGR.game_parameter3_value);</span></a>
-<a name="1371"><span class="lineNum">    1371 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(6, PGR.game_parameter4_value);</span></a>
-<a name="1372"><span class="lineNum">    1372 </span><span class="lineCov">          4 :     prep_stmt-&gt;setString(7, player_email);</span></a>
-<a name="1373"><span class="lineNum">    1373 </span><span class="lineCov">          4 :     prep_stmt-&gt;setInt(8, game_id);</span></a>
-<a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">          4 :     prep_stmt-&gt;executeUpdate();</span></a>
-<a name="1375"><span class="lineNum">    1375 </span><span class="lineCov">          4 :     pgr = get_player_game_rating(PGR.player_email, PGR.game_id);</span></a>
+<a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">          2 :     prep_stmt-&gt;setString(1, PGR.player_email);</span></a>
+<a name="1367"><span class="lineNum">    1367 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(2, PGR.game_id);</span></a>
+<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(3, PGR.game_parameter1_value);</span></a>
+<a name="1369"><span class="lineNum">    1369 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(4, PGR.game_parameter2_value);</span></a>
+<a name="1370"><span class="lineNum">    1370 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(5, PGR.game_parameter3_value);</span></a>
+<a name="1371"><span class="lineNum">    1371 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(6, PGR.game_parameter4_value);</span></a>
+<a name="1372"><span class="lineNum">    1372 </span><span class="lineCov">          2 :     prep_stmt-&gt;setString(7, player_email);</span></a>
+<a name="1373"><span class="lineNum">    1373 </span><span class="lineCov">          2 :     prep_stmt-&gt;setInt(8, game_id);</span></a>
+<a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">          2 :     prep_stmt-&gt;executeUpdate();</span></a>
+<a name="1375"><span class="lineNum">    1375 </span><span class="lineCov">          2 :     pgr = get_player_game_rating(PGR.player_email, PGR.game_id);</span></a>
 <a name="1376"><span class="lineNum">    1376 </span>            : </a>
-<a name="1377"><span class="lineNum">    1377 </span><span class="lineCov">          4 :     delete prep_stmt;</span></a>
-<a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">          4 :     delete con;</span></a>
+<a name="1377"><span class="lineNum">    1377 </span><span class="lineCov">          2 :     delete prep_stmt;</span></a>
+<a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">          2 :     delete con;</span></a>
 <a name="1379"><span class="lineNum">    1379 </span>            : </a>
-<a name="1380"><span class="lineNum">    1380 </span><span class="lineCov">         12 :     LOG(INFO) &lt;&lt; &quot;Successfully updated rating in game with game_id: &quot; +</span></a>
-<a name="1381"><span class="lineNum">    1381 </span><span class="lineCov">         12 :     std::to_string(game_id) +&quot; for player with email: &quot; +</span></a>
-<a name="1382"><span class="lineNum">    1382 </span><span class="lineCov">          4 :     player_email&lt;&lt; std::endl;</span></a>
+<a name="1380"><span class="lineNum">    1380 </span><span class="lineCov">          4 :     LOG(INFO) &lt;&lt; &quot;Successfully updated rating in game with game_id: &quot; +</span></a>
+<a name="1381"><span class="lineNum">    1381 </span><span class="lineCov">          4 :     std::to_string(game_id) +&quot; for player with email: &quot; +</span></a>
+<a name="1382"><span class="lineNum">    1382 </span><span class="lineCov">          2 :     player_email&lt;&lt; std::endl;</span></a>
 <a name="1383"><span class="lineNum">    1383 </span><span class="lineNoCov">          0 :   } catch (sql::SQLException &amp;e) {</span></a>
 <a name="1384"><span class="lineNum">    1384 </span><span class="lineNoCov">          0 :     pgr.is_valid = false;</span></a>
 <a name="1385"><span class="lineNum">    1385 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;Error updating rating in game with game_id: &quot; +</span></a>
@@ -1453,10 +1453,10 @@
 <a name="1391"><span class="lineNum">    1391 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;# ERR: &quot; &lt;&lt; e.what();</span></a>
 <a name="1392"><span class="lineNum">    1392 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot; (MySQL error code: &quot; &lt;&lt; e.getErrorCode();</span></a>
 <a name="1393"><span class="lineNum">    1393 </span><span class="lineNoCov">          0 :     LOG(INFO) &lt;&lt; &quot;, SQLState: &quot; &lt;&lt; e.getSQLState() &lt;&lt;&quot; )&quot; &lt;&lt; std::endl;</span></a>
-<a name="1394"><span class="lineNum">    1394 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="1394"><span class="lineNum">    1394 </span>            :   }</a>
 <a name="1395"><span class="lineNum">    1395 </span>            : </a>
-<a name="1396"><span class="lineNum">    1396 </span><span class="lineCov">          4 :   return pgr;</span></a>
-<a name="1397"><span class="lineNum">    1397 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1396"><span class="lineNum">    1396 </span><span class="lineCov">          2 :   return pgr;</span></a>
+<a name="1397"><span class="lineNum">    1397 </span>            : }</a>
 </pre>
       </td>
     </tr>
