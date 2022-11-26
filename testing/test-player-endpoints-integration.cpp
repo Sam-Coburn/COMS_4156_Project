@@ -618,3 +618,4 @@ TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsValidTest) {
     EXPECT_EQ(res.code, 200);
     EXPECT_EQ(res.body, "Player stats were updated");
 }
+
