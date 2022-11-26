@@ -77,8 +77,8 @@ jobs:
       - name: cppcheck
         run: |
           cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h	      
-          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp	      #     cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp
-          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h	      #     cppcheck --language=c++ main/*.cc main/*.cpp main/*.h
+          cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp	
+          cppcheck --language=c++ main/*.cc main/*.cpp main/*.h	     
           cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
    build-and-test:
     runs-on: ubuntu-latest

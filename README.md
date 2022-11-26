@@ -136,13 +136,30 @@ We use [glog](https://github.com/google/glog#severity-levels) for our logging ou
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/* &> style-check.txt`
+`cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*`
 
 ### Static Analysis
-We use two command line tools for static analysis,
-flawfinder and cppchecker (See main.yaml file for details)
-as well as Sonar Cloud with github actions.
-Results from Sonar Cloud CI are here: https://sonarcloud.io/summary/overall?id=EmilySillars_COMS_4156_Project
+We use two command line tools for static analysis, flawfinder and cppchecker.
+Once flawfinder is installed run:
+`flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*`
+Once cppchecker is installed run:
+```
+cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h	      
+cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp	
+cppcheck --language=c++ main/*.cc main/*.cpp main/*.h	     
+cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
+```
+We also use Sonar Cloud with github actions.
+Results from Sonar Cloud CI are [here](https://sonarcloud.io/code?id=EmilySillars_COMS_4156_Project)
+
+## Continuous Integration Reports
+We run `bash ./reports/generateCIReports.sh` to generate reports locally.
+[cpplint](./reports/style-check.txt)
+[flawfinder](./reports/flawfinder.txt)
+[cppcheck](./reports/cppcheck.txt)
+[sonar cloud](https://sonarcloud.io/code?id=EmilySillars_COMS_4156_Project)
+[regression tests](./reports/test-report.txt)
+[coverage](./genhtml/index.html)
 
 ## Install Bazel
 **Platform: Debian 11**

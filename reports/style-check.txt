@@ -1,0 +1,33 @@
+Ignoring api-endpoints/BUILD; not a valid file name (hxx, c, cuh, hh, cxx, c++, hpp, cu, cpp, h++, h, cc)
+Ignoring authentication/BUILD; not a valid file name (hxx, c, cuh, hh, cxx, c++, hpp, cu, cpp, h++, h, cc)
+Skipping input 'authentication/bcrypt': Can't open for reading
+Skipping input 'authentication/jwt-cpp': Can't open for reading
+Ignoring main/BUILD; not a valid file name (hxx, c, cuh, hh, cxx, c++, hpp, cu, cpp, h++, h, cc)
+Ignoring testing/BUILD; not a valid file name (hxx, c, cuh, hh, cxx, c++, hpp, cu, cpp, h++, h, cc)
+Done processing api-endpoints/BUILD
+Done processing api-endpoints/api-endpoints-lib.h
+Done processing api-endpoints/api-endpoints.cc
+Done processing api-endpoints/api-matchmaking-lib.h
+Done processing api-endpoints/api-matchmaking.cc
+Done processing authentication/BUILD
+Done processing authentication/auth-service.cpp
+Done processing authentication/auth-service.h
+Done processing main/BUILD
+Done processing main/db-service.cpp
+Done processing main/db-service.h
+Done processing main/main.cpp
+Done processing testing/BUILD
+Done processing testing/MockAPIEndPoints.h
+Done processing testing/MockAuthService.h
+Done processing testing/MockDBService.h
+Done processing testing/test-auth-routes-integration.cpp
+Done processing testing/test-auth-routes.cpp
+Done processing testing/test-auth.cpp
+Done processing testing/test-db-integration.cpp
+Done processing testing/test-gdp.cpp
+Done processing testing/test-get-post-games-routes-integration.cc
+Done processing testing/test-get-post-games-routes.cc
+Done processing testing/test-matchmaking-integration.cpp
+Done processing testing/test-matchmaking.cpp
+Done processing testing/test-player-endpoints-integration.cpp
+Done processing testing/test-player-endpoints.cpp
