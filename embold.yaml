@@ -1,0 +1,36 @@
+# we can integrate embold cloud with our repo here https://embold.io/product/
+# You get a certain number of free scans per week, but I forget how many.
+# I tried this on my forked repo, but to get this working on our main repo,
+# I think Sam needs to link his github because he is the owner of our repo.
+# We can talk more about if we want to do this, but I'm adding this file here
+# just in case!
+
+languages: 'CPP'
+sources:
+  #Files or Directories to be Excluded are mentioned in exclusions
+  exclusions:
+    - 'bcrypt'
+    - 'jwt-cpp'
+    - 'crow'
+    - 'BUILD'
+    - 'postman-testing'
+    - '.github'
+    - 'genhtml'
+# Files excluded by default below
+    - 'test'
+    - 'generated'
+    - 'mock'
+    - 'thirdparty'
+    - 'third-party'
+    - '3rd-party'
+    - '3rdparty'
+    - 'external'
+    - 'build'
+    - 'node_modules'
+    - 'assets'
+    - 'gulp'
+    - 'grunt'
+    - 'library'
+    - 'libs'
+    - '.git'
+    - 'demosubproject'

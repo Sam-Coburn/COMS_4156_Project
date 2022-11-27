@@ -18,7 +18,7 @@ enum POST_GAME_BODY_KIND { COPY, EMPTY, BAD_JSON, ROOT_NULL, NOT_NAME_VAL_PAIRS,
 // return a valid Game_Details struct for poker
 Game_Details static defaultVal();
 // generate input for a PostGames endpoint body, according to the flag POST_GAME_BODY_KIND
-std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
+static std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
 
 // test desired response from PostGames vs actual response
 static void testAgainstBody(APIEndPoints* api,
@@ -74,11 +74,14 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
   // mock return values
   Game_Details invalid_game_details;
   Game_Details valid_game_details;
+  Game_Details valid_game_details2;
   Developer valid_developer;
 
   // initialize mock return values
   valid_game_details.is_valid = true;
   valid_game_details.game_id = 5;
+  valid_game_details2.is_valid = true;
+  valid_game_details2.game_id = 6;
   invalid_game_details.is_valid = false;
   valid_developer.developer_email = "gamedev42@awesomeCardGames.com";
   valid_developer.developer_password = "some_password";
@@ -93,9 +96,10 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
   EXPECT_CALL(DB, get_developer(_))
   .WillRepeatedly(Return(valid_developer));
 
-  EXPECT_CALL(DB, add_game_details(_)).Times(2)
+  EXPECT_CALL(DB, add_game_details(_)).Times(3)
   .WillOnce(Return(valid_game_details))
-  .WillOnce(Return(invalid_game_details));
+  .WillOnce(Return(invalid_game_details))
+  .WillOnce(Return(valid_game_details2));
 
   // set input as valid game
   gm.category = "cards";
@@ -155,6 +159,12 @@ TEST(Get_Post_Games_Suite, Post_Games_Tests) {
 
   bdy = "weights elt is invalid float";
   testAgainstBody(&api, INVALID_WEIGHTS_ELT, bdy);
+
+  // valid game with negative weight
+  bdy = "6";
+  gm.game_id = 6;
+  gm.game_parameter1_weight = -0.2;
+  testAgainstBody(&api, COPY, bdy, gm, 200, false);
 
   bdy = "invalid category";
   testAgainstBody(&api, INVALID_CATEGORY, bdy);
@@ -263,10 +273,10 @@ TEST(Get_Post_Games_Suite, Get_Games_Tests) {
   testAgainstBodyGet(&api, COPY, bdy, "", 401);
 
   bdy = "Developer does not exist";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, COPY, bdy, "", 404);
 
   bdy = "Error Accessing Games: none found!";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, COPY, bdy, "", 204);
 
   bdy = ss.str();  // case success
   testAgainstBodyGet(&api, COPY, bdy, "", 200);

@@ -1,3 +1,5 @@
+// "Copyright [year] <Copyright Owner>"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -21,7 +23,8 @@ class MockDBService : public DBService {
   MOCK_METHOD(Developer, get_developer, (std::string developer_email), (override));
   MOCK_METHOD(Game_Details, get_game_details, (int game_id), (override));
   MOCK_METHOD(Player_Game_Ratings, get_player_game_rating, (std::string player_email, int game_id), (override));
-  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating, (std::string player_email, int game_id), (override));
+  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating,
+  (std::string player_email, int game_id), (override));
 
   MOCK_METHOD(std::vector<Player>, get_all_players, (), (override));
   MOCK_METHOD(std::vector<Developer>, get_all_developers, (), (override));
@@ -42,17 +45,20 @@ class MockDBService : public DBService {
   MOCK_METHOD(Player, update_player, (std::string player_email, Player P), (override));
   MOCK_METHOD(Developer, update_developer, (std::string developer_email, Developer D), (override));
   MOCK_METHOD(Game_Details, update_game_details, (int game_id, Game_Details GD), (override));
-  MOCK_METHOD(Player_Game_Ratings, update_player_rating, (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
+  MOCK_METHOD(Player_Game_Ratings, update_player_rating,
+  (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
 };
 
 class MockMatchmaking: public Matchmaking {
  public:
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >), matchmakingBackendBasic, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+        std::vector<std::string> >), matchmakingBackendBasic,
+        (int game_id, std::vector<std::string> player_emails, DBService* DB));
   MOCK_METHOD((std::tuple<
         std::vector<std::vector<std::vector<std::string> > >,
-        std::vector<std::string> >), matchmakingBackendAdvanced, (int game_id, std::vector<std::string> player_emails, DBService* DB));
+        std::vector<std::string> >), matchmakingBackendAdvanced,
+        (int game_id, std::vector<std::string> player_emails, DBService* DB));
 };
 
 TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set1) {
@@ -80,7 +86,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set1) {
     .WillRepeatedly(Return(games));
 
     EXPECT_CALL(auth, decodeAndVerifyJWT(_))
-    .WillRepeatedly(Return(std::make_pair(true, "some_email@gmail.com")));
+    .WillRepeatedly(Return(std::make_pair(200, "some_email@gmail.com")));
 
     // Test: Empty Request Body
     body = {};
@@ -141,6 +147,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
@@ -156,12 +163,12 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     std::tuple<
     std::vector<std::vector<std::vector<std::string> > >,
     std::vector<std::string> > matchmaking_result;
-    
+
     EXPECT_CALL(DB, get_developer(_))
     .WillRepeatedly(Return(valid_developer));
 
     EXPECT_CALL(auth, decodeAndVerifyJWT(_))
-    .WillRepeatedly(Return(std::make_pair(true, "developer@gmail.com")));
+    .WillRepeatedly(Return(std::make_pair(200, "developer@gmail.com")));
 
     EXPECT_CALL(DB, get_all_games_for_developer(_))
     .WillRepeatedly(Return(good_developer_games));
@@ -246,7 +253,7 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     player_emails_4.push_back("player_2@gmail.com");
     body["player_emails"] = player_emails_4;
     req.body = body.dump();
-    res =  api.matchmake(req, &DB, &M);
+    res =  api.matchmake(req, &M);
     ASSERT_EQ(res.code, 400);
     ASSERT_EQ(res.body, "Incorrect Request Format.\n");
 
@@ -277,6 +284,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set1) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
@@ -339,6 +347,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set2) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
@@ -384,6 +393,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set3) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
@@ -449,7 +459,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set3) {
         ASSERT_EQ(test_overflow.at(i), overflow.at(i));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set4) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -461,6 +471,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -469,6 +480,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
     checkers.game_parameter1_weight = 0;
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
+    checkers.category = "Strategy";
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -530,7 +542,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set4) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set5) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -542,6 +554,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -550,6 +563,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
     checkers.game_parameter1_weight = 0;
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
+    checkers.category = "Strategy";
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -618,7 +632,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set5) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set6) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -630,6 +644,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -638,6 +653,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
     checkers.game_parameter1_weight = 0;
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
+    checkers.category = "Strategy";
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -706,7 +722,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set6) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set7) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -718,6 +734,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -726,6 +743,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
     checkers.game_parameter1_weight = 0;
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
+    checkers.category = "Strategy";
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -797,7 +815,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set7) {
                 ASSERT_EQ(test_lobbies.at(i).at(j).at(k), lobbies.at(i).at(j).at(k));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set8) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -809,6 +827,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -817,6 +836,8 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
     checkers.game_parameter1_weight = 0;
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
+    checkers.category = "Strategy";
+    checkers.category = "Strategy";
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -906,7 +927,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set8) {
         ASSERT_EQ(test_overflow.at(i), overflow.at(i));
 }
 
-TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set9) {
+TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set9) {
     Matchmaking matchmaking;
 
     MockDBService DB;
@@ -918,6 +939,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set9) {
     chess.game_parameter1_weight = 0;
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
+    chess.category = "Strategy";
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -926,6 +948,7 @@ TEST(MatchmakingTestFixture, Matchmaking_Backend_Tests_Set9) {
     checkers.game_parameter1_weight = 0;
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
+    checkers.category = "Strategy";
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
