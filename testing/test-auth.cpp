@@ -47,6 +47,5 @@ TEST(AuthTest, Auth_Function_Tests) {
 
   result = auth.decodeAndVerifyJWT("SOME RANDOM TOKEN");
   ASSERT_EQ(result.first, false);
-
 }
 

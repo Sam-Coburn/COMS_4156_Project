@@ -1,4 +1,4 @@
-// "Copyright [year] <Copyright Owner>"
+// Copyright [2022] RaisingCanesFanClub
 
 #ifndef TESTING_MOCKDBSERVICE_H_
 #define TESTING_MOCKDBSERVICE_H_
@@ -8,14 +8,6 @@
 #include <vector>
 #include <string>
 #include "main/db-service.h"
-
-class MockAuthService : public AuthService {
- public:
-  MOCK_METHOD(std::string, encryptPassword, (std::string password), (override));
-  MOCK_METHOD(bool, validatePassword, (std::string password, std::string hash), (override));
-  MOCK_METHOD(std::string, createJWT, (std::string password, int seconds), (override));
-  MOCK_METHOD((std::pair<bool, std::string>), decodeAndVerifyJWT, (std::string token), (override));
-};
 
 class MockDBService : public DBService {
  public:

@@ -23,13 +23,16 @@ class MockDBService : public DBService {
   MOCK_METHOD(Developer, get_developer, (std::string developer_email), (override));
   MOCK_METHOD(Game_Details, get_game_details, (int game_id), (override));
   MOCK_METHOD(Player_Game_Ratings, get_player_game_rating, (std::string player_email, int game_id), (override));
-  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating, (std::string player_email, int game_id), (override));
+  MOCK_METHOD(Joined_Player_Game_Ratings, get_joined_player_game_rating,
+  (std::string player_email, int game_id), (override));
 
   MOCK_METHOD(std::vector<Player>, get_all_players, (), (override));
   MOCK_METHOD(std::vector<Developer>, get_all_developers, (), (override));
   MOCK_METHOD(std::vector<Game_Details>, get_all_games, (), (override));
-  MOCK_METHOD(std::vector<Joined_Player_Game_Ratings>, get_all_player_game_ratings_for_game, (int game_id), (override));
-  MOCK_METHOD(std::vector<Game_Details>, get_all_games_for_developer, (std::string developer_email), (override));
+  MOCK_METHOD(std::vector<Joined_Player_Game_Ratings>, get_all_player_game_ratings_for_game,
+  (int game_id), (override));
+  MOCK_METHOD(std::vector<Game_Details>, get_all_games_for_developer,
+  (std::string developer_email), (override));
 
   MOCK_METHOD(Player, add_player, (Player P), (override));
   MOCK_METHOD(Developer, add_developer, (Developer D), (override));
@@ -44,7 +47,8 @@ class MockDBService : public DBService {
   MOCK_METHOD(Player, update_player, (std::string player_email, Player P), (override));
   MOCK_METHOD(Developer, update_developer, (std::string developer_email, Developer D), (override));
   MOCK_METHOD(Game_Details, update_game_details, (int game_id, Game_Details GD), (override));
-  MOCK_METHOD(Player_Game_Ratings, update_player_rating, (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
+  MOCK_METHOD(Player_Game_Ratings, update_player_rating,
+  (std::string player_email, int game_id, Player_Game_Ratings PGR), (override));
 };
 
 TEST(AuthRouteTest, Authenticate_Token_Test) {
@@ -55,7 +59,7 @@ TEST(AuthRouteTest, Authenticate_Token_Test) {
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
-  std::pair<bool, std::string> result;
+  std::pair<int, std::string> result;
 
   Developer valid_developer;
   valid_developer.developer_email = "some_email@gmail.com";
@@ -97,24 +101,63 @@ TEST(AuthRouteTest, Authenticate_Token_Test) {
   ASSERT_EQ(res.code, 200);
 
   // No Authorization Header
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
   ASSERT_EQ(result.second, "Invalid Header");
 
   // Invalid token
   req.add_header("Authorization", "Random String");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
 
   // Expired token
   req.add_header("Authorization", "Expired Token");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
-  
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
+
   // Valid token
   req.add_header("Authorization", "Valid Token");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, true);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 200);
+}
+
+TEST(AuthRouteTest, Developer_Owns_Game_Tests) {
+  MockDBService DB;
+  MockAuthService auth;
+  APIEndPoints api = APIEndPoints(&DB, &auth);
+  bool res;
+
+  Game_Details game1;
+  Game_Details game2;
+  Game_Details game_invalid;
+
+  game1.developer_email = "dev1@gmail.com";
+  game1.game_id = 1;
+  game1.is_valid = true;
+  game2.developer_email = "dev2@gmail.com";
+  game2.game_id = 2;
+  game2.is_valid = true;
+  game_invalid.developer_email = "dev3@gmail.com";
+  game_invalid.game_id = 3;
+  game_invalid.is_valid = false;
+
+  // Invalid Game_Details object
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game_invalid));
+  res = api.developerOwnsGame(game_invalid.developer_email, game_invalid.game_id);
+  EXPECT_EQ(res, false);
+
+  // Developer does not own game
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game2));
+  res = api.developerOwnsGame(game1.developer_email, game2.game_id);
+  EXPECT_EQ(res, false);
+
+  // Developer owns game
+  EXPECT_CALL(DB, get_game_details(_)).Times(1)
+  .WillOnce(Return(game1));
+  res = api.developerOwnsGame(game1.developer_email, game1.game_id);
+  EXPECT_EQ(res, true);
 }
 
 TEST(AuthRouteTest, Post_SignUp_Tests) {
@@ -175,10 +218,10 @@ TEST(AuthRouteTest, Post_SignUp_Tests) {
   ASSERT_EQ(res.code, 200);
 
   // Invalid Body (developer already exists)
-  body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}} ;
+  body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
   res = api.postSignUp(req);
-  ASSERT_EQ(res.code, 400);
+  ASSERT_EQ(res.code, 409);
   ASSERT_EQ(res.body, "Developer already exists");
 }
 
@@ -254,7 +297,7 @@ TEST(AuthRouteTest, Post_Login_Tests) {
   body = {{"developer_email", "fake_email@gmail.com"}, {"developer_password", "wrong_password"}};
   req.body = body.dump();
   res = api.postLogin(req);
-  ASSERT_EQ(res.code, 400);
+  ASSERT_EQ(res.code, 404);
   ASSERT_EQ(res.body, "Developer does not exist");
 
   // Invalid Login (Invalid Credentials)
@@ -337,7 +380,7 @@ TEST(AuthRouteTest, Delete_Login_Tests) {
   req.add_header("Authorization", "Expired Token");
   res = api.deleteLogin(req);
   ASSERT_EQ(res.code, 401);
-  
+
   // Valid Delete
   req.add_header("Authorization", "Valid Token");
   res = api.deleteLogin(req);

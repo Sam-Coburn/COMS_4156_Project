@@ -1,0 +1,1 @@
+[sonar cloud report](https://sonarcloud.io/code?id=EmilySillars_COMS_4156_Project) (ignore the `genhtml` directory)
