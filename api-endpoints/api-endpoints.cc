@@ -599,12 +599,13 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
         return crow::response(400, "Given Game ID does not belong to the Given Developer.\n");
 
       // Check the Passed Player Emails for Two Reasons:
-      // 1) All passed players exist with our database
+      // 1) All passed players exist within our database
       // 2) All passed players are unique
       // 3) All players have stats for the given game
       input_player_emails_rvalue = request_body["player_emails"];
       input_player_emails = input_player_emails_rvalue.lo();
 
+      // 1) All players exist within our database
       std::vector<std::string> player_emails;
       std::vector<std::string> nonexistent_emails;
       for (crow::json::rvalue email : input_player_emails) {
@@ -626,6 +627,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
         return crow::response(400, error_message);
       }
 
+      // 2) All passed players are unique
       std::set<std::string> duplicate_emails_set;
       for (uint64_t i = 0; i < player_emails.size(); i++) {
         for (uint64_t j = 0; j < player_emails.size(); j++) {
@@ -643,6 +645,25 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
             else
                 error_message += *i + ", ";
             duplicate_iterator++;
+        }
+        return crow::response(400, error_message);
+      }
+
+      // 3) All players have stats for the given game
+      std::vector<std::string> no_stats_players;
+      for (uint64_t i = 0; i < player_emails.size(); i++) {
+        Player_Game_Ratings player_metrics = DB->get_player_game_rating(player_emails.at(i), game_id);
+        if (player_metrics.is_valid == false)
+          no_stats_players.push_back(player_emails.at(i));
+      }
+
+      if (no_stats_players.size() > 0) {
+        std::string error_message = "The following player IDs had no stats for the provided game: ";
+        for (uint64_t i = 0; i < no_stats_players.size(); i++) {
+            if (i == no_stats_players.size() - 1)
+                error_message += no_stats_players.at(i) + "\n";
+            else
+                error_message += no_stats_players.at(i) + ", ";
         }
         return crow::response(400, error_message);
       }
