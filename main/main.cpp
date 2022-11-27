@@ -7,10 +7,8 @@
 #include "crow/crow_all.h"
 #include "main/db-service.h"
 #include "api-endpoints/api-endpoints-lib.h"
-#include "api-endpoints/api-endpoints-bandaid-lib.h"
 
 #define CREATE_API_ENDPOINTS_OBJECT APIEndPoints api = APIEndPoints()
-// #define CREATE_API_ENDPOINTS_OBJECT APIEndPointsBandaid api = APIEndPointsBandaid()
 
 APIEndPoints api = APIEndPoints();
 

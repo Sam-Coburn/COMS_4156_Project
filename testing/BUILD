@@ -14,7 +14,8 @@ cc_test(
           "test-matchmaking.cpp",
           "test-matchmaking-integration.cpp",
           "test-get-post-games-routes.cc",
-          "test-player-endpoints.cpp"],
+          "test-player-endpoints.cpp",
+          "test-player-endpoints-integration.cpp"],
   deps = [
     "//main:main",
     "//main:db-service",

@@ -133,7 +133,7 @@ TEST_F(AuthRouteTestFixture, Developer_Owns_Game_Tests) {
   body["parameters"] = parms;
   body["weights"] = weights;
   req.body = body.dump();
-  res_pair = api.postGame(req);
+  res_pair = api.postGames(req);
   ASSERT_EQ(res.code, res_pair.first);
   game1_id = std::stoi(res_pair.second);
   // Signing up developer2
@@ -168,7 +168,7 @@ TEST_F(AuthRouteTestFixture, Developer_Owns_Game_Tests) {
   body["parameters"] = parms;
   body["weights"] = weights;
   req.body = body.dump();
-  res_pair = api.postGame(req);
+  res_pair = api.postGames(req);
   ASSERT_EQ(res.code, res_pair.first);
   game2_id = std::stoi(res_pair.second);
 

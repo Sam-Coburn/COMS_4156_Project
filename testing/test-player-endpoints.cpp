@@ -32,6 +32,10 @@ class PlayerTestFixture : public testing::Test {
         valid_developer3.developer_password = "some_password3";
         valid_developer3.is_valid = true;
 
+        valid_developer4.developer_email = "dev4@gmail.com";
+        valid_developer4.developer_password = "some_password4";
+        valid_developer4.is_valid = true;
+
         invalid_developer.is_valid = false;
 
         // Adding games
@@ -99,6 +103,22 @@ class PlayerTestFixture : public testing::Test {
         game4.is_valid = true;
         game4.game_id = 4;
 
+        game5.developer_email = valid_developer4.developer_email;
+        game5.game_name = "Tic-Tac-Toe";
+        game5.category = "Paper-and-Pencil";
+        game5.game_parameter1_name = "gamesWon";
+        game5.game_parameter2_name = "gamesLost";
+        game5.game_parameter3_name = "";
+        game5.game_parameter4_name = "";
+        game5.game_parameter1_weight = 4.25;
+        game5.game_parameter2_weight = 3.00;
+        game5.game_parameter3_weight = 0;
+        game5.game_parameter4_weight = 0;
+        game5.teams_per_match = 2;
+        game5.players_per_team = 1;
+        game5.is_valid = true;
+        game5.game_id = 5;
+
         // Adding players
         p1.player_email = "player1@gmail.com";
         p1.is_valid = true;
@@ -114,6 +134,12 @@ class PlayerTestFixture : public testing::Test {
 
         p7_created.player_email = p7_new.player_email;
         p7_created.is_valid = true;
+
+        p8.player_email = "player8@gmail.com";
+        p8.is_valid = true;
+
+        p9.player_email = "player9@gmail.com";
+        p9.is_valid = true;
 
         // Adding players' stats
         pgr1.player_email = p1.player_email;
@@ -139,6 +165,9 @@ class PlayerTestFixture : public testing::Test {
         pgr3.game_parameter3_value = 44.62;
         pgr3.game_parameter4_value = 31.33;
         pgr3.is_valid = true;
+
+        pgr3_invalid.player_email = p3.player_email;
+        pgr3_invalid.is_valid = false;
 
         pgr4.player_email = "player4@gmail.com";
         pgr4.game_id = game2.game_id;
@@ -174,6 +203,22 @@ class PlayerTestFixture : public testing::Test {
         pgr7.game_parameter3_value = 4.79;
         pgr7.game_parameter4_value = 18.33;
         pgr7.is_valid = true;
+
+        pgr8.player_email = p8.player_email;
+        pgr8.game_id = game5.game_id;
+        pgr8.game_parameter1_value = 40;
+        pgr8.game_parameter2_value = 10;
+        pgr8.game_parameter3_value = 0;
+        pgr8.game_parameter4_value = 0;
+        pgr8.is_valid = true;
+
+        pgr9.player_email = p9.player_email;
+        pgr9.game_id = game5.game_id;
+        pgr9.game_parameter1_value = 30;
+        pgr9.game_parameter2_value = 25;
+        pgr9.game_parameter3_value = 0;
+        pgr9.game_parameter4_value = 0;
+        pgr9.is_valid = true;
 
         pgr_invalid1.player_email = "player.invalid1@gmail.com";
         pgr_invalid1.game_id = game2.game_id;
@@ -231,6 +276,30 @@ class PlayerTestFixture : public testing::Test {
         jpgr_game2_pgr4.game_parameter4_value = pgr4.game_parameter4_value;
         jpgr_game2_pgr4.is_valid = true;
 
+        jpgr_game5_pgr8.player_email = pgr8.player_email;
+        jpgr_game5_pgr8.game_id = pgr8.game_id;
+        jpgr_game5_pgr8.game_parameter1_name = game5.game_parameter1_name;
+        jpgr_game5_pgr8.game_parameter1_value = pgr8.game_parameter1_value;
+        jpgr_game5_pgr8.game_parameter2_name = game5.game_parameter2_name;
+        jpgr_game5_pgr8.game_parameter2_value = pgr8.game_parameter2_value;
+        jpgr_game5_pgr8.game_parameter3_name = game5.game_parameter3_name;
+        jpgr_game5_pgr8.game_parameter3_value = pgr8.game_parameter3_value;
+        jpgr_game5_pgr8.game_parameter4_name = game5.game_parameter4_name;
+        jpgr_game5_pgr8.game_parameter4_value = pgr8.game_parameter4_value;
+        jpgr_game5_pgr8.is_valid = true;
+
+        jpgr_game5_pgr9.player_email = pgr9.player_email;
+        jpgr_game5_pgr9.game_id = pgr9.game_id;
+        jpgr_game5_pgr9.game_parameter1_name = game5.game_parameter1_name;
+        jpgr_game5_pgr9.game_parameter1_value = pgr9.game_parameter1_value;
+        jpgr_game5_pgr9.game_parameter2_name = game5.game_parameter2_name;
+        jpgr_game5_pgr9.game_parameter2_value = pgr9.game_parameter2_value;
+        jpgr_game5_pgr9.game_parameter3_name = game5.game_parameter3_name;
+        jpgr_game5_pgr9.game_parameter3_value = pgr9.game_parameter3_value;
+        jpgr_game5_pgr9.game_parameter4_name = game5.game_parameter4_name;
+        jpgr_game5_pgr9.game_parameter4_value = pgr9.game_parameter4_value;
+        jpgr_game5_pgr9.is_valid = true;
+
         jpgr_game2_pgr_invalid1.player_email = pgr_invalid1.player_email;
         jpgr_game2_pgr_invalid1.is_valid = false;
 
@@ -245,37 +314,18 @@ class PlayerTestFixture : public testing::Test {
     std::pair<int, std::string> auth_code_valid;
     std::pair<int, std::string> auth_code_invalid_header;
 
-    Developer valid_developer1;
-    Developer valid_developer2;
-    Developer valid_developer3;
+    Developer valid_developer1, valid_developer2, valid_developer3, valid_developer4;
     Developer invalid_developer;
 
-    Game_Details game1;
-    Game_Details game2;
-    Game_Details game3;
-    Game_Details game4;
+    Game_Details game1, game2, game3, game4, game5;
 
-    Player p1;
-    Player p2;
-    Player p3;
-    Player p7_new;
-    Player p7_created;
+    Player p1, p2, p3, p7_new, p7_created, p8, p9;
 
-    Player_Game_Ratings pgr1;
-    Player_Game_Ratings pgr2;
-    Player_Game_Ratings pgr3;
-    Player_Game_Ratings pgr4;
-    Player_Game_Ratings pgr5;
-    Player_Game_Ratings pgr6;
-    Player_Game_Ratings pgr7_created_error;
-    Player_Game_Ratings pgr7;
-    Player_Game_Ratings pgr_invalid1;
-    Player_Game_Ratings pgr_invalid2;
+    Player_Game_Ratings pgr1, pgr2, pgr3, pgr4, pgr5, pgr6, pgr7, pgr8, pgr9;
+    Player_Game_Ratings pgr3_invalid, pgr7_created_error, pgr_invalid1, pgr_invalid2;
 
-    Joined_Player_Game_Ratings jpgr_game1_pgr1;
-    Joined_Player_Game_Ratings jpgr_game1_pgr2;
-    Joined_Player_Game_Ratings jpgr_game1_pgr3;
-    Joined_Player_Game_Ratings jpgr_game2_pgr4;
+    Joined_Player_Game_Ratings jpgr_game1_pgr1, jpgr_game1_pgr2, jpgr_game1_pgr3, jpgr_game2_pgr4,
+        jpgr_game5_pgr8, jpgr_game5_pgr9;
     Joined_Player_Game_Ratings jpgr_game2_pgr_invalid1;
 
     crow::request req;
@@ -291,7 +341,7 @@ class PlayerTestFixture : public testing::Test {
     --------------------------------------------------------------------------------
 */
 
-/* Testing invalid developer authentication*/
+/* Invalid developer authentication */
 TEST_F(PlayerTestFixture, GetGamePlayersAuthTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -381,6 +431,40 @@ TEST_F(PlayerTestFixture, GetGamePlayersDevOwnsMultipleGamesTest) {
     EXPECT_EQ(res.body, return_body.dump());
 }
 
+/* Game only has 2 parameters */
+TEST_F(PlayerTestFixture, GetGamePlayersMissingParmsTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    std::vector<Joined_Player_Game_Ratings> joined_players;
+    joined_players.push_back(jpgr_game5_pgr8);
+    joined_players.push_back(jpgr_game5_pgr9);
+    EXPECT_CALL(DB, get_all_player_game_ratings_for_game(_)).Times(1)
+    .WillOnce(Return(joined_players));
+
+    // Performing test
+    res = api.getGamePlayers(req, game5.game_id);
+    return_body = {
+        {pgr8.player_email, {
+            {"game_id", game5.game_id},
+            {game5.game_parameter1_name, pgr8.game_parameter1_value},
+            {game5.game_parameter2_name, pgr8.game_parameter2_value},
+        }},
+        {pgr9.player_email, {
+            {"game_id", game5.game_id},
+            {game5.game_parameter1_name, pgr9.game_parameter1_value},
+            {game5.game_parameter2_name, pgr9.game_parameter2_value},
+        }}
+    };
+    EXPECT_EQ(res.code, 200);
+    EXPECT_EQ(res.body, return_body.dump());
+}
+
 /* Invalid player */
 TEST_F(PlayerTestFixture, GetGamePlayersInvalidPlayerTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
@@ -410,8 +494,8 @@ TEST_F(PlayerTestFixture, GetGamePlayersInvalidPlayerTest) {
     --------------------------------------------------------------------------------
 */
 
-/* Testing invalid developer authentication*/
-TEST_F(PlayerTestFixture, AddPlayerStatsAuthTest) {
+/* Invalid developer authentication */
+TEST_F(PlayerTestFixture, AddPlayersStatsAuthTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Invalid header
@@ -434,7 +518,7 @@ TEST_F(PlayerTestFixture, AddPlayerStatsAuthTest) {
 }
 
 /* No players provided -- Therefore cannot add any stats */
-TEST_F(PlayerTestFixture, AddPlayerStatsNoPlayersTest) {
+TEST_F(PlayerTestFixture, AddPlayersStatsNoPlayersTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -452,7 +536,7 @@ TEST_F(PlayerTestFixture, AddPlayerStatsNoPlayersTest) {
 }
 
 /* Adding player stats for already existing players */
-TEST_F(PlayerTestFixture, AddPlayerStatsPlayersExistTest) {
+TEST_F(PlayerTestFixture, AddPlayersStatsPlayersExistTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -491,7 +575,7 @@ TEST_F(PlayerTestFixture, AddPlayerStatsPlayersExistTest) {
 }
 
 /* Adding player stats for player which doesn't exist yet */
-TEST_F(PlayerTestFixture, AddPlayerStatsPlayerDoesntExistTest) {
+TEST_F(PlayerTestFixture, AddPlayersStatsPlayerDoesntExistTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -523,8 +607,43 @@ TEST_F(PlayerTestFixture, AddPlayerStatsPlayerDoesntExistTest) {
     EXPECT_EQ(res.body, "Player stats were added");
 }
 
+/* Adding player stats for players with missing parameters */
+TEST_F(PlayerTestFixture, AddPlayersStatsMissingParmsTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    EXPECT_CALL(DB, get_player(_)).Times(2)
+    .WillOnce(Return(p8))
+    .WillOnce(Return(p9));
+
+    EXPECT_CALL(DB, add_player_rating(_)).Times(2)
+    .WillOnce(Return(pgr8))
+    .WillOnce(Return(pgr9));
+
+    // Performing test
+    body = {
+        {pgr8.player_email, {
+            {"game_parameter1_value", pgr8.game_parameter1_value},
+            {"game_parameter2_value", pgr8.game_parameter2_value},
+        }},
+        {pgr9.player_email, {
+            {"game_parameter1_value", pgr9.game_parameter1_value},
+            {"game_parameter2_value", pgr9.game_parameter2_value},
+        }}
+    };
+    req.body = body.dump();
+    res = api.addPlayersStats(req, game5.game_id);
+    EXPECT_EQ(res.code, 200);
+    EXPECT_EQ(res.body, "Player stats were added");
+}
+
 /* Adding player stats for player which doesn't exist yet -- Player cannot be added */
-TEST_F(PlayerTestFixture, AddPlayerStatsPlayerDoesntExistCreateErrorTest) {
+TEST_F(PlayerTestFixture, AddPlayersStatsPlayerDoesntExistCreateErrorTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -553,8 +672,38 @@ TEST_F(PlayerTestFixture, AddPlayerStatsPlayerDoesntExistCreateErrorTest) {
     EXPECT_EQ(res.body, "Internal Server Error due to player " + p7_new.player_email);
 }
 
+/* Adding player stats for player which doesn't exist yet -- Player has stats in invalid format */
+TEST_F(PlayerTestFixture, AddPlayersStatsInvalidStatsFormatest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    EXPECT_CALL(DB, get_player(_)).Times(1)
+    .WillOnce(Return(p7_new));
+    EXPECT_CALL(DB, add_player(_)).Times(1)
+    .WillOnce(Return(p7_created));
+
+    // Performing test
+    body = {
+        {pgr7.player_email, {
+            {"game_parameter1_value", pgr7.game_parameter1_value},
+            {"game_parameter2_value", "bad"},
+        }}
+    };
+    req.body = body.dump();
+    res = api.addPlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 417);
+    std::string error = "No stats were added due to incorrect format of player value for player " +
+        pgr7.player_email + " and parameter game_parameter2_value";
+    EXPECT_EQ(res.body, error);
+}
+
 /* Adding player stats for already existing players -- Player stats cannot be added */
-TEST_F(PlayerTestFixture, AddPlayerStatsPlayersExistAddingStatsErrorTest) {
+TEST_F(PlayerTestFixture, AddPlayersStatsPlayersExistAddingStatsErrorTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -599,7 +748,7 @@ TEST_F(PlayerTestFixture, AddPlayerStatsPlayersExistAddingStatsErrorTest) {
     --------------------------------------------------------------------------------
 */
 
-/* Testing invalid developer authentication*/
+/* Invalid developer authentication */
 TEST_F(PlayerTestFixture, GetPlayersStatsAuthTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -706,7 +855,7 @@ TEST_F(PlayerTestFixture, GetPlayersStatsValidTest) {
     --------------------------------------------------------------------------------
 */
 
-/* Testing invalid developer authentication*/
+/* Invalid developer authentication */
 TEST_F(PlayerTestFixture, DeletePlayersStatsAuthTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -729,6 +878,30 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsAuthTest) {
     EXPECT_EQ(res.body, error);
 }
 
+/* Player emails in incorrect format */
+TEST_F(PlayerTestFixture, DeletePlayersStatsInvalidEmailFormatTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    // Performing test
+    std::vector<std::vector<std::string>> player_emails_vector;
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.player_email);
+    player_emails_vector.push_back(player_emails);
+
+    body = {};
+    body["player_emails"] = player_emails_vector;
+    req.body = body.dump();
+    res = api.deletePlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 417);
+    EXPECT_EQ(res.body, "No stats were deleted due to incorrect format of emails");
+}
+
 /* Attempting to delete multiple players that don't exist */
 TEST_F(PlayerTestFixture, DeletePlayersStatsMissingPlayersTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
@@ -739,7 +912,7 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingPlayersTest) {
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
 
-    EXPECT_CALL(DB, remove_player_rating(_, _)).Times(4)
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(4)
     .WillOnce(Return(pgr1))
     .WillOnce(Return(pgr_invalid1))
     .WillOnce(Return(pgr_invalid2))
@@ -758,15 +931,15 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingPlayersTest) {
     res = api.deletePlayersStats(req, game1.game_id);
     EXPECT_EQ(res.code, 500);
     // Players can be listed in any order as long as both players are stated as invalid
-    std::string missing_players1 = "The following players do not exist: " + pgr_invalid1.player_email +
-        ", "  + pgr_invalid2.player_email;
-    std::string missing_players2 = "The following players do not exist: " + pgr_invalid2.player_email +
-        ", "  + pgr_invalid1.player_email;
+    std::string missing_players1 = "No player stats were deleted since the following players do not exist: " +
+        pgr_invalid1.player_email + ", "  + pgr_invalid2.player_email;
+    std::string missing_players2 = "No player stats were deleted since the following players do not exist: " +
+        pgr_invalid2.player_email + ", "  + pgr_invalid1.player_email;
     EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
 }
 
 /* Player game ratings are valid */
-TEST_F(PlayerTestFixture, DeletePlayersStatsMissingStatsTest) {
+TEST_F(PlayerTestFixture, DeletePlayersStatsValidTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -774,6 +947,11 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingStatsTest) {
     .WillOnce(Return(auth_code_valid));
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(3)
+    .WillOnce(Return(pgr1))
+    .WillOnce(Return(pgr2))
+    .WillOnce(Return(pgr3));
 
     EXPECT_CALL(DB, remove_player_rating(_, _)).Times(3)
     .WillOnce(Return(pgr1))
@@ -794,6 +972,42 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingStatsTest) {
     EXPECT_EQ(res.body, "Player stats were removed");
 }
 
+/* Player game ratings are valid but cannot delete them */
+TEST_F(PlayerTestFixture, DeletePlayersStatsInvalidDeleteTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    EXPECT_CALL(DB, get_player_game_rating(_, _)).Times(3)
+    .WillOnce(Return(pgr1))
+    .WillOnce(Return(pgr2))
+    .WillOnce(Return(pgr3));
+
+    EXPECT_CALL(DB, remove_player_rating(_, _)).Times(3)
+    .WillOnce(Return(pgr1))
+    .WillOnce(Return(pgr2))
+    .WillOnce(Return(pgr3_invalid));
+
+    // Performing test
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.player_email);
+    player_emails.push_back(pgr2.player_email);
+    player_emails.push_back(pgr3.player_email);
+
+    body = {};
+    body["player_emails"] = player_emails;
+    req.body = body.dump();
+    res = api.deletePlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 500);
+    std::string error = "Internal Server Error due to player " + pgr3.player_email +
+        ". Only the following players were deleted: " + pgr1.player_email + ", " + pgr2.player_email;
+    EXPECT_EQ(res.body, error);
+}
+
 /*
     --------------------------------------------------------------------------------
     Endpoint: Update Players Stats
@@ -801,7 +1015,7 @@ TEST_F(PlayerTestFixture, DeletePlayersStatsMissingStatsTest) {
     --------------------------------------------------------------------------------
 */
 
-/* Testing invalid developer authentication*/
+/* Invalid developer authentication */
 TEST_F(PlayerTestFixture, UpdatePlayersStatsAuthTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
@@ -838,8 +1052,8 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsMissingStatsTest) {
     body = {};
     req.body = body.dump();
     res = api.updatePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 200);
-    EXPECT_EQ(res.body, "No player stats added due to empty request");
+    EXPECT_EQ(res.code, 204);
+    EXPECT_EQ(res.body, "No player stats were updated due to empty request");
 }
 
 /* Attempting to update players stats with invalid stats */
@@ -852,36 +1066,24 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsInvalidStatsTest) {
     EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
     .WillOnce(Return(true));
 
+    EXPECT_CALL(DB, get_player(_)).Times(1)
+    .WillOnce(Return(p1));
+
     // Performing test
     body = {
         {pgr1.player_email, {
             {"game_parameter1_value", pgr1.game_parameter1_value},
             {"game_parameter2_value", pgr1.game_parameter2_value},
-            {"game_parameter3_value", pgr1.game_parameter3_value},
+            {"game_parameter3_value", "bad"},
             {"game_parameter4_value", pgr1.game_parameter4_value}
-        }},
-        {pgr_invalid1.player_email, {
-            {"game_parameter2_value", pgr_invalid1.game_parameter2_value}
-        }},
-        {pgr_invalid2.player_email, {
-            {"game_parameter4_value", pgr_invalid2.game_parameter4_value}
-        }},
-        {pgr4.player_email, {
-            {"game_parameter1_value", pgr4.game_parameter1_value},
-            {"game_parameter2_value", pgr4.game_parameter2_value},
-            {"game_parameter3_value", pgr4.game_parameter3_value},
-            {"game_parameter4_value", pgr4.game_parameter4_value}
-        }},
+        }}
     };
     req.body = body.dump();
     res = api.updatePlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 204);
-    // Players can be listed in any order as long as both players are stated as invalid
-    std::string invalid_player_stats1 = "The following players have invalid stats: " + pgr_invalid1.player_email +
-        ", "  + pgr_invalid2.player_email;
-    std::string invalid_player_stats2 = "The following players have invalid stats: " + pgr_invalid2.player_email +
-        ", "  + pgr_invalid1.player_email;
-    EXPECT_TRUE((res.body ==  invalid_player_stats1) || (res.body == invalid_player_stats2));
+    EXPECT_EQ(res.code, 417);
+    std::string error = "No stats were updated due to incorrect format of player value for player "
+                            + pgr1.player_email + " and parameter game_parameter3_value";
+    EXPECT_EQ(res.body, error);
 }
 
 /* Attempting to update stats for new player -- But cannot add player */
@@ -915,8 +1117,8 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsCannotAddPlayerTest) {
     EXPECT_EQ(res.body, "Internal Server Error due to player " + p7_new.player_email);
 }
 
-/* Unable to update player rating */
-TEST_F(PlayerTestFixture, UpdatePlayersStatsCannotUpdateStatsTest) {
+/* 'Updating' player rating that has never been added */
+TEST_F(PlayerTestFixture, UpdatePlayersStatsNeverAddedTest) {
     NiceMock<MockAPIEndPoints> api(&DB, &auth);
 
     // Mocking
@@ -929,6 +1131,37 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsCannotUpdateStatsTest) {
     .WillOnce(Return(p7_new));
 
     EXPECT_CALL(DB, add_player(_)).Times(1)
+    .WillOnce(Return(p7_created));
+
+    EXPECT_CALL(DB, add_player_rating(_)).Times(1)
+    .WillOnce(Return(pgr7));
+
+    // Performing test
+    body = {
+        {pgr7.player_email, {
+            {"game_parameter1_value", pgr7.game_parameter1_value},
+            {"game_parameter2_value", pgr7.game_parameter2_value},
+            {"game_parameter3_value", pgr7.game_parameter3_value},
+            {"game_parameter4_value", pgr7.game_parameter4_value}
+        }}
+    };
+    req.body = body.dump();
+    res = api.updatePlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 200);
+    EXPECT_EQ(res.body, "Player stats were updated");
+}
+
+/* Unable to update player rating */
+TEST_F(PlayerTestFixture, UpdatePlayersStatsCannotUpdateStatsTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    EXPECT_CALL(DB, get_player(_)).Times(1)
     .WillOnce(Return(p7_created));
 
     EXPECT_CALL(DB, update_player_rating(_, _, _)).Times(1)
@@ -993,6 +1226,152 @@ TEST_F(PlayerTestFixture, UpdatePlayersStatsValidTest) {
     req.body = body.dump();
     res = api.updatePlayersStats(req, game1.game_id);
     EXPECT_EQ(res.code, 200);
-    EXPECT_EQ(res.body, "Player stats were added");
+    EXPECT_EQ(res.body, "Player stats were updated");
+}
+
+/*
+    --------------------------------------------------------------------------------
+    Endpoint: Put Game
+    (Developer updates their game)
+    --------------------------------------------------------------------------------
+*/
+
+/* Invalid developer authentication */
+TEST_F(PlayerTestFixture, PutGameAuthTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Invalid header
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_invalid_header));
+    res = api.putGame(req, 1);
+    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.body, "Invalid Header");
+
+    // Developer does not own game
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(false));
+
+    res = api.updatePlayersStats(req, game1.game_id);
+    std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
+    EXPECT_EQ(res.code, 403);
+    EXPECT_EQ(res.body, error);
+}
+
+/* Not giving any game information to update a game */
+TEST_F(PlayerTestFixture, PutGameEmptyBodyTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    // Performing test
+    body = {};
+    req.body = body.dump();
+    res = api.putGame(req, game1.game_id);
+    EXPECT_EQ(res.code, 204);
+    EXPECT_EQ(res.body, "Game was not updated due to empty request");
+}
+
+/* Attempting to update game with invalid fields */
+TEST_F(PlayerTestFixture, PutGameInvalidFieldsTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    // Performing test
+    body = {
+        {"game_name", game1.game_name},
+        {"game_parameter1_name", game1.game_parameter1_name},
+        {"game_parameter2_name", game1.game_parameter2_name},
+        {"game_parameter3_name", game1.game_parameter3_name},
+        {"game_parameter4_name", game1.game_parameter4_name},
+        {"made_up_parm", 10},
+        {"category", game1.category},
+        {"players_per_team", game1.players_per_team},
+        {"teams_per_match", game1.teams_per_match},
+        {"game_parameter1_weight", game1.game_parameter1_weight},
+        {"game_parameter2_weight", game1.game_parameter2_weight},
+        {"game_parameter3_weight", "bad"},
+        {"game_parameter4_weight", game1.game_parameter4_weight}
+    };
+    req.body = body.dump();
+    res = api.putGame(req, game1.game_id);
+    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.body, "Invalid request body");
+}
+
+/* Attempting to update game with invalid values */
+TEST_F(PlayerTestFixture, PutGameInvalidValuesTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    // Performing test
+    body = {
+        {"game_name", game1.game_name},
+        {"game_parameter1_name", game1.game_parameter1_name},
+        {"game_parameter2_name", game1.game_parameter2_name},
+        {"game_parameter3_name", game1.game_parameter3_name},
+        {"game_parameter4_name", game1.game_parameter4_name},
+        {"category", game1.category},
+        {"players_per_team", game1.players_per_team},
+        {"teams_per_match", game1.teams_per_match},
+        {"game_parameter1_weight", game1.game_parameter1_weight},
+        {"game_parameter2_weight", game1.game_parameter2_weight},
+        {"game_parameter3_weight", "bad"},
+        {"game_parameter4_weight", game1.game_parameter4_weight}
+    };
+    req.body = body.dump();
+    res = api.putGame(req, game1.game_id);
+    EXPECT_EQ(res.code, 400);
+    EXPECT_EQ(res.body, "Invalid request body");
+}
+
+/* Updating game details -- valid */
+TEST_F(PlayerTestFixture, PutGameValidTest) {
+    NiceMock<MockAPIEndPoints> api(&DB, &auth);
+
+    // Mocking
+    EXPECT_CALL(api, authenticateTokenGetErrorCode(_)).Times(1)
+    .WillOnce(Return(auth_code_valid));
+    EXPECT_CALL(api, developerOwnsGame(_, _)).Times(1)
+    .WillOnce(Return(true));
+
+    EXPECT_CALL(DB, update_game_details(_, _)).Times(1)
+    .WillOnce(Return(game1));
+
+    // Performing test
+    body = {
+        {"game_name", game1.game_name},
+        {"game_parameter1_name", game1.game_parameter1_name},
+        {"game_parameter2_name", game1.game_parameter2_name},
+        {"game_parameter3_name", game1.game_parameter3_name},
+        {"game_parameter4_name", game1.game_parameter4_name},
+        {"category", game1.category},
+        {"players_per_team", game1.players_per_team},
+        {"teams_per_match", game1.teams_per_match},
+        {"game_parameter1_weight", game1.game_parameter1_weight},
+        {"game_parameter2_weight", game1.game_parameter2_weight},
+        {"game_parameter3_weight", game1.game_parameter3_weight},
+        {"game_parameter4_weight", game1.game_parameter4_weight},
+    };
+
+    req.body = body.dump();
+    res = api.putGame(req, game1.game_id);
+    EXPECT_EQ(res.code, 200);
+    EXPECT_EQ(res.body, "Added requested game details");
 }
 }  // namespace
