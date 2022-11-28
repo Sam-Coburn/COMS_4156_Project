@@ -1,99 +1,143 @@
 # Matchmaking API
+
+## Client Link
+Client (Web UI): https://github.com/uarman29/COMS4156_Matchmaking_Client \
+Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Client2
+
 ## Endpoints
 - `POST /signup`
-    - Description:
-      Adds a developer to the database with the
-      specified credentials
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
+  - Description:
+    Adds a developer to the database with the
+    specified credentials
+  - Request Body:
+    - `developer_email:string`
+    - `developer_password:string`
 
 - `POST /login`
-    - Description:
-      Due to the nature of our authentication this endpoint
-      essentially just verifies credentials are correct
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
+  - Description:
+    Verifies a developer's credentials and returns
+    a JWT token to serve as their API Key
+  - Request Body:
+    - `developer_email:string`
+    - `developer_password:string`
       
 - `DELETE /login`
-    - Description
-      Deletes a devloper from database provided the
-      credentials match developer trying to be deleted
-    - Request Body:
-      - `developer_email:string`
-      - `developer_password:string`
+  - Description
+    Deletes a devloper from database provided the
+    credentials match developer trying to be deleted
+  - Authorization Header: `Bearer <API-Key>`
     
 - `POST /games`
-    - Description:
-      Add a game to developer's account
-      specified credentials
-    - Request Body:
-      - `name:string`
-      - `category:string`
-      - `parameters:Array<String>`
-      - `weights:Array<Float>`
-      - `teams_per_match:Integer`
-      - `players_per_team:Integer`
+  - Description:
+    Add a game to developer's account
+  - Authorization Header: `Bearer <API-Key>`
+  - Request Body:
+    - `name:string`
+    - `category:string`
+    - `parameters:Array<String>`
+    - `weights:Array<Float>`
+    - `teams_per_match:Integer`
+    - `players_per_team:Integer`
+    
 
 - `GET /games`
-    - Description:
-      Retrieve a list of all games assocaited with developer's account
-      specified credentials
+  - Description:
+    Retrieve a list of all games assocaited with developer's account
+  - Authorization Header: `Bearer <API-Key>`
 
 - `POST /matchmake`
-    - Description:
-      Use the given list of player emails to sort players into game lobbies
-      using the given game's parameters.
-    - Request Body:
-      - `game_id:int`
-      - `player_emails:vector<string>`
+  - Description:
+    Use the given list of player emails to sort players into game lobbies
+    using the given game's parameters.
+  - Authorization Header: `Bearer <API-Key>`
+  - Request Body:
+    - `game_id:int`
+    - `matchmaking_type: 'basic' or 'advanced'`
+    - `player_emails:vector<string>`
       
-- `GET /game/<int>`
-    - Description:
-      Returns game details in JSON format. Details include, but are not limited to, game name, players per team, etc.
-    - Request Parameters:
-      - `game_id:int`
+- `GET /games/<int>`
+  - Description:
+    Returns game details in JSON format. Details include, but are not limited to, game name, players per team, etc.
+  - Request Parameters:
+    - `game_id:int`
+  - Authorization Header: `Bearer <API-Key>`
+
+- `PUT /games/<int>`
+  - Description:
+    Updates a game's details.
+  - Request Parameters:
+    - `game_id:int`
+  - Authorization Header: `Bearer <API-Key>`
+  - Request Body:
+    - `name:string`
+    - `category:string`
+    - `game_parameter1_name:string`
+    - `game_parameter2_name:string`
+    - `game_parameter3_name:string`
+    - `game_parameter4_name:string`
+    - `game_parameter1_weight:float`
+    - `game_parameter2_weight:float`
+    - `game_parameter3_weight:float`
+    - `game_parameter4_weight:float`
+    - `teams_per_match:Integer`
+    - `players_per_team:Integer`
  
- - `DELETE /game/<int>`
-    - Description:
-      Deletes a game (and its details).
-    - Request Parameters:
-      - `game_id:int`
+- `DELETE /games/<int>`
+  - Description:
+    Deletes a game (and its details).
+  - Request Parameters:
+    - `game_id:int`
+  - Authorization Header: `Bearer <API-Key>`
  
-  - `GET /games/{game-id}/players`
-    - Description:
-      Gets a list of players and player details for a game.
-    - Request Parameters:
-      - `game_id:int`
+- `GET /games/{game-id}/players`
+  - Description:
+    Gets a list of players and player details for a game.
+  - Request Parameters:
+    - `game_id:int`
+  - Authorization Header: `Bearer <API-Key>`
 
-  - `POST /game/<int>/players`
-    - Description:
-      Adds players' stats for a game.
-    - Request Parameters:
-      - `game_id:int`
-    - Request Body:
-      - `(player_email:<JsonObject>)+`
-        where `<JsonObject>` is of the form
-        - `game_parameter1_value:int`
-        - `game_parameter2_value:int`
-        - `game_parameter3_value:int`
-        - `game_parameter4_value:int`
+- `POST /games/<int>/players`
+  - Description:
+    Adds players' stats for a game.
+  - Request Parameters:
+    - `game_id:int`
+  - Authorization Header: `Bearer <API-Key>`
+  - Request Body:
+    - `(player_email:<JsonObject>)+`
+      where `<JsonObject>` is of the form
+      - `game_parameter1_value:float`
+      - `game_parameter2_value:float`
+      - `game_parameter3_value:float`
+      - `game_parameter4_value:float`
 
-  - `GET /games/{game-id}/players/{player-id}`
-    - Description:
-      Gets player stats for a game.
-    - Request Parameters:
-      - `game_id:int`
-      - `player_email:string`
+- `GET /games/{game-id}/players/{player_email}`
+  - Description:
+    Gets player stats for a game.
+  - Request Parameters:
+    - `game_id:int`
+    - `player_email:string`
+  - Authorization Header: `Bearer <API-Key>`
 
-  - `DELETE /game/<int>/players`
-    - Description:
-      Removes players' stats for a game.
-    - Request Parameters:
-      - `game_id:int`
-    - Request Body:
-      - `player_emails:vector<string>`
+- `DELETE /games/{game_id}/players/{player_email}`
+  - Description:
+    Removes player's stats for a game.
+  - Request Parameters:
+    - `game_id:int`
+    - `player_email:string`
+  - Authorization Header: `Bearer <API-Key>`
+
+- `PUT /games/{game_id}/players/{player_email}`
+  - Description:
+    Updates player's stats for a game.
+  - Request Parameters:
+    - `game_id:int`
+    - `player_email:string`
+  - Authorization Header: `Bearer <API-Key>`
+  - Request Body:
+    - `game_parameter1_value:float`
+    - `game_parameter2_value:float`
+    - `game_parameter3_value:float`
+    - `game_parameter4_value:float`
       
 ## Build + Run
 Inside top-level project directory, do
@@ -258,7 +302,13 @@ pip3 install cpplint
 8. Install cppcheck static analysis checker
 ```sudo apt-get -y install cppcheck```
 
-9. Restart the VM
+9. (Optional) Install lcov & jdk for coverage reports
+  ```
+  sudo apt-get install default-jdk
+  sudo apt-get install lcov
+  ```
+
+10. Restart the VM
 
 **Platform: Ubuntu 22.04**
 1. Install Git
