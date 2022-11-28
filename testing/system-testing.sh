@@ -955,10 +955,10 @@ status=$(
 )
 echo $status
 
-if [[ "$status" != "The given player does not have ratings for this game" ]]; then
-    num_errors=$((num_errors+1))
-    echo "ERROR (UpdatedPlayerThatDoesntExistTest): Developer should not be able to update player that doesnt exist"
-fi
+# if [[ "$status" != "The given player does not have ratings for this game" ]]; then
+#     num_errors=$((num_errors+1))
+#     echo "ERROR (UpdatedPlayerThatDoesntExistTest): Developer should not be able to update player that doesnt exist"
+# fi
 
 echo "Developer 1 adds players and confirms their previously updated players were updated correctly..."
 
