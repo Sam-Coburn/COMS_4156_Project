@@ -756,6 +756,8 @@ if [ $status != 204 ]; then
     echo "ERROR (GameDoesntHavePlayersTest): There should be no players for this game with game_id ${game1_id}"
 fi
 
+echo "taking a nap for github actions..."
+sleep 2
 echo "Developer 1 adds players..."
 
 # Developer 1 adds players
