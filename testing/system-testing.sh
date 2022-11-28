@@ -762,7 +762,7 @@ echo "Developer 1 adds players..."
 
 # Developer 1 adds players
 status=$(
-    curl -s -w "%{http_code}" -X POST ${URL}/games/${game1_id}/players \
+    curl -s -X POST ${URL}/games/${game1_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}" \
         -d '{
