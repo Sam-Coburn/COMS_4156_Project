@@ -15,6 +15,7 @@ Examining testing/BUILD
 Examining testing/MockAPIEndPoints.h
 Examining testing/MockAuthService.h
 Examining testing/MockDBService.h
+Examining testing/system-testing.sh
 Examining testing/test-auth.cpp
 Examining testing/test-auth-routes.cpp
 Examining testing/test-auth-routes-integration.cpp
@@ -25,21 +26,49 @@ Examining testing/test-get-post-games-routes.cc
 Examining testing/test-get-post-games-routes-integration.cc
 Examining testing/test-matchmaking.cpp
 Examining testing/test-matchmaking-integration.cpp
+Examining testing/test-player-endpoints 2.cpp
 Examining testing/test-player-endpoints.cpp
+Examining testing/test-player-endpoints-integration 2.cpp
 Examining testing/test-player-endpoints-integration.cpp
 
 FINAL RESULTS:
 
+testing/system-testing.sh:198:  [5] (buffer) gets:
+  Does not check for buffer overflows (CWE-120, CWE-20). Use fgets() instead.
+testing/system-testing.sh:264:  [5] (buffer) gets:
+  Does not check for buffer overflows (CWE-120, CWE-20). Use fgets() instead.
+testing/system-testing.sh:485:  [5] (buffer) gets:
+  Does not check for buffer overflows (CWE-120, CWE-20). Use fgets() instead.
+testing/system-testing.sh:624:  [5] (buffer) gets:
+  Does not check for buffer overflows (CWE-120, CWE-20). Use fgets() instead.
+testing/system-testing.sh:1106:  [4] (race) access:
+  This usually indicates a security flaw. If an attacker can change anything
+  along the path between the call to access() and the file's actual use
+  (e.g., by moving files), the attacker can exploit the race condition
+  (CWE-362/CWE-367!). Set up the correct permissions (e.g., using setuid())
+  and try to open the file directly.
+testing/system-testing.sh:1119:  [4] (race) access:
+  This usually indicates a security flaw. If an attacker can change anything
+  along the path between the call to access() and the file's actual use
+  (e.g., by moving files), the attacker can exploit the race condition
+  (CWE-362/CWE-367!). Set up the correct permissions (e.g., using setuid())
+  and try to open the file directly.
 
 ANALYSIS SUMMARY:
 
-No hits found.
-Lines analyzed = 10315 in approximately 0.07 seconds (149654 lines/second)
-Physical Source Lines of Code (SLOC) = 7967
-Hits@level = [0]   0 [1]   0 [2]   0 [3]   0 [4]   0 [5]   0
-Hits@level+ = [0+]   0 [1+]   0 [2+]   0 [3+]   0 [4+]   0 [5+]   0
-Hits/KSLOC@level+ = [0+]   0 [1+]   0 [2+]   0 [3+]   0 [4+]   0 [5+]   0
+Hits = 6
+Lines analyzed = 14764 in approximately 0.11 seconds (130592 lines/second)
+Physical Source Lines of Code (SLOC) = 11441
+Hits@level = [0]   0 [1]   0 [2]   0 [3]   0 [4]   2 [5]   4
+Hits@level+ = [0+]   6 [1+]   6 [2+]   6 [3+]   6 [4+]   6 [5+]   4
+Hits/KSLOC@level+ = [0+] 0.52443 [1+] 0.52443 [2+] 0.52443 [3+] 0.52443 [4+] 0.52443 [5+] 0.34962
 Minimum risk level = 1
+
+Not every hit is necessarily a security vulnerability.
+You can inhibit a report by adding a comment in this form:
+// flawfinder: ignore
+Make *sure* it's a false positive!
+You can use the option --neverignore to show these.
 
 There may be other security vulnerabilities; review your code!
 See 'Secure Programming HOWTO'

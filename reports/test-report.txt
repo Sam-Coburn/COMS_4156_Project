@@ -1,48 +1,32 @@
 Loading: 
 Loading: 0 packages loaded
-INFO: Build options --collect_code_coverage, --instrumentation_filter, and --test_env have changed, discarding analysis cache.
+INFO: Build option --linkopt has changed, discarding analysis cache.
 Analyzing: target //testing:test (0 packages loaded, 0 targets configured)
 INFO: Analyzed target //testing:test (0 packages loaded, 782 targets configured).
 INFO: Found 1 test target...
-[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
-[33 / 50] Compiling googletest/src/gtest.cc; 0s linux-sandbox ... (8 actions, 7 running)
-[44 / 65] Compiling googletest/src/gtest.cc; 2s linux-sandbox ... (8 actions, 7 running)
-[56 / 77] Compiling api-endpoints/api-endpoints.cc; 1s linux-sandbox ... (8 actions, 7 running)
-[76 / 100] Compiling api-endpoints/api-endpoints.cc; 2s linux-sandbox ... (8 actions, 7 running)
-[82 / 100] Compiling api-endpoints/api-endpoints.cc; 4s linux-sandbox ... (8 actions running)
-[83 / 100] Compiling api-endpoints/api-endpoints.cc; 5s linux-sandbox ... (8 actions, 7 running)
-INFO: From Compiling api-endpoints/api-endpoints.cc:
-api-endpoints/api-endpoints.cc: In lambda function:
-api-endpoints/api-endpoints.cc:156:14: warning: statement has no effect [-Wunused-value]
-  156 |         for (i; i < s.size(); i++) {
-      |              ^
-api-endpoints/api-endpoints.cc: In member function 'crow::response APIEndPoints::updatePlayersStats(const crow::request&, int)':
-api-endpoints/api-endpoints.cc:525:17: warning: variable 'temp' set but not used [-Wunused-but-set-variable]
-  525 |             int temp;
-      |                 ^~~~
-[86 / 100] Compiling main/main.cpp; 5s linux-sandbox ... (8 actions running)
-[88 / 100] Compiling main/main.cpp; 7s linux-sandbox ... (8 actions, 7 running)
-[91 / 100] Testing //testing:test [6s, 9s (8 actions)] ... (8 actions running)
-[97 / 100] Testing //testing:test [6s, 8s] ... (2 actions running)
+[2 / 15] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[94 / 100] Compiling testing/test-matchmaking.cpp; 1s linux-sandbox ... (2 actions running)
+[95 / 100] Compiling testing/test-matchmaking.cpp; 3s linux-sandbox ... (3 actions, 1 running)
+[98 / 100] Compiling testing/test-matchmaking.cpp; 4s linux-sandbox
 [99 / 100] [Prepa] Linking testing/test
-[100 / 101] Testing //testing:test; 5s linux-sandbox
-[100 / 101] Testing //testing:test; 10s linux-sandbox
-[100 / 101] 1 / 1 tests; Testing //testing:test; 28s linux-sandbox
+[100 / 101] Testing //testing:test; 1s linux-sandbox
+[100 / 101] Testing //testing:test; 11s linux-sandbox
+[100 / 101] 1 / 1 tests; Testing //testing:test; 31s linux-sandbox
 INFO: From Testing //testing:test:
 ==================== Test output for //testing:test:
 Running main() from gmock_main.cc
-[==========] Running 94 tests from 12 test suites.
+[==========] Running 114 tests from 12 test suites.
 [----------] Global test environment set-up.
 [----------] 4 tests from DBServiceTestFixture
 [ RUN      ] DBServiceTestFixture.Player_Tests
-[       OK ] DBServiceTestFixture.Player_Tests (561 ms)
+[       OK ] DBServiceTestFixture.Player_Tests (397 ms)
 [ RUN      ] DBServiceTestFixture.Developer_Tests
-[       OK ] DBServiceTestFixture.Developer_Tests (459 ms)
+[       OK ] DBServiceTestFixture.Developer_Tests (500 ms)
 [ RUN      ] DBServiceTestFixture.Game_Details_Tests
-[       OK ] DBServiceTestFixture.Game_Details_Tests (593 ms)
+[       OK ] DBServiceTestFixture.Game_Details_Tests (456 ms)
 [ RUN      ] DBServiceTestFixture.Player_Game_Ratings_Tests
-[       OK ] DBServiceTestFixture.Player_Game_Ratings_Tests (707 ms)
-[----------] 4 tests from DBServiceTestFixture (2321 ms total)
+[       OK ] DBServiceTestFixture.Player_Game_Ratings_Tests (515 ms)
+[----------] 4 tests from DBServiceTestFixture (1870 ms total)
 
 [----------] 5 tests from AuthRouteTest
 [ RUN      ] AuthRouteTest.Authenticate_Token_Test
@@ -55,25 +39,25 @@ Running main() from gmock_main.cc
 [       OK ] AuthRouteTest.Post_Login_Tests (0 ms)
 [ RUN      ] AuthRouteTest.Delete_Login_Tests
 [       OK ] AuthRouteTest.Delete_Login_Tests (0 ms)
-[----------] 5 tests from AuthRouteTest (2 ms total)
+[----------] 5 tests from AuthRouteTest (0 ms total)
 
 [----------] 1 test from AuthTest
 [ RUN      ] AuthTest.Auth_Function_Tests
-[       OK ] AuthTest.Auth_Function_Tests (1552 ms)
-[----------] 1 test from AuthTest (1552 ms total)
+[       OK ] AuthTest.Auth_Function_Tests (1557 ms)
+[----------] 1 test from AuthTest (1557 ms total)
 
 [----------] 5 tests from AuthRouteTestFixture
 [ RUN      ] AuthRouteTestFixture.Authenticate_Token_Test
-[       OK ] AuthRouteTestFixture.Authenticate_Token_Test (602 ms)
+[       OK ] AuthRouteTestFixture.Authenticate_Token_Test (540 ms)
 [ RUN      ] AuthRouteTestFixture.Developer_Owns_Game_Tests
-[       OK ] AuthRouteTestFixture.Developer_Owns_Game_Tests (822 ms)
+[       OK ] AuthRouteTestFixture.Developer_Owns_Game_Tests (719 ms)
 [ RUN      ] AuthRouteTestFixture.Post_SignUp_Tests
-[       OK ] AuthRouteTestFixture.Post_SignUp_Tests (533 ms)
+[       OK ] AuthRouteTestFixture.Post_SignUp_Tests (489 ms)
 [ RUN      ] AuthRouteTestFixture.Post_Login_Tests
-[       OK ] AuthRouteTestFixture.Post_Login_Tests (602 ms)
+[       OK ] AuthRouteTestFixture.Post_Login_Tests (585 ms)
 [ RUN      ] AuthRouteTestFixture.Delete_Login_Tests
-[       OK ] AuthRouteTestFixture.Delete_Login_Tests (512 ms)
-[----------] 5 tests from AuthRouteTestFixture (3074 ms total)
+[       OK ] AuthRouteTestFixture.Delete_Login_Tests (508 ms)
+[----------] 5 tests from AuthRouteTestFixture (2844 ms total)
 
 [----------] 11 tests from MatchmakingTests
 [ RUN      ] MatchmakingTests.Matchmaking_Endpoint_Tests_Set1
@@ -110,134 +94,206 @@ Running main() from gmock_main.cc
 
 [----------] 11 tests from MatchmakingTestFixture
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set1
-[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set1 (516 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set1 (494 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set2
 2000
 2000
-[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set2 (713 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Endpoint_Tests_Set2 (702 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set1
 2000
 1000
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set1 (602 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set1 (597 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set2
 2000
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set2 (570 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set2 (540 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set3
 2000
 1000
 0
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set3 (606 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set3 (588 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set4
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set4 (651 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set4 (593 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set5
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set5 (679 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set5 (620 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set6
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set6 (688 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set6 (625 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set7
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set7 (694 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set7 (651 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set8
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set8 (710 ms)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set8 (678 ms)
 [ RUN      ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set9
-[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set9 (590 ms)
-[----------] 11 tests from MatchmakingTestFixture (7026 ms total)
+[       OK ] MatchmakingTestFixture.Matchmaking_Backend_Tests_Set9 (602 ms)
+[----------] 11 tests from MatchmakingTestFixture (6695 ms total)
 
 [----------] 2 tests from Get_Post_Games_Suite
 [ RUN      ] Get_Post_Games_Suite.Post_Games_Tests
-[       OK ] Get_Post_Games_Suite.Post_Games_Tests (5 ms)
+[       OK ] Get_Post_Games_Suite.Post_Games_Tests (1 ms)
 [ RUN      ] Get_Post_Games_Suite.Get_Games_Tests
-[       OK ] Get_Post_Games_Suite.Get_Games_Tests (1 ms)
-[----------] 2 tests from Get_Post_Games_Suite (7 ms total)
+[       OK ] Get_Post_Games_Suite.Get_Games_Tests (0 ms)
+[----------] 2 tests from Get_Post_Games_Suite (2 ms total)
 
-[----------] 22 tests from PlayerTestFixture
+[----------] 32 tests from PlayerTestFixture
 [ RUN      ] PlayerTestFixture.GetGamePlayersAuthTest
 [       OK ] PlayerTestFixture.GetGamePlayersAuthTest (0 ms)
 [ RUN      ] PlayerTestFixture.GetGamePlayersNoPlayersTest
 [       OK ] PlayerTestFixture.GetGamePlayersNoPlayersTest (0 ms)
 [ RUN      ] PlayerTestFixture.GetGamePlayersDevOwnsMultipleGamesTest
 [       OK ] PlayerTestFixture.GetGamePlayersDevOwnsMultipleGamesTest (0 ms)
+[ RUN      ] PlayerTestFixture.GetGamePlayersMissingParmsTest
+[       OK ] PlayerTestFixture.GetGamePlayersMissingParmsTest (0 ms)
 [ RUN      ] PlayerTestFixture.GetGamePlayersInvalidPlayerTest
 [       OK ] PlayerTestFixture.GetGamePlayersInvalidPlayerTest (0 ms)
-[ RUN      ] PlayerTestFixture.AddPlayerStatsAuthTest
-[       OK ] PlayerTestFixture.AddPlayerStatsAuthTest (0 ms)
-[ RUN      ] PlayerTestFixture.AddPlayerStatsNoPlayersTest
-[       OK ] PlayerTestFixture.AddPlayerStatsNoPlayersTest (0 ms)
-[ RUN      ] PlayerTestFixture.AddPlayerStatsPlayersExistTest
-[       OK ] PlayerTestFixture.AddPlayerStatsPlayersExistTest (0 ms)
-[ RUN      ] PlayerTestFixture.AddPlayerStatsPlayerDoesntExistTest
-[       OK ] PlayerTestFixture.AddPlayerStatsPlayerDoesntExistTest (0 ms)
-[ RUN      ] PlayerTestFixture.AddPlayerStatsPlayerDoesntExistCreateErrorTest
-[       OK ] PlayerTestFixture.AddPlayerStatsPlayerDoesntExistCreateErrorTest (0 ms)
-[ RUN      ] PlayerTestFixture.AddPlayerStatsPlayersExistAddingStatsErrorTest
-[       OK ] PlayerTestFixture.AddPlayerStatsPlayersExistAddingStatsErrorTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsAuthTest
+[       OK ] PlayerTestFixture.AddPlayersStatsAuthTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsNoPlayersTest
+[       OK ] PlayerTestFixture.AddPlayersStatsNoPlayersTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsPlayersExistTest
+[       OK ] PlayerTestFixture.AddPlayersStatsPlayersExistTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsWhereStatsExistTest
+[       OK ] PlayerTestFixture.AddPlayersStatsWhereStatsExistTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsPlayerDoesntExistTest
+[       OK ] PlayerTestFixture.AddPlayersStatsPlayerDoesntExistTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsMissingParmsTest
+
+GMOCK WARNING:
+Uninteresting mock function call - returning default value.
+    Function call: get_player_game_rating("player9@gmail.com", 5)
+          Returns: 56-byte object <50-36 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 FF-FF FF-FF 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+
+GMOCK WARNING:
+Uninteresting mock function call - returning default value.
+    Function call: get_player_game_rating("player8@gmail.com", 5)
+          Returns: 56-byte object <50-36 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 FF-FF FF-FF 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+[       OK ] PlayerTestFixture.AddPlayersStatsMissingParmsTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsPlayerDoesntExistCreateErrorTest
+[       OK ] PlayerTestFixture.AddPlayersStatsPlayerDoesntExistCreateErrorTest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsInvalidStatsFormatest
+[       OK ] PlayerTestFixture.AddPlayersStatsInvalidStatsFormatest (0 ms)
+[ RUN      ] PlayerTestFixture.AddPlayersStatsPlayersExistAddingStatsErrorTest
+
+GMOCK WARNING:
+Uninteresting mock function call - returning default value.
+    Function call: get_player_game_rating("player7@gmail.com", 1)
+          Returns: 56-byte object <B0-33 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 FF-FF FF-FF 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+
+GMOCK WARNING:
+Uninteresting mock function call - returning default value.
+    Function call: get_player_game_rating("player1@gmail.com", 1)
+          Returns: 56-byte object <B0-33 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 FF-FF FF-FF 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+[       OK ] PlayerTestFixture.AddPlayersStatsPlayersExistAddingStatsErrorTest (0 ms)
 [ RUN      ] PlayerTestFixture.GetPlayersStatsAuthTest
 [       OK ] PlayerTestFixture.GetPlayersStatsAuthTest (0 ms)
 [ RUN      ] PlayerTestFixture.GetPlayersStatsMissingStatsTest
 [       OK ] PlayerTestFixture.GetPlayersStatsMissingStatsTest (0 ms)
 [ RUN      ] PlayerTestFixture.GetPlayersStatsValidTest
 [       OK ] PlayerTestFixture.GetPlayersStatsValidTest (0 ms)
-[ RUN      ] PlayerTestFixture.DeletePlayersStatsAuthTest
-[       OK ] PlayerTestFixture.DeletePlayersStatsAuthTest (0 ms)
-[ RUN      ] PlayerTestFixture.DeletePlayersStatsMissingPlayersTest
-[       OK ] PlayerTestFixture.DeletePlayersStatsMissingPlayersTest (0 ms)
-[ RUN      ] PlayerTestFixture.DeletePlayersStatsMissingStatsTest
-[       OK ] PlayerTestFixture.DeletePlayersStatsMissingStatsTest (0 ms)
-[ RUN      ] PlayerTestFixture.UpdatePlayersStatsAuthTest
-[       OK ] PlayerTestFixture.UpdatePlayersStatsAuthTest (0 ms)
-[ RUN      ] PlayerTestFixture.UpdatePlayersStatsMissingStatsTest
-[       OK ] PlayerTestFixture.UpdatePlayersStatsMissingStatsTest (0 ms)
-[ RUN      ] PlayerTestFixture.UpdatePlayersStatsInvalidStatsTest
-[       OK ] PlayerTestFixture.UpdatePlayersStatsInvalidStatsTest (0 ms)
-[ RUN      ] PlayerTestFixture.UpdatePlayersStatsCannotAddPlayerTest
-[       OK ] PlayerTestFixture.UpdatePlayersStatsCannotAddPlayerTest (0 ms)
-[ RUN      ] PlayerTestFixture.UpdatePlayersStatsCannotUpdateStatsTest
-[       OK ] PlayerTestFixture.UpdatePlayersStatsCannotUpdateStatsTest (0 ms)
-[ RUN      ] PlayerTestFixture.UpdatePlayersStatsValidTest
-[       OK ] PlayerTestFixture.UpdatePlayersStatsValidTest (0 ms)
-[----------] 22 tests from PlayerTestFixture (6 ms total)
+[ RUN      ] PlayerTestFixture.DeletePlayerStatsAuthTest
+[       OK ] PlayerTestFixture.DeletePlayerStatsAuthTest (0 ms)
+[ RUN      ] PlayerTestFixture.DeletePlayerStatsMissingPlayersTest
+[       OK ] PlayerTestFixture.DeletePlayerStatsMissingPlayersTest (0 ms)
+[ RUN      ] PlayerTestFixture.DeletePlayerStatsValidTest
+[       OK ] PlayerTestFixture.DeletePlayerStatsValidTest (0 ms)
+[ RUN      ] PlayerTestFixture.DeletePlayerStatsInvalidDeleteTest
+[       OK ] PlayerTestFixture.DeletePlayerStatsInvalidDeleteTest (0 ms)
+[ RUN      ] PlayerTestFixture.UpdatePlayerStatsAuthTest
+[       OK ] PlayerTestFixture.UpdatePlayerStatsAuthTest (0 ms)
+[ RUN      ] PlayerTestFixture.UpdatePlayerStatsMissingStatsTest
+[       OK ] PlayerTestFixture.UpdatePlayerStatsMissingStatsTest (0 ms)
+[ RUN      ] PlayerTestFixture.UpdatePlayerStatsEmptyBodyTest
+[       OK ] PlayerTestFixture.UpdatePlayerStatsEmptyBodyTest (0 ms)
+[ RUN      ] PlayerTestFixture.UpdatePlayerStatsInvalidStatsTest
+[       OK ] PlayerTestFixture.UpdatePlayerStatsInvalidStatsTest (0 ms)
+[ RUN      ] PlayerTestFixture.UpdatePlayerStatsNeverAddedTest
+[       OK ] PlayerTestFixture.UpdatePlayerStatsNeverAddedTest (0 ms)
+[ RUN      ] PlayerTestFixture.UpdatePlayerStatsValidTest
+[       OK ] PlayerTestFixture.UpdatePlayerStatsValidTest (0 ms)
+[ RUN      ] PlayerTestFixture.PutGameAuthTest
+[       OK ] PlayerTestFixture.PutGameAuthTest (0 ms)
+[ RUN      ] PlayerTestFixture.PutGameEmptyBodyTest
+
+GMOCK WARNING:
+Uninteresting mock function call - returning default value.
+    Function call: update_game_details(1, 280-byte object <01-00 00-00 00-00 00-00 D8-39 E1-A8 FD-7F 00-00 0E-00 00-00 00-00 00-00 64-65 76-31 40-67 6D-61 69-6C 2E-63 6F-6D 00-00 F8-39 E1-A8 FD-7F 00-00 07-00 00-00 00-00 00-00 53-6B 69-70 2D-42 6F-00 ... 64-00 94-70 25-56 00-00 33-33 33-3F FD-7F 00-00 B8-3A E1-A8 FD-7F 00-00 05-00 00-00 00-00 00-00 43-61 72-64 73-00 00-00 00-3B E1-A8 FD-7F 00-00 01-00 00-00 02-00 00-00 01-6C 94-70 25-56 00-00>)
+          Returns: 280-byte object <FF-FF FF-FF 00-00 00-00 F8-32 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 18-33 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 D8-33 E1-A8 FD-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+[       OK ] PlayerTestFixture.PutGameEmptyBodyTest (0 ms)
+[ RUN      ] PlayerTestFixture.PutGameInvalidFieldsTest
+[       OK ] PlayerTestFixture.PutGameInvalidFieldsTest (0 ms)
+[ RUN      ] PlayerTestFixture.PutGameInvalidValuesTest
+[       OK ] PlayerTestFixture.PutGameInvalidValuesTest (0 ms)
+[ RUN      ] PlayerTestFixture.PutGameValidTest
+[       OK ] PlayerTestFixture.PutGameValidTest (0 ms)
+[----------] 32 tests from PlayerTestFixture (3 ms total)
 
 [----------] 2 tests from PostGetGamesTestFixture
 [ RUN      ] PostGetGamesTestFixture.Post_Games_Integration_Tests
-[       OK ] PostGetGamesTestFixture.Post_Games_Integration_Tests (555 ms)
+[       OK ] PostGetGamesTestFixture.Post_Games_Integration_Tests (552 ms)
 [ RUN      ] PostGetGamesTestFixture.Get_Games_Integration_Tests
-[       OK ] PostGetGamesTestFixture.Get_Games_Integration_Tests (603 ms)
-[----------] 2 tests from PostGetGamesTestFixture (1159 ms total)
+[       OK ] PostGetGamesTestFixture.Get_Games_Integration_Tests (566 ms)
+[----------] 2 tests from PostGetGamesTestFixture (1119 ms total)
 
-[----------] 17 tests from PlayerTestIntegrationFixture
+[----------] 27 tests from PlayerTestIntegrationFixture
 [ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersAuthTest
-[       OK ] PlayerTestIntegrationFixture.GetGamePlayersAuthTest (530 ms)
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersAuthTest (507 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersNoPlayersTest
-[       OK ] PlayerTestIntegrationFixture.GetGamePlayersNoPlayersTest (546 ms)
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersNoPlayersTest (501 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersDevOwnsMultipleGamesTest
-[       OK ] PlayerTestIntegrationFixture.GetGamePlayersDevOwnsMultipleGamesTest (775 ms)
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersDevOwnsMultipleGamesTest (655 ms)
+[ RUN      ] PlayerTestIntegrationFixture.GetGamePlayersMissingParmsTest
+[       OK ] PlayerTestIntegrationFixture.GetGamePlayersMissingParmsTest (556 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsAuthTest (508 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsAuthTest (549 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsNoPlayersTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsNoPlayersTest (507 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsNoPlayersTest (487 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsPlayersExistTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayersExistTest (595 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayersExistTest (567 ms)
+[ RUN      ] PlayerTestIntegrationFixture.AddPlayersStatsWhereStatsExistTest
+game_id: 1
+added is valid?: 1
+[       OK ] PlayerTestIntegrationFixture.AddPlayersStatsWhereStatsExistTest (532 ms)
 [ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsPlayerDoesntExistTest
-[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayerDoesntExistTest (548 ms)
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsPlayerDoesntExistTest (516 ms)
+[ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsMissingParmsTest
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsMissingParmsTest (527 ms)
+[ RUN      ] PlayerTestIntegrationFixture.AddPlayerStatsInvalidStatsFormatest
+[       OK ] PlayerTestIntegrationFixture.AddPlayerStatsInvalidStatsFormatest (520 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetPlayersStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsAuthTest (537 ms)
+[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsAuthTest (515 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetPlayersStatsMissingStatsTest
-[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsMissingStatsTest (628 ms)
+[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsMissingStatsTest (583 ms)
 [ RUN      ] PlayerTestIntegrationFixture.GetPlayersStatsValidTest
-[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsValidTest (681 ms)
+[       OK ] PlayerTestIntegrationFixture.GetPlayersStatsValidTest (621 ms)
 [ RUN      ] PlayerTestIntegrationFixture.DeletePlayersStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsAuthTest (504 ms)
+[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsAuthTest (498 ms)
 [ RUN      ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingPlayersTest
-[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingPlayersTest (695 ms)
+[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingPlayersTest (611 ms)
 [ RUN      ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingStatsTest
-[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingStatsTest (724 ms)
-[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsAuthTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsAuthTest (523 ms)
-[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsMissingStatsTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsMissingStatsTest (540 ms)
-[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsInvalidStatsTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsInvalidStatsTest (643 ms)
-[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayersStatsValidTest
-[       OK ] PlayerTestIntegrationFixture.UpdatePlayersStatsValidTest (651 ms)
-[----------] 17 tests from PlayerTestIntegrationFixture (10145 ms total)
+[       OK ] PlayerTestIntegrationFixture.DeletePlayersStatsMissingStatsTest (602 ms)
+[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayerStatsAuthTest
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayerStatsAuthTest (490 ms)
+[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayerStatsMissingStatsTest
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayerStatsMissingStatsTest (491 ms)
+[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayerStatsEmptyBodyTest
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayerStatsEmptyBodyTest (619 ms)
+[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayerStatsInvalidStatsTest
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayerStatsInvalidStatsTest (577 ms)
+[ RUN      ] PlayerTestIntegrationFixture.UpdatePlayerStatsValidTest
+[       OK ] PlayerTestIntegrationFixture.UpdatePlayerStatsValidTest (602 ms)
+[ RUN      ] PlayerTestIntegrationFixture.PutGameAuthTest
+[       OK ] PlayerTestIntegrationFixture.PutGameAuthTest (490 ms)
+[ RUN      ] PlayerTestIntegrationFixture.PutGameEmptyBodyTest
+[       OK ] PlayerTestIntegrationFixture.PutGameEmptyBodyTest (534 ms)
+[ RUN      ] PlayerTestIntegrationFixture.PutGameInvalidStatsTest
+[       OK ] PlayerTestIntegrationFixture.PutGameInvalidStatsTest (495 ms)
+[ RUN      ] PlayerTestIntegrationFixture.PutGameInvalidValuesTest
+[       OK ] PlayerTestIntegrationFixture.PutGameInvalidValuesTest (524 ms)
+[ RUN      ] PlayerTestIntegrationFixture.PutGameValidTest
+[       OK ] PlayerTestIntegrationFixture.PutGameValidTest (519 ms)
+[----------] 27 tests from PlayerTestIntegrationFixture (14700 ms total)
 
 [----------] 8 tests from GameTesting
 [ RUN      ] GameTesting.GameTest
@@ -256,33 +312,33 @@ Running main() from gmock_main.cc
 [       OK ] GameTesting.GameTest7 (0 ms)
 [ RUN      ] GameTesting.GameTest8
 [       OK ] GameTesting.GameTest8 (0 ms)
-[----------] 8 tests from GameTesting (1 ms total)
+[----------] 8 tests from GameTesting (0 ms total)
 
 [----------] 6 tests from GameGDPTestIntegrationFixture
 [ RUN      ] GameGDPTestIntegrationFixture.GameTest
-[       OK ] GameGDPTestIntegrationFixture.GameTest (300 ms)
+[       OK ] GameGDPTestIntegrationFixture.GameTest (315 ms)
 [ RUN      ] GameGDPTestIntegrationFixture.GameTest2
-[       OK ] GameGDPTestIntegrationFixture.GameTest2 (499 ms)
+[       OK ] GameGDPTestIntegrationFixture.GameTest2 (496 ms)
 [ RUN      ] GameGDPTestIntegrationFixture.GameTest3
-[       OK ] GameGDPTestIntegrationFixture.GameTest3 (556 ms)
+[       OK ] GameGDPTestIntegrationFixture.GameTest3 (507 ms)
 [ RUN      ] GameGDPTestIntegrationFixture.GameTest5
-[       OK ] GameGDPTestIntegrationFixture.GameTest5 (311 ms)
+[       OK ] GameGDPTestIntegrationFixture.GameTest5 (275 ms)
 [ RUN      ] GameGDPTestIntegrationFixture.GameTest6
-[       OK ] GameGDPTestIntegrationFixture.GameTest6 (503 ms)
+[       OK ] GameGDPTestIntegrationFixture.GameTest6 (549 ms)
 [ RUN      ] GameGDPTestIntegrationFixture.GameTest7
-[       OK ] GameGDPTestIntegrationFixture.GameTest7 (520 ms)
+[       OK ] GameGDPTestIntegrationFixture.GameTest7 (546 ms)
 [----------] 6 tests from GameGDPTestIntegrationFixture (2692 ms total)
 
 [----------] Global test environment tear-down
-[==========] 94 tests from 12 test suites ran. (28126 ms total)
-[  PASSED  ] 94 tests.
+[==========] 114 tests from 12 test suites ran. (31606 ms total)
+[  PASSED  ] 114 tests.
 ================================================================================
 Target //testing:test up-to-date:
   bazel-bin/testing/test
-INFO: Elapsed time: 49.174s, Critical Path: 38.82s
-INFO: 80 processes: 21 internal, 59 linux-sandbox.
-INFO: Build completed successfully, 80 total actions
-//testing:test                                                           PASSED in 28.2s
+INFO: Elapsed time: 38.229s, Critical Path: 37.99s
+INFO: 34 processes: 20 internal, 14 linux-sandbox.
+INFO: Build completed successfully, 34 total actions
+//testing:test                                                           PASSED in 31.6s
 
 Executed 1 out of 1 test: 1 test passes.
-INFO: Build completed successfully, 80 total actions
+INFO: Build completed successfully, 34 total actions

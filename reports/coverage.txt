@@ -1,15 +1,15 @@
 Reading data file bazel-out/_coverage/_coverage_report.dat
-Resolved relative source file path "api-endpoints/api-endpoints-lib.h" with CWD to "/home/spinel/fork/COMS_4156_Project/api-endpoints/api-endpoints-lib.h".
+Resolved relative source file path "api-endpoints/api-endpoints-lib.h" with CWD to "/home/spinel/COMS_4156_Project/api-endpoints/api-endpoints-lib.h".
 Found 5 entries.
-Found common filename prefix "/home/spinel/fork/COMS_4156_Project"
+Found common filename prefix "/home/spinel/COMS_4156_Project"
 Writing .css and .png files.
 Generating output.
 Processing file api-endpoints/api-matchmaking.cc
-Processing file api-endpoints/api-endpoints.cc
 Processing file api-endpoints/api-endpoints-lib.h
-Processing file authentication/auth-service.h
+Processing file api-endpoints/api-endpoints.cc
 Processing file authentication/auth-service.cpp
+Processing file authentication/auth-service.h
 Writing directory view page.
 Overall coverage rate:
-  lines......: 89.7% (643 of 717 lines)
-  functions..: 93.1% (27 of 29 functions)
+  lines......: 94.5% (669 of 708 lines)
+  functions..: 96.6% (28 of 29 functions)

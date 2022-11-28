@@ -1,9 +1,10 @@
-Ignoring api-endpoints/BUILD; not a valid file name (cuh, c++, c, hxx, cpp, cc, h, hpp, h++, hh, cu, cxx)
-Ignoring authentication/BUILD; not a valid file name (cuh, c++, c, hxx, cpp, cc, h, hpp, h++, hh, cu, cxx)
+Ignoring api-endpoints/BUILD; not a valid file name (cxx, cpp, cc, cuh, h, hh, hxx, c, h++, hpp, cu, c++)
+Ignoring authentication/BUILD; not a valid file name (cxx, cpp, cc, cuh, h, hh, hxx, c, h++, hpp, cu, c++)
 Skipping input 'authentication/bcrypt': Can't open for reading
 Skipping input 'authentication/jwt-cpp': Can't open for reading
-Ignoring main/BUILD; not a valid file name (cuh, c++, c, hxx, cpp, cc, h, hpp, h++, hh, cu, cxx)
-Ignoring testing/BUILD; not a valid file name (cuh, c++, c, hxx, cpp, cc, h, hpp, h++, hh, cu, cxx)
+Ignoring main/BUILD; not a valid file name (cxx, cpp, cc, cuh, h, hh, hxx, c, h++, hpp, cu, c++)
+Ignoring testing/BUILD; not a valid file name (cxx, cpp, cc, cuh, h, hh, hxx, c, h++, hpp, cu, c++)
+Ignoring testing/system-testing.sh; not a valid file name (cxx, cpp, cc, cuh, h, hh, hxx, c, h++, hpp, cu, c++)
 Done processing api-endpoints/BUILD
 Done processing api-endpoints/api-endpoints-lib.h
 Done processing api-endpoints/api-endpoints.cc
@@ -20,6 +21,7 @@ Done processing testing/BUILD
 Done processing testing/MockAPIEndPoints.h
 Done processing testing/MockAuthService.h
 Done processing testing/MockDBService.h
+Done processing testing/system-testing.sh
 Done processing testing/test-auth-routes-integration.cpp
 Done processing testing/test-auth-routes.cpp
 Done processing testing/test-auth.cpp
@@ -30,5 +32,7 @@ Done processing testing/test-get-post-games-routes-integration.cc
 Done processing testing/test-get-post-games-routes.cc
 Done processing testing/test-matchmaking-integration.cpp
 Done processing testing/test-matchmaking.cpp
+Done processing testing/test-player-endpoints 2.cpp
+Done processing testing/test-player-endpoints-integration 2.cpp
 Done processing testing/test-player-endpoints-integration.cpp
 Done processing testing/test-player-endpoints.cpp
