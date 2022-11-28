@@ -42,7 +42,7 @@ TEST_F(AuthRouteTestFixture, Authenticate_Token_Test) {
   crow::request req;
   crow::response res;
   crow::json::wvalue body;
-  std::pair<bool, std::string> result;
+  std::pair<int, std::string> result;
 
   Developer valid_developer;
   valid_developer.developer_email = "some_email@gmail.com";
@@ -68,24 +68,24 @@ TEST_F(AuthRouteTestFixture, Authenticate_Token_Test) {
   token = res.body.substr(res.body.find(":") + 2);
 
   // No Authorization Header
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
   ASSERT_EQ(result.second, "Invalid Header");
 
   // Invalid token
   req.add_header("Authorization", "Random String");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
 
   // Expired token
   req.add_header("Authorization", "Expired Token");
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, false);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 401);
 
   // Valid token
   req.add_header("Authorization", token);
-  result = api.authenticateToken(req);
-  ASSERT_EQ(result.first, true);
+  result = api.authenticateTokenGetErrorCode(req);
+  ASSERT_EQ(result.first, 200);
 }
 
 TEST_F(AuthRouteTestFixture, Developer_Owns_Game_Tests) {
@@ -230,7 +230,7 @@ TEST_F(AuthRouteTestFixture, Post_SignUp_Tests) {
   body = {{"developer_email", "some_email@gmail.com"}, {"developer_password", "some_password"}};
   req.body = body.dump();
   res = api.postSignUp(req);
-  ASSERT_EQ(res.code, 400);
+  ASSERT_EQ(res.code, 409);
   ASSERT_EQ(res.body, "Developer already exists");
 }
 
@@ -280,7 +280,7 @@ TEST_F(AuthRouteTestFixture, Post_Login_Tests) {
   body = {{"developer_email", "fake_email@gmail.com"}, {"developer_password", "wrong_password"}};
   req.body = body.dump();
   res = api.postLogin(req);
-  ASSERT_EQ(res.code, 400);
+  ASSERT_EQ(res.code, 404);
   ASSERT_EQ(res.body, "Developer does not exist");
 
   // Invalid Login (Invalid Credentials)

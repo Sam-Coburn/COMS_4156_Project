@@ -124,21 +124,6 @@ players=("${player1_email}" "${player2_email}" "${player3_email}"
 
 num_errors=0
 
-# TESTED: std::pair <int, std::string> getGames(const crow::request& req);  // Gets all client's games
-# TESTED: std::pair <int, std::string> postGames(const crow::request& req);  // Adds a list of games to client's account
-# TESTED: crow::response postSignUp(const crow::request& req);
-# TESTED: crow::response postLogin(const crow::request& req);
-# crow::response deleteLogin(const crow::request& req);
-# TESTED: virtual crow::response matchmake(const crow::request& req, Matchmaking *M);
-# TESTED: crow::response getGamePlayers(const crow::request& req, int game_id);
-# TESTED: crow::response addPlayersStats(const crow::request& req, int game_id);
-# TESTED: crow::response getPlayersStats(const crow::request& req, int game_id);
-# TESTED: crow::response deletePlayersStats(const crow::request& req, int game_id);
-# TESTED: crow::response updatePlayersStats(const crow::request& req, int game_id);
-# TESTED: crow::response getGame(const crow::request& req, int game_id);
-# TESTED: crow::response putGame(const crow::request& req, int game_id);
-# crow::response deleteGame(const crow::request& req, int game_id);
-
 # -------------------------------------------------------
 # SIGNING UP AND LOGGING IN
 # -------------------------------------------------------
@@ -181,6 +166,7 @@ status=$(
         -d "{ \"developer_email\": \"${developer1_email}\", \
             \"developer_password\": \"${developer1_password}\" }"
 )
+echo $status
 token1=${status#*:}
 
 # Developer 2 logs in
@@ -190,6 +176,7 @@ status=$(
         -d "{ \"developer_email\": \"${developer2_email}\", \
             \"developer_password\": \"${developer2_password}\" }"
 )
+echo $status
 token2=${status#*:}
 
 # Developer 3 logs in
@@ -199,6 +186,7 @@ status=$(
         -d "{ \"developer_email\": \"${developer3_email}\", \
             \"developer_password\": \"${developer3_password}\" }"
 )
+echo $status
 token3=${status#*:}
 
 # -------------------------------------------------------
@@ -209,14 +197,13 @@ echo "Developer makes sure they don't own any games yet..."
 
 # Developer 1 gets their games (shouldn't have any games yet)
 status=$(
-    curl -s -X GET ${URL}/games \
+    curl -s -w "%{http_code}" -X GET ${URL}/games \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
 
 # TEST: Developer 1 shouldn't have any games
-if [ "$status" != "Error Accessing Games: none found!" ]
-then
+if [[ $status -ne 204 ]]; then
     num_errors=$((num_errors+1))
     echo "ERROR (DeveloperDoesntOwnAnyGamesTest): Developer 1 shouldn't have any games"
 fi
@@ -272,11 +259,6 @@ status=$(
 )
 game3_id=$status
 
-# game1_id=15
-# game2_id=11
-# game3_id=12
-# game4_id=13
-
 echo "Developers get their games..."
 
 # Developer 1 gets their games
@@ -287,6 +269,7 @@ status=$(
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
+echo $status
 code=$( jq -r  '.code' <<< "${status}" )
 code=($code)
 code=${code[1]}
@@ -507,6 +490,7 @@ status=$(
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token2}"
 )
+echo $status
 code=$( jq -r  '.code' <<< "${status}" )
 code=($code)
 code=${code[1]}
@@ -624,7 +608,7 @@ game1_parameter3_weight=0.11
 game1_parameter4_weight=0.09
 
 status=$(
-    curl -s -X PUT ${URL}/game/${game1_id} \
+    curl -s -X PUT ${URL}/games/${game1_id} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}" \
         -d '{
@@ -640,11 +624,12 @@ echo "Developer confirms their game has been updated ..."
 # Developer 1 gets their game to confirm their game has been updated properly
 status=$(
     curl -s -w "%{stdout}{\"code\": %{http_code}}" \
-        -X GET ${URL}/game/${game1_id} \
+        -X GET ${URL}/games/${game1_id} \
         -H 'Accept: application/json' \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
+echo $status
 code=$( jq -r  '.code' <<< "${status}" )
 code=($code)
 code=${code[1]}
@@ -760,7 +745,7 @@ echo "Developer makes sure they don't own any players..."
 
 # Developer 1 is getting all of their players for their game (no players should exist)
 status=$(
-    curl -s -w "%{http_code}" -X GET ${URL}/game/${game1_id}/players \
+    curl -s -w "%{http_code}" -X GET ${URL}/games/${game1_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
@@ -775,7 +760,7 @@ echo "Developer 1 adds players..."
 
 # Developer 1 adds players
 status=$(
-    curl -s -w "%{http_code}" -X POST ${URL}/game/${game1_id}/players \
+    curl -s -w "%{http_code}" -X POST ${URL}/games/${game1_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}" \
         -d '{
@@ -828,10 +813,11 @@ echo "Developer 1 gets their players to confirm they were added correctly..."
 
 # Developer 1 is getting all of their players for their game
 status=$(
-    curl -s -X GET ${URL}/game/${game1_id}/players \
+    curl -s -X GET ${URL}/games/${game1_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
+echo $status
 keys=$( jq 'keys | .[]' <<< "${status}" )
 num_players=$( jq -r 'length' <<< ${status} )
 num_players=$( echo ${num_players} | awk '{print $1;}' )
@@ -925,22 +911,56 @@ player1_game_parameter1_value=25
 player2_game_parameter1_value=25
 
 status=$(
-    curl -s -X PUT ${URL}/game/${game1_id}/players \
+    curl -s -X PUT ${URL}/games/${game1_id}/players/${player1_email} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}" \
         -d '{
-            "'${player1_email}'": {
-                "game_parameter1_value": '${player1_game_parameter1_value}',
-                "game_parameter2_value": '${player1_game_parameter2_value}',
-                "game_parameter3_value": '${player1_game_parameter3_value}',
-                "game_parameter4_value": '${player1_game_parameter4_value}'
-            },
-            "'${player2_email}'": {
-                "game_parameter1_value": '${player2_game_parameter1_value}',
-                "game_parameter2_value": '${player2_game_parameter2_value}',
-                "game_parameter3_value": '${player2_game_parameter3_value}',
-                "game_parameter4_value": '${player2_game_parameter4_value}'
-            },
+            "game_parameter1_value": '${player1_game_parameter1_value}',
+            "game_parameter2_value": '${player1_game_parameter2_value}',
+            "game_parameter3_value": '${player1_game_parameter3_value}',
+            "game_parameter4_value": '${player1_game_parameter4_value}'
+        }'
+)
+
+status=$(
+    curl -s -X PUT ${URL}/games/${game1_id}/players/${player2_email} \
+        -H 'Content-Type: application/json' \
+        -H "Authorization: ${token1}" \
+        -d '{
+            "game_parameter1_value": '${player2_game_parameter1_value}',
+            "game_parameter2_value": '${player2_game_parameter2_value}',
+            "game_parameter3_value": '${player2_game_parameter3_value}',
+            "game_parameter4_value": '${player2_game_parameter4_value}'
+        }'
+)
+
+echo "Developer confirms it cannot add players that don't exist..."
+
+status=$(
+    curl -s -X PUT ${URL}/games/${game1_id}/players/${player8_email} \
+        -H 'Content-Type: application/json' \
+        -H "Authorization: ${token1}" \
+        -d '{
+            "game_parameter1_value": '${player8_game_parameter1_value}',
+            "game_parameter2_value": '${player8_game_parameter2_value}',
+            "game_parameter3_value": '${player8_game_parameter3_value}',
+            "game_parameter4_value": '${player8_game_parameter4_value}'
+        }'
+)
+echo $status
+
+if [[ "$status" != "The given player does not have ratings for this game" ]]; then
+    num_errors=$((num_errors+1))
+    echo "ERROR (UpdatedPlayerThatDoesntExistTest): Developer should not be able to update player that doesnt exist"
+fi
+
+echo "Developer 1 adds players and confirms their previously updated players were updated correctly..."
+
+status=$(
+    curl -s -X POST ${URL}/games/${game1_id}/players \
+        -H 'Content-Type: application/json' \
+        -H "Authorization: ${token1}" \
+        -d '{
             "'${player8_email}'": {
                 "game_parameter1_value": '${player8_game_parameter1_value}',
                 "game_parameter2_value": '${player8_game_parameter2_value}',
@@ -955,28 +975,25 @@ status=$(
             }
         }'
 )
-echo $status
 
-echo "Developer 1 confirms their players have been updated and added correctly..."
+players=(${players[@]} "${player8_email}" "${player9_email}")
 
 # Developer 1 is getting all of their players for their game
 status=$(
-    curl -s -X GET ${URL}/game/${game1_id}/players \
+    curl -s -X GET ${URL}/games/${game1_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
+echo $status
 keys=$( jq 'keys | .[]' <<< "${status}" )
 num_players=$( jq -r 'length' <<< ${status} )
 num_players=$( echo ${num_players} | awk '{print $1;}' )
 
-# TEST: Developer 1 should have 2 new players and updated stats for players: 
-#       yoshi@gmail.com and waluigi@gmail.com
-players=(${players[@]} "${player8_email}" "${player9_email}")
-
+# TEST: Developer 1 should have updated stats for players
 missing_players=""
 if [[ $num_players -ne ${#players[@]} ]]; then
     num_errors=$((num_errors+1))
-    echo "ERROR  (UpdatedPlayerStatsAndAddedPlayersTest): Developer 1 has incorrect number of players for game1. Expected" ${#players[@]}", but received" $num_players
+    echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect number of players for game1. Expected" ${#players[@]}", but received" $num_players
 else
     for k in $keys
     do
@@ -1041,26 +1058,26 @@ else
 
             if [[ $key_game_parameter1_value -ne $player_game_parameter1_value ]]; then
                 num_errors=$((num_errors+1))
-                echo "ERROR  (UpdatedPlayerStatsAndAddedPlayersTest): Developer 1 has incorrect parameter1 value for player" $k". Expected" $player_game_parameter1_value", but received" $key_game_parameter1_value
+                echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter1 value for player" $k". Expected" $player_game_parameter1_value", but received" $key_game_parameter1_value
             fi
             if [[ $key_game_parameter2_value -ne $player_game_parameter2_value ]]; then
                 num_errors=$((num_errors+1))
-                echo "ERROR  (UpdatedPlayerStatsAndAddedPlayersTest): Developer 1 has incorrect parameter2 value for player" $k". Expected" $player_game_parameter2_value", but received" $key_game_parameter2_value
+                echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter2 value for player" $k". Expected" $player_game_parameter2_value", but received" $key_game_parameter2_value
             fi
             if [[ $key_game_parameter3_value -ne $player_game_parameter3_value ]]; then
                 num_errors=$((num_errors+1))
-                echo "ERROR  (UpdatedPlayerStatsAndAddedPlayersTest): Developer 1 has incorrect parameter3 value for player" $k". Expected" $player_game_parameter3_value", but received" $key_game_parameter3_value
+                echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter3 value for player" $k". Expected" $player_game_parameter3_value", but received" $key_game_parameter3_value
             fi
             if [[ $key_game_parameter4_value -ne $player_game_parameter4_value ]]; then
                 num_errors=$((num_errors+1))
-                echo "ERROR  (UpdatedPlayerStatsAndAddedPlayersTest): Developer 1 has incorrect parameter4 value for player" $k". Expected" $player_game_parameter4_value", but received" $key_game_parameter4_value
+                echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter4 value for player" $k". Expected" $player_game_parameter4_value", but received" $key_game_parameter4_value
             fi
         fi
     done
 
     if [[ -n $missing_players ]]; then
         num_errors=$((num_errors+1))
-        echo "ERROR  (UpdatedPlayerStatsAndAddedPlayersTest): Developer 1 should have the following players, but they are not found in the database:" $missing_players
+        echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 should have the following players, but they are not found in the database:" $missing_players
     fi
 fi
 
@@ -1068,21 +1085,16 @@ echo "Developer deletes a player..."
 
 # Developer 1 is deleting 1 player
 status=$(
-    curl -s -X DELETE ${URL}/game/${game1_id}/players \
-        -H 'Content-Type: application/json' \
+    curl -s -X DELETE ${URL}/games/${game1_id}/players/${player2_email} \
         -H "Authorization: ${token1}" \
-        -d '{
-            "player_emails": [
-                "'${player2_email}'"
-            ]
-        }'
 )
+echo $status
 
 echo "Developer tries to access the player it just deleted..."
 
 # Developer 1 is trying to access the player it just deleted
 status=$(
-    curl -s -w "%{http_code}" -X GET ${URL}/game/${game1_id}/players/${player2_email} \
+    curl -s -w "%{http_code}" -X GET ${URL}/games/${game1_id}/players/${player2_email} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}" \
         -d '{
@@ -1091,9 +1103,10 @@ status=$(
             ]
         }'
 )
+echo $status
 
 # TEST: Developer 1 should not be able to access this player
-if [ $status -ne 204 ]; then
+if [[ $status -ne 204 ]]; then
     num_errors=$((num_errors+1))
     echo "ERROR (AccessingDeletedPlayerTest): Player stats for deleted player ${player2_email} should not be accessed"
 fi
@@ -1130,6 +1143,7 @@ status=$(
             "matchmaking_type": "basic"
         }'
 )
+echo $status
 code=$( jq -r '.code' <<< ${status} )
 code=($code)
 code=${code[1]}
@@ -1197,7 +1211,7 @@ fi
 echo "Performing advanced matchmaking where there are no other games in this category..."
 
 status=$(
-    curl -s -X POST ${URL}/game/${game3_id}/players \
+    curl -s -X POST ${URL}/games/${game3_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token2}" \
         -d '{
@@ -1215,6 +1229,7 @@ status=$(
             }
         }'
 )
+echo $status
 
 player_ranked1=${player7_email} # 0.6(50) + 0.2(1) + 0.11(0) + 0.09(0) = 30.2
 player_ranked2=${player3_email} # 0.6(40) + 0.2(3) + 0.11(1) + 0.09(2) = 24.89
@@ -1322,7 +1337,7 @@ game4_id=$status
 # Developer 3 adds players which are also present in developer 1's game1, and is in game with same category
 echo "Developer adds players..."
 status=$(
-    curl -s -X POST ${URL}/game/${game4_id}/players \
+    curl -s -X POST ${URL}/games/${game4_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token3}" \
         -d '{
@@ -1346,6 +1361,7 @@ status=$(
             }
         }'
 )
+echo $status
 
 player_ranked1=${player3_email} # avg rank = (2 + 2) / 2 = 2 (speed: 100(0.8) + 5(0.2) = 81)
 player_ranked2=${player4_email} # avg rank = (4 + 1) / 2 = 2.5 (speed: 150(0.8) + 4(0.2) = 120.8)
@@ -1371,6 +1387,7 @@ status=$(
             "matchmaking_type": "advanced"
         }'
 )
+echo $status
 code=$( jq -r '.code' <<< ${status} )
 code=($code)
 code=${code[1]}
@@ -1437,91 +1454,92 @@ fi
 # CLEANING UP
 # -------------------------------------------------------
 
-data_json=''
-for p in ${players[@]}; do
-    if [[ -z $data_json ]]; then
-        data_json='["'${p}'"'
-    else
-        data_json=''${data_json}', "'${p}'"'
-    fi
-done
-data_json="${data_json}]"
-data_json='{
-    "player_emails": '$data_json'
-}'
-
 # Delete players for game1
 echo "Deleting player stats..."
-status=$(
-    curl -s -X DELETE ${URL}/game/${game1_id}/players \
-        -H 'Content-Type: application/json' \
-        -H "Authorization: ${token1}" \
-        -d "$data_json"
-)
-echo $status
+for p in ${players[@]}; do
+    echo "Deleting player p: ${p}"
+    status=$(
+        curl -s -X DELETE ${URL}/games/${game1_id}/players/${p} \
+            -H "Authorization: ${token1}" \
+    )
+    echo $status
+done
 
 # Developer 1 gets all players for their game to make sure all were deleted
 status=$(
-    curl -s -w "%{http_code}" -X GET ${URL}/game/${game1_id}/players \
+    curl -s -w "%{http_code}" -X GET ${URL}/games/${game1_id}/players \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
-echo $status
 
 # TEST: No players should exist for this game
 if [ $status != 204 ]; then
     num_errors=$((num_errors+1))
-    echo "ERROR (GameDoesntHavePlayersTest): There should be no players for this game with game_id ${game1_id}"
+    echo "ERROR (GameDeletedAllPlayersTest): There should be no players for this game with game_id ${game1_id}"
 fi
 
-players3_json='{
-    "player_emails": [ "'${player1_email}'", "'${player3_email}'", "'${player4_email}'" ]
-}'
+players3=($player1_email, $player3_email, $player4_email)
+
+echo "Players for game 3"
+status=$(
+    curl -s -X GET ${URL}/games/${game3_id}/players \
+        -H "Authorization: ${token1}"
+)
+echo $status
+
+echo "Players for game 4"
+status=$(
+    curl -s -X GET ${URL}/games/${game4_id}/players \
+        -H "Authorization: ${token1}"
+)
+echo $status
 
 # Delete players for game3
-status=$(
-    curl -s -X DELETE ${URL}/game/${game3_id}/players \
-        -H 'Content-Type: application/json' \
-        -H "Authorization: ${token2}" \
-        -d "$players3_json"
-)
-echo $status
+for p in ${players3[@]}; do
+    echo "Deleting player p: ${p}"
+    status=$(
+        curl -s -X DELETE ${URL}/games/${game3_id}/players/${p} \
+            -H "Authorization: ${token2}" \
+    )
+    echo $status
+done
 
 # Delete players for game4
-status=$(
-    curl -s -X DELETE ${URL}/game/${game4_id}/players \
-        -H 'Content-Type: application/json' \
-        -H "Authorization: ${token3}" \
-        -d "$players3_json"
-)
-echo $status
+for p in ${players3[@]}; do
+    echo "Deleting player p: ${p}"
+    status=$(
+        curl -s -X DELETE ${URL}/games/${game4_id}/players/${p} \
+            -H "Authorization: ${token3}" \
+    )
+    echo $status
+done
 
 echo "Delete games..."
 
 # Delete games
 status=$(
-    curl -s -X DELETE ${URL}/game/${game1_id} \
+    curl -s -X DELETE ${URL}/games/${game1_id} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
 echo $status
 
 status=$(
-    curl -s -X DELETE ${URL}/game/${game2_id} \
+    curl -s -X DELETE ${URL}/games/${game2_id} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token1}"
 )
 echo $status
 
 status=$(
-    curl -s -X DELETE ${URL}/game/${game3_id} \
+    curl -s -X DELETE ${URL}/games/${game3_id} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token2}"
 )
 echo $status
 
 status=$(
-    curl -s -X DELETE ${URL}/game/${game4_id} \
+    curl -s -X DELETE ${URL}/games/${game4_id} \
         -H 'Content-Type: application/json' \
         -H "Authorization: ${token3}"
 )
@@ -1529,13 +1547,12 @@ echo $status
 
 # Developer 1 gets their games (shouldn't have games anymore)
 status=$(
-    curl -s -X GET ${URL}/games \
-        -H 'Content-Type: application/json' \
+    curl -s -w "%{http_code}" -X GET ${URL}/games \
         -H "Authorization: ${token1}"
 )
 
 # TEST: Developer 1 shouldn't have any games
-if [ "$status" != "Error Accessing Games: none found!" ]
+if [ "$status" -ne 204 ]
 then
     num_errors=$((num_errors+1))
     echo "ERROR (DeveloperDeletedGamesTest): Developer 1 shouldn't have any games"
@@ -1543,13 +1560,12 @@ fi
 
 # Developer 3 gets their games (shouldn't have games anymore)
 status=$(
-    curl -s -X GET ${URL}/games \
-        -H 'Content-Type: application/json' \
+    curl -s -w "%{http_code}" -X GET ${URL}/games \
         -H "Authorization: ${token3}"
 )
 
 # TEST: Developer 3 shouldn't have any games
-if [ "$status" != "Error Accessing Games: none found!" ]
+if [ "$status" -ne 204 ]
 then
     num_errors=$((num_errors+1))
     echo "ERROR (DeveloperDeletedGamesTest): Developer 3 shouldn't have any games"
@@ -1593,4 +1609,12 @@ echo $status
 if [[ "$status" != "Developer does not exist" ]]; then
     num_errors=$((num_errors+1))
     echo "ERROR (DeveloperLoggingInAfterDeletionTest): Developer shouldn't be able to log-in; account was recently deleted"
+fi
+
+# Exiting script if there is any errors
+if [[ $num_errors -gt 0 ]]; then
+    echo "***** SCRIPT FAILED WITH ${num_errors} ERRORS *****"
+    exit 1
+else 
+    echo "***** SCRIPT SUCCEEDED *****"
 fi

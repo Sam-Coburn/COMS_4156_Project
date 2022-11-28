@@ -18,7 +18,7 @@ enum POST_GAME_BODY_KIND { COPY, EMPTY, BAD_JSON, ROOT_NULL, NOT_NAME_VAL_PAIRS,
 // return a valid Game_Details struct for poker
 Game_Details static defaultVal();
 // generate input for a PostGames endpoint body, according to the flag POST_GAME_BODY_KIND
-std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
+static std::string genPostGamesBody(POST_GAME_BODY_KIND kind, Game_Details gm);
 
 // test desired response from PostGames vs actual response
 static void testAgainstBody(APIEndPoints* api,
@@ -273,10 +273,10 @@ TEST(Get_Post_Games_Suite, Get_Games_Tests) {
   testAgainstBodyGet(&api, COPY, bdy, "", 401);
 
   bdy = "Developer does not exist";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, COPY, bdy, "", 404);
 
   bdy = "Error Accessing Games: none found!";
-  testAgainstBodyGet(&api, COPY, bdy, "", 401);
+  testAgainstBodyGet(&api, COPY, bdy, "", 204);
 
   bdy = ss.str();  // case success
   testAgainstBodyGet(&api, COPY, bdy, "", 200);
