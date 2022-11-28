@@ -362,16 +362,16 @@ crow::response APIEndPoints::addPlayersStats(const crow::request& req, int game_
             pgr.player_email = pemail;
             pgr.game_id = game_id;
 
-            std::vector<std::pair<int*, std::string>> game_parms;
+            std::vector<std::pair<float*, std::string>> game_parms;
             game_parms.push_back(std::make_pair(&pgr.game_parameter1_value, "game_parameter1_value"));
             game_parms.push_back(std::make_pair(&pgr.game_parameter2_value, "game_parameter2_value"));
             game_parms.push_back(std::make_pair(&pgr.game_parameter3_value, "game_parameter3_value"));
             game_parms.push_back(std::make_pair(&pgr.game_parameter4_value, "game_parameter4_value"));
 
-            for (std::pair<int*, std::string> game_parm : game_parms) {
+            for (std::pair<float*, std::string> game_parm : game_parms) {
                 if (player_info.has(game_parm.second)) {
                     try {
-                        *game_parm.first = player_info[game_parm.second].i();
+                        *game_parm.first = player_info[game_parm.second].d();
                     } catch(...) {
                         std::string error = "No stats were added due to incorrect format of player value for player " +
                             pemail + " and parameter " + game_parm.second;
@@ -512,16 +512,16 @@ crow::response APIEndPoints::updatePlayerStats(const crow::request& req, int gam
         return crow::response(403, error);
     }
 
-    std::vector<std::pair<int*, std::string>> game_parms;
+    std::vector<std::pair<float*, std::string>> game_parms;
     game_parms.push_back(std::make_pair(&pgr.game_parameter1_value, "game_parameter1_value"));
     game_parms.push_back(std::make_pair(&pgr.game_parameter2_value, "game_parameter2_value"));
     game_parms.push_back(std::make_pair(&pgr.game_parameter3_value, "game_parameter3_value"));
     game_parms.push_back(std::make_pair(&pgr.game_parameter4_value, "game_parameter4_value"));
 
-    for (std::pair<int*, std::string> game_parm : game_parms) {
+    for (std::pair<float*, std::string> game_parm : game_parms) {
         if (user_req.has(game_parm.second)) {
             try {
-                *game_parm.first = user_req[game_parm.second].i();
+                *game_parm.first = user_req[game_parm.second].d();
             } catch(...) {
                 std::string error = "No stats were updated due to incorrect format of player value for player "
                     + player_email + " and parameter " + game_parm.second;

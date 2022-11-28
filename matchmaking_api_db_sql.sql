@@ -39,10 +39,10 @@ CREATE TABLE Game_Details (
 CREATE TABLE Player_Game_Ratings (
   	player_email varchar(255) NOT NULL,
     game_id int NOT NULL,
-  	game_parameter1_value int,
-  	game_parameter2_value int,
-  	game_parameter3_value int,
-  	game_parameter4_value int,
+  	game_parameter1_value float,
+  	game_parameter2_value float,
+  	game_parameter3_value float,
+  	game_parameter4_value float,
   	PRIMARY KEY (player_email, game_id),
   	FOREIGN KEY (player_email) REFERENCES Players(player_email) ON DELETE CASCADE ON UPDATE CASCADE,
   	FOREIGN KEY (game_id) REFERENCES Game_Details(game_id) ON DELETE CASCADE ON UPDATE CASCADE

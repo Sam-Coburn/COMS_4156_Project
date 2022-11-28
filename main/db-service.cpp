@@ -70,10 +70,10 @@ bool DBService::setUpDatabase() {
     "Player_Game_Ratings ("
     "player_email varchar(255) NOT NULL, "
     "game_id int NOT NULL, "
-    "game_parameter1_value int, "
-    "game_parameter2_value int, "
-    "game_parameter3_value int, "
-    "game_parameter4_value int, "
+    "game_parameter1_value float, "
+    "game_parameter2_value float, "
+    "game_parameter3_value float, "
+    "game_parameter4_value float, "
     "PRIMARY KEY (player_email, game_id), "
     "FOREIGN KEY (player_email) REFERENCES Players(player_email) "
     "ON DELETE CASCADE ON UPDATE CASCADE, "
@@ -333,13 +333,13 @@ DBService::get_player_game_rating(std::string player_email, int game_id) {
       PGR.player_email = res->getString("player_email");
       PGR.game_id = std::stoi(res->getString("game_id"));
       PGR.game_parameter1_value =
-      std::stoi(res->getString("game_parameter1_value"));
+      std::stof(res->getString("game_parameter1_value"));
       PGR.game_parameter2_value =
-      std::stoi(res->getString("game_parameter2_value"));
+      std::stof(res->getString("game_parameter2_value"));
       PGR.game_parameter3_value =
-      std::stoi(res->getString("game_parameter3_value"));
+      std::stof(res->getString("game_parameter3_value"));
       PGR.game_parameter4_value =
-      std::stoi(res->getString("game_parameter4_value"));
+      std::stof(res->getString("game_parameter4_value"));
       PGR.is_valid = true;
       LOG(INFO) << PGR.toString() << std::endl;
     }
@@ -406,25 +406,25 @@ get_joined_player_game_rating(std::string player_email, int game_id) {
       JPGR.game_parameter1_weight =
       std::stof(res->getString("game_parameter1_weight"));
       JPGR.game_parameter1_value =
-      std::stoi(res->getString("game_parameter1_value"));
+      std::stof(res->getString("game_parameter1_value"));
 
       JPGR.game_parameter2_name = res->getString("game_parameter2_name");
       JPGR.game_parameter2_weight =
       std::stof(res->getString("game_parameter2_weight"));
       JPGR.game_parameter2_value =
-      std::stoi(res->getString("game_parameter2_value"));
+      std::stof(res->getString("game_parameter2_value"));
 
       JPGR.game_parameter3_name = res->getString("game_parameter3_name");
       JPGR.game_parameter3_weight =
       std::stof(res->getString("game_parameter3_weight"));
       JPGR.game_parameter3_value =
-      std::stoi(res->getString("game_parameter3_value"));
+      std::stof(res->getString("game_parameter3_value"));
 
       JPGR.game_parameter4_name = res->getString("game_parameter4_name");
       JPGR.game_parameter4_weight =
       std::stof(res->getString("game_parameter4_weight"));
       JPGR.game_parameter4_value =
-      std::stoi(res->getString("game_parameter4_value"));
+      std::stof(res->getString("game_parameter4_value"));
 
       JPGR.category = res->getString("category");
       JPGR.players_per_team = std::stoi(res->getString("players_per_team"));
@@ -641,25 +641,25 @@ DBService::get_all_player_game_ratings_for_game(int game_id) {
       jpgr.game_parameter1_weight =
       std::stof(res->getString("game_parameter1_weight"));
       jpgr.game_parameter1_value =
-      std::stoi(res->getString("game_parameter1_value"));
+      std::stof(res->getString("game_parameter1_value"));
 
       jpgr.game_parameter2_name = res->getString("game_parameter2_name");
       jpgr.game_parameter2_weight =
       std::stof(res->getString("game_parameter2_weight"));
       jpgr.game_parameter2_value =
-      std::stoi(res->getString("game_parameter2_value"));
+      std::stof(res->getString("game_parameter2_value"));
 
       jpgr.game_parameter3_name = res->getString("game_parameter3_name");
       jpgr.game_parameter3_weight =
       std::stof(res->getString("game_parameter3_weight"));
       jpgr.game_parameter3_value =
-      std::stoi(res->getString("game_parameter3_value"));
+      std::stof(res->getString("game_parameter3_value"));
 
       jpgr.game_parameter4_name = res->getString("game_parameter4_name");
       jpgr.game_parameter4_weight =
       std::stof(res->getString("game_parameter4_weight"));
       jpgr.game_parameter4_value =
-      std::stoi(res->getString("game_parameter4_value"));
+      std::stof(res->getString("game_parameter4_value"));
 
       jpgr.category = res->getString("category");
       jpgr.players_per_team = std::stoi(res->getString("players_per_team"));
@@ -935,10 +935,10 @@ Player_Game_Ratings DBService::add_player_rating(Player_Game_Ratings PGR) {
     // Fill in relevant variables in statement and execute
     prep_stmt->setString(1, PGR.player_email);
     prep_stmt->setInt(2, PGR.game_id);
-    prep_stmt->setInt(3, PGR.game_parameter1_value);
-    prep_stmt->setInt(4, PGR.game_parameter2_value);
-    prep_stmt->setInt(5, PGR.game_parameter3_value);
-    prep_stmt->setInt(6, PGR.game_parameter4_value);
+    prep_stmt->setDouble(3, PGR.game_parameter1_value);
+    prep_stmt->setDouble(4, PGR.game_parameter2_value);
+    prep_stmt->setDouble(5, PGR.game_parameter3_value);
+    prep_stmt->setDouble(6, PGR.game_parameter4_value);
     prep_stmt->executeUpdate();
 
     PGR.is_valid = true;
@@ -1365,10 +1365,10 @@ Player_Game_Ratings DBService::update_player_rating(std::string player_email, in
     // Fill in relevant variables in statement and execute
     prep_stmt->setString(1, PGR.player_email);
     prep_stmt->setInt(2, PGR.game_id);
-    prep_stmt->setInt(3, PGR.game_parameter1_value);
-    prep_stmt->setInt(4, PGR.game_parameter2_value);
-    prep_stmt->setInt(5, PGR.game_parameter3_value);
-    prep_stmt->setInt(6, PGR.game_parameter4_value);
+    prep_stmt->setDouble(3, PGR.game_parameter1_value);
+    prep_stmt->setDouble(4, PGR.game_parameter2_value);
+    prep_stmt->setDouble(5, PGR.game_parameter3_value);
+    prep_stmt->setDouble(6, PGR.game_parameter4_value);
     prep_stmt->setString(7, player_email);
     prep_stmt->setInt(8, game_id);
     prep_stmt->executeUpdate();
