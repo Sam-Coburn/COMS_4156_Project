@@ -808,7 +808,7 @@ status=$(
             }
         }'
 )
-
+echo $status
 echo "Developer 1 gets their players to confirm they were added correctly..."
 
 # Developer 1 is getting all of their players for their game
