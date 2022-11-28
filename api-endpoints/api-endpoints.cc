@@ -147,13 +147,13 @@ std::pair <int, std::string> APIEndPoints::postGames(const crow::request& req) {
         Json::StreamWriterBuilder builder;
         const std::string s = Json::writeString(builder, v);
         int dotCount = 0;
-        size_t i = 0;
+        uint64_t start = 0;  // starting index starts at 0
         // negative float
-        if ((s.size() > 2) && (s[i] == '-')) {
-          i = 1;
+        if ((s.size() > 2) && (s[start] == '-')) {
+          start = 1;  // if negative, skip first elt of string
         }
         // any other case
-        for (; i < s.size(); i++) {
+        for (uint64_t i = start; i < s.size(); i++) {
           if (s[i] == '.') {
             dotCount++;
           } else if (!std::isdigit(s[i])) {

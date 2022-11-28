@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Variables
-# URL=http://127.0.0.1:80
-URL=http://0.0.0.0:8080
+#URL=http://0.0.0.0:8080 # docker
+URL=http://0.0.0.0:18080
 
 developer1_email='nintendo.systest@gmail.com'
 developer1_password='nintendo_systest_pwd'
@@ -756,6 +756,8 @@ if [ $status != 204 ]; then
     echo "ERROR (GameDoesntHavePlayersTest): There should be no players for this game with game_id ${game1_id}"
 fi
 
+echo "taking a nap for github actions..."
+sleep 2
 echo "Developer 1 adds players..."
 
 # Developer 1 adds players
@@ -808,7 +810,7 @@ status=$(
             }
         }'
 )
-
+echo $status
 echo "Developer 1 gets their players to confirm they were added correctly..."
 
 # Developer 1 is getting all of their players for their game

@@ -261,7 +261,27 @@ We use [glog](https://github.com/google/glog#severity-levels) for our logging ou
 
 ### Style Checker
 Once cpplint is installed run:
-`cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/* &> style-check.txt`
+`cpplint --linelength=120 api-endpoints/* authentication/* main/* testing/*`
+
+### Static Analysis
+We use two command line tools for static analysis, flawfinder and cppchecker.
+Once flawfinder is installed run:
+`flawfinder api-endpoints/* authentication/auth-service.h authentication/auth-service.cpp main/* testing/*`
+Once cppchecker is installed run:
+```
+cppcheck --language=c++ api-endpoints/*.cc api-endpoints/*.cpp api-endpoints/*.h	      
+cppcheck --language=c++ authentication/auth-service.h authentication/auth-service.cpp	
+cppcheck --language=c++ main/*.cc main/*.cpp main/*.h	     
+cppcheck --language=c++ testing/*.cc testing/*.cpp testing/*.h
+```
+## Continuous Integration Reports
+We run `bash ./reports/generateCIReports.sh` to generate reports and store them in the [reports](./reports/) directory. Links to individual reports below.
+- [cpplint report](./reports/style-check.txt)
+- [flawfinder report](./reports/flawfinder.txt)
+- [cppcheck report](./reports/cppcheck.txt)
+- [regression tests report](./reports/test-report.txt)
+- [coverage report](./reports/coverage.txt)
+- [coverage report as interactive webpage](./genhtml/index.html)
 
 ## Install Bazel
 **Platform: Debian 11**
