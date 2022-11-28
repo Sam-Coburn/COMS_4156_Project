@@ -302,7 +302,7 @@ TEST_F(PlayerTestIntegrationFixture, GetGamePlayersAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.getGamePlayers(req, game1.game_id);
-    EXPECT_EQ(res.code, 401);
+    EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -404,7 +404,7 @@ TEST_F(PlayerTestIntegrationFixture, AddPlayerStatsAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.addPlayersStats(req, game1.game_id);
-    EXPECT_EQ(res.code, 401);
+    EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -455,39 +455,6 @@ TEST_F(PlayerTestIntegrationFixture, AddPlayerStatsPlayersExistTest) {
     res = api.addPlayersStats(req, pgr1.game->game_id);
     EXPECT_EQ(res.code, 200);
     EXPECT_EQ(res.body, "Player stats were added");
-}
-
-/* Adding player stats for already existing players who already have stats */
-TEST_F(PlayerTestIntegrationFixture, AddPlayersStatsWhereStatsExistTest) {
-    signUp(pgr1.game->developer->developer);
-    logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
-    createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
-    DB.add_player(p1);
-    pgr1.pgr.game_id = pgr1.game->game_id;
-    std::cout << "game_id: " + std::to_string(pgr1.pgr.game_id) + "\n";
-    Player_Game_Ratings pgr_added = DB.add_player_rating(pgr1.pgr);
-    std::cout << "added is valid?: " + std::to_string(pgr_added.is_valid) + "\n";
-
-    body = {
-        {pgr1.pgr.player_email, {
-            {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
-            {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
-            {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
-            {"game_parameter4_value", pgr1.pgr.game_parameter4_value},
-        }},
-        {pgr2.pgr.player_email, {
-            {"game_parameter1_value", pgr2.pgr.game_parameter1_value},
-            {"game_parameter2_value", pgr2.pgr.game_parameter2_value},
-            {"game_parameter3_value", pgr2.pgr.game_parameter3_value},
-            {"game_parameter4_value", pgr2.pgr.game_parameter4_value},
-        }}
-    };
-    req.body = body.dump();
-    res = api.addPlayersStats(req, pgr1.game->game_id);
-    EXPECT_EQ(res.code, 409);
-    std::string error = "No stats were added due to player " + pgr1.pgr.player_email
-        + " which already exists. Please use update stats endpoint instead.";
-    EXPECT_EQ(res.body, error);
 }
 
 /* Adding player stats for player which doesn't exist yet */
@@ -560,15 +527,15 @@ TEST_F(PlayerTestIntegrationFixture, GetPlayersStatsAuthTest) {
     // Invalid header
     body = {};
     req.body = body.dump();
-    res = api.getPlayerStats(req, game1.game_id, "");
-    EXPECT_EQ(res.code, 401);
+    res = api.getPlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
     logIn(dev2.developer, &(dev2.token));
     // Developer does not own game
     req.add_header("Authorization", game2.developer->token);
-    res = api.getPlayerStats(req, game1.game_id, "");
+    res = api.getPlayersStats(req, game1.game_id);
     std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
     EXPECT_EQ(res.body, error);
@@ -581,11 +548,23 @@ TEST_F(PlayerTestIntegrationFixture, GetPlayersStatsMissingStatsTest) {
     createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
     addPlayersStatsForGame(pgr1.game->game_id);
 
-    res = api.getPlayerStats(req, pgr1.game->game_id, pgr_invalid1.pgr.player_email);
-    EXPECT_EQ(res.code, 404);
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.pgr.player_email);
+    player_emails.push_back(pgr_invalid1.pgr.player_email);
+    player_emails.push_back(pgr_invalid2.pgr.player_email);
+    player_emails.push_back(pgr2.pgr.player_email);
+
+    body = {};
+    body["player_emails"] = player_emails;
+    req.body = body.dump();
+    res = api.getPlayersStats(req, pgr1.game->game_id);
+    EXPECT_EQ(res.code, 204);
     // Players can be listed in any order as long as both players are stated as invalid
-    std::string missing_players1 = "The given player does not have ratings for this game";
-    EXPECT_TRUE(res.body == missing_players1);
+    std::string missing_players1 = "The following players do not exist " + pgr_invalid1.pgr.player_email +
+        ", "  + pgr_invalid2.pgr.player_email;
+    std::string missing_players2 = "The following players do not exist " + pgr_invalid2.pgr.player_email +
+        ", "  + pgr_invalid1.pgr.player_email;
+    EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
 }
 
 /* Player game ratings are valid */
@@ -595,15 +574,30 @@ TEST_F(PlayerTestIntegrationFixture, GetPlayersStatsValidTest) {
     createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
     addPlayersStatsForGame(pgr1.game->game_id);
 
-    crow::json::wvalue expected_return = {
-        {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
-        {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
-        {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
-        {"game_parameter4_value", pgr1.pgr.game_parameter4_value},
-    };
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.pgr.player_email);
+    player_emails.push_back(pgr2.pgr.player_email);
+    player_emails.push_back(pgr3.pgr.player_email);
 
-    res = api.getPlayerStats(req, pgr1.game->game_id, pgr1.pgr.player_email);
+    body["player_emails"] = player_emails;
+    req.body = body.dump();
+
+    return_body[pgr1.pgr.player_email]["game_parameter1_value"] = pgr1.pgr.game_parameter1_value;
+    return_body[pgr1.pgr.player_email]["game_parameter2_value"] = pgr1.pgr.game_parameter2_value;
+    return_body[pgr1.pgr.player_email]["game_parameter3_value"] = pgr1.pgr.game_parameter3_value;
+    return_body[pgr1.pgr.player_email]["game_parameter4_value"] = pgr1.pgr.game_parameter4_value;
+    return_body[pgr2.pgr.player_email]["game_parameter1_value"] = pgr2.pgr.game_parameter1_value;
+    return_body[pgr2.pgr.player_email]["game_parameter2_value"] = pgr2.pgr.game_parameter2_value;
+    return_body[pgr2.pgr.player_email]["game_parameter3_value"] = pgr2.pgr.game_parameter3_value;
+    return_body[pgr2.pgr.player_email]["game_parameter4_value"] = pgr2.pgr.game_parameter4_value;
+    return_body[pgr3.pgr.player_email]["game_parameter1_value"] = pgr3.pgr.game_parameter1_value;
+    return_body[pgr3.pgr.player_email]["game_parameter2_value"] = pgr3.pgr.game_parameter2_value;
+    return_body[pgr3.pgr.player_email]["game_parameter3_value"] = pgr3.pgr.game_parameter3_value;
+    return_body[pgr3.pgr.player_email]["game_parameter4_value"] = pgr3.pgr.game_parameter4_value;
+
+    res = api.getPlayersStats(req, pgr1.game->game_id);
     EXPECT_EQ(res.code, 200);
+    EXPECT_EQ(res.body, return_body.dump());
 }
 
 /*
@@ -618,18 +612,38 @@ TEST_F(PlayerTestIntegrationFixture, DeletePlayersStatsAuthTest) {
     // Invalid header
     body = {};
     req.body = body.dump();
-    res = api.deletePlayerStats(req, game1.game_id, "");
-    EXPECT_EQ(res.code, 401);
+    res = api.deletePlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
     logIn(dev2.developer, &(dev2.token));
     // Developer does not own game
     req.add_header("Authorization", game2.developer->token);
-    res = api.deletePlayerStats(req, game1.game_id, "");
+    res = api.deletePlayersStats(req, game1.game_id);
     std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
     EXPECT_EQ(res.body, error);
+}
+
+/* Player emails in incorrect format */
+TEST_F(PlayerTestIntegrationFixture, DeletePlayersStatsInvalidEmailFormatTest) {
+    signUp(pgr1.game->developer->developer);
+    logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
+    createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
+    addPlayersStatsForGame(pgr1.game->game_id);
+
+    std::vector<std::vector<std::string>> player_emails_vector;
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.pgr.player_email);
+    player_emails_vector.push_back(player_emails);
+
+    body = {};
+    body["player_emails"] = player_emails_vector;
+    req.body = body.dump();
+    res = api.deletePlayersStats(req, pgr1.game->game_id);
+    EXPECT_EQ(res.code, 417);
+    EXPECT_EQ(res.body, "No stats were deleted due to incorrect format of emails");
 }
 
 /* Attempting to delete multiple players that don't exist */
@@ -639,11 +653,23 @@ TEST_F(PlayerTestIntegrationFixture, DeletePlayersStatsMissingPlayersTest) {
     createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
     addPlayersStatsForGame(pgr1.game->game_id);
 
-    res = api.deletePlayerStats(req, pgr1.game->game_id, pgr_invalid1.pgr.player_email);
-    EXPECT_EQ(res.code, 404);
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.pgr.player_email);
+    player_emails.push_back(pgr_invalid1.pgr.player_email);
+    player_emails.push_back(pgr_invalid2.pgr.player_email);
+    player_emails.push_back(pgr2.pgr.player_email);
+
+    body = {};
+    body["player_emails"] = player_emails;
+    req.body = body.dump();
+    res = api.deletePlayersStats(req, pgr1.game->game_id);
+    EXPECT_EQ(res.code, 500);
     // Players can be listed in any order as long as both players are stated as invalid
-    std::string missing_players1 = "The given player does not have ratings for this game";
-    EXPECT_TRUE(res.body == missing_players1);
+    std::string missing_players1 = "No player stats were deleted since the following players do not exist: " +
+        pgr_invalid1.pgr.player_email + ", "  + pgr_invalid2.pgr.player_email;
+    std::string missing_players2 = "No player stats were deleted since the following players do not exist: " +
+        pgr_invalid2.pgr.player_email + ", "  + pgr_invalid1.pgr.player_email;
+    EXPECT_TRUE((res.body == missing_players1) || (res.body == missing_players2));
 }
 
 /* Player game ratings are valid */
@@ -653,7 +679,15 @@ TEST_F(PlayerTestIntegrationFixture, DeletePlayersStatsMissingStatsTest) {
     createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
     addPlayersStatsForGame(pgr1.game->game_id);
 
-    res = api.deletePlayerStats(req, pgr1.game->game_id, pgr1.pgr.player_email);
+    std::vector<std::string> player_emails;
+    player_emails.push_back(pgr1.pgr.player_email);
+    player_emails.push_back(pgr2.pgr.player_email);
+    player_emails.push_back(pgr3.pgr.player_email);
+
+    body = {};
+    body["player_emails"] = player_emails;
+    req.body = body.dump();
+    res = api.deletePlayersStats(req, pgr1.game->game_id);
     EXPECT_EQ(res.code, 200);
     EXPECT_EQ(res.body, "Player stats were removed");
 }
@@ -666,96 +700,131 @@ TEST_F(PlayerTestIntegrationFixture, DeletePlayersStatsMissingStatsTest) {
 */
 
 /* Testing invalid developer authentication */
-TEST_F(PlayerTestIntegrationFixture, UpdatePlayerStatsAuthTest) {
+TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsAuthTest) {
     // Invalid header
     body = {};
     req.body = body.dump();
-    res = api.updatePlayerStats(req, game1.game_id, "");
-    EXPECT_EQ(res.code, 401);
+    res = api.updatePlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
     logIn(dev2.developer, &(dev2.token));
     // Developer does not own game
     req.add_header("Authorization", game2.developer->token);
-    res = api.updatePlayerStats(req, game1.game_id, "");
+    res = api.updatePlayersStats(req, game1.game_id);
     std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
     EXPECT_EQ(res.body, error);
 }
 
-/* Player rating does not exist */
-TEST_F(PlayerTestIntegrationFixture, UpdatePlayerStatsMissingStatsTest) {
-    signUp(pgr1.game->developer->developer);
-    logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
-    createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
-
-    // Performing test
-    body = {
-        {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
-        {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
-        {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
-        {"game_parameter4_value", pgr1.pgr.game_parameter4_value}
-    };
-    req.body = body.dump();
-    res = api.updatePlayerStats(req, game1.game_id, pgr1.pgr.player_email);
-    EXPECT_EQ(res.code, 404);
-    EXPECT_EQ(res.body, "The given player does not have ratings for this game");
-}
-
 /* Not giving any stats to update */
-TEST_F(PlayerTestIntegrationFixture, UpdatePlayerStatsEmptyBodyTest) {
+TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsMissingStatsTest) {
     signUp(pgr1.game->developer->developer);
     logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
     createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
-    addPlayersStatsForGame(pgr1.game->game_id);
 
     // Performing test
     body = {};
     req.body = body.dump();
-    res = api.updatePlayerStats(req, game1.game_id, pgr1.pgr.player_email);
+    res = api.updatePlayersStats(req, game1.game_id);
+    EXPECT_EQ(res.code, 204);
+    EXPECT_EQ(res.body, "No player stats were updated due to empty request");
+}
+
+/* Attempting to update players stats with invalid stats */
+TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsInvalidStatsTest) {
+    signUp(pgr1.game->developer->developer);
+    logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
+    createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
+    addPlayersStatsForGame(pgr1.game->game_id);
+
+    body = {
+        {pgr1.pgr.player_email, {
+            {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr1.pgr.game_parameter4_value}
+        }},
+        {pgr2.pgr.player_email, {
+            {"game_parameter2_value", pgr2.pgr.game_parameter2_value}
+        }},
+        {pgr3.pgr.player_email, {
+            {"game_parameter1_value", pgr3.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr3.pgr.game_parameter2_value},
+            {"game_parameter3_value", "bad"},
+            {"game_parameter4_value", pgr3.pgr.game_parameter4_value}
+        }},
+    };
+    req.body = body.dump();
+    res = api.updatePlayersStats(req, pgr1.game->game_id);
+    EXPECT_EQ(res.code, 417);
+    std::string error = "No stats were updated due to incorrect format of player value for player "
+                            + pgr3.pgr.player_email + " and parameter game_parameter3_value";
+    EXPECT_EQ(res.body, error);
+}
+
+/* Valid update */
+TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsValidTest) {
+    signUp(pgr1.game->developer->developer);
+    logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
+    createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
+    addPlayersStatsForGame(pgr1.game->game_id);
+
+    body = {
+        {pgr1.pgr.player_email, {
+            {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr1.pgr.game_parameter4_value}
+        }},
+        {pgr2.pgr.player_email, {
+            {"game_parameter1_value", pgr2.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr2.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr2.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr2.pgr.game_parameter4_value}
+        }},
+        {pgr3.pgr.player_email, {
+            {"game_parameter1_value", pgr3.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr3.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr3.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr3.pgr.game_parameter4_value}
+        }}
+    };
+    req.body = body.dump();
+    res = api.updatePlayersStats(req, pgr1.game->game_id);
     EXPECT_EQ(res.code, 200);
     EXPECT_EQ(res.body, "Player stats were updated");
 }
 
-
-/* Attempting to update players stats with invalid stats */
-TEST_F(PlayerTestIntegrationFixture, UpdatePlayerStatsInvalidStatsTest) {
+/* Valid update but for players whose player rating was never added */
+TEST_F(PlayerTestIntegrationFixture, UpdatePlayersStatsNeverAddedTest) {
     signUp(pgr1.game->developer->developer);
     logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
     createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
-    addPlayersStatsForGame(pgr1.game->game_id);
 
-    // Performing test
     body = {
-        {"game_parameter1_value", "abc"},
-        {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
-        {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
-        {"game_parameter4_value", pgr1.pgr.game_parameter4_value}
+        {pgr1.pgr.player_email, {
+            {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr1.pgr.game_parameter4_value}
+        }},
+        {pgr2.pgr.player_email, {
+            {"game_parameter1_value", pgr2.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr2.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr2.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr2.pgr.game_parameter4_value}
+        }},
+        {pgr3.pgr.player_email, {
+            {"game_parameter1_value", pgr3.pgr.game_parameter1_value},
+            {"game_parameter2_value", pgr3.pgr.game_parameter2_value},
+            {"game_parameter3_value", pgr3.pgr.game_parameter3_value},
+            {"game_parameter4_value", pgr3.pgr.game_parameter4_value}
+        }}
     };
     req.body = body.dump();
-    res = api.updatePlayerStats(req, game1.game_id, pgr1.pgr.player_email);
-    EXPECT_EQ(res.code, 417);
-    EXPECT_EQ(res.body, "No stats were updated due to incorrect format of player value for player "
-        + pgr1.pgr.player_email + " and parameter game_parameter1_value");
-}
-
-/* Valid update */
-TEST_F(PlayerTestIntegrationFixture, UpdatePlayerStatsValidTest) {
-    signUp(pgr1.game->developer->developer);
-    logIn(pgr1.game->developer->developer, &(pgr1.game->developer->token));
-    createGame(pgr1.game->game, pgr1.game->developer->token, &pgr1.game->game_id);
-    addPlayersStatsForGame(pgr1.game->game_id);
-
-    // Performing test
-    body = {
-        {"game_parameter1_value", pgr1.pgr.game_parameter1_value},
-        {"game_parameter2_value", pgr1.pgr.game_parameter2_value},
-        {"game_parameter3_value", pgr1.pgr.game_parameter3_value},
-        {"game_parameter4_value", pgr1.pgr.game_parameter4_value}
-    };
-    req.body = body.dump();
-    res = api.updatePlayerStats(req, game1.game_id, pgr1.pgr.player_email);
+    res = api.updatePlayersStats(req, pgr1.game->game_id);
     EXPECT_EQ(res.code, 200);
     EXPECT_EQ(res.body, "Player stats were updated");
 }
@@ -773,7 +842,7 @@ TEST_F(PlayerTestIntegrationFixture, PutGameAuthTest) {
     body = {};
     req.body = body.dump();
     res = api.putGame(req, game1.game_id);
-    EXPECT_EQ(res.code, 401);
+    EXPECT_EQ(res.code, 400);
     EXPECT_EQ(res.body, "Invalid Header");
 
     signUp(dev2.developer);
@@ -781,8 +850,9 @@ TEST_F(PlayerTestIntegrationFixture, PutGameAuthTest) {
     // Developer does not own game
     req.add_header("Authorization", game2.developer->token);
     res = api.putGame(req, game1.game_id);
+    std::string error = "Do not have access to game with game_id " + std::to_string(game1.game_id);
     EXPECT_EQ(res.code, 403);
-    EXPECT_EQ(res.body, "Invalid authentication");
+    EXPECT_EQ(res.body, error);
 }
 
 /* Not giving any game information to update a game */
@@ -795,8 +865,8 @@ TEST_F(PlayerTestIntegrationFixture, PutGameEmptyBodyTest) {
     body = {};
     req.body = body.dump();
     res = api.putGame(req, game1.game_id);
-    EXPECT_EQ(res.code, 200);
-    EXPECT_EQ(res.body, "Added requested game details");
+    EXPECT_EQ(res.code, 204);
+    EXPECT_EQ(res.body, "Game was not updated due to empty request");
 }
 
 /* Attempting to update game with invalid fields */

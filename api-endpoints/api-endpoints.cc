@@ -283,10 +283,18 @@ crow::response APIEndPoints::getGamePlayers(const crow::request& req, int game_i
             if (p.is_valid) {
                 std::string e = p.player_email;
                 players[e]["game_id"] = p.game_id;
-                players[e][p.game_parameter1_name] = p.game_parameter1_value;
-                players[e][p.game_parameter2_name] = p.game_parameter2_value;
-                players[e][p.game_parameter3_name] = p.game_parameter3_value;
-                players[e][p.game_parameter4_name] = p.game_parameter4_value;
+                if (p.game_parameter1_name != "") {
+                    players[e][p.game_parameter1_name] = p.game_parameter1_value;
+                }
+                if (p.game_parameter1_name != "") {
+                    players[e][p.game_parameter2_name] = p.game_parameter2_value;
+                }
+                if (p.game_parameter3_name != "") {
+                    players[e][p.game_parameter3_name] = p.game_parameter3_value;
+                }
+                if (p.game_parameter4_name != "") {
+                    players[e][p.game_parameter4_name] = p.game_parameter4_value;
+                }
             } else {
                 std::string error = "Internal Server Error due to player " + p.player_email;
                 return crow::response(500, error);
@@ -326,13 +334,22 @@ crow::response APIEndPoints::addPlayersStats(const crow::request& req, int game_
             return crow::response(403, error);
         }
 
+        // Making sure the provided stats are in the valid format and can be added
         crow::json::rvalue player_info;
-        bool added = false;
+        std::vector<Player_Game_Ratings> pgrs;
         for (std::string pemail : user_req.keys()) {
-            // If player does not already exist, add player to database
             Player p = DB->get_player(pemail);
             p.player_email = pemail;
-            if (!p.is_valid) {
+            if (p.is_valid) {
+                // If player stats already exists, should be using update player stats function
+                Player_Game_Ratings pgr = DB->get_player_game_rating(pemail, game_id);
+                if (pgr.is_valid) {
+                    std::string error = "No stats were added due to player " + pemail
+                        + " which already exists. Please use update stats endpoint instead.";
+                    return crow::response(409, error);
+                }
+            } else {
+                // If player does not already exist, add player to database
                 p = DB->add_player(p);
                 if (!p.is_valid) {
                     std::string error = "Internal Server Error due to player " + pemail;
@@ -344,21 +361,40 @@ crow::response APIEndPoints::addPlayersStats(const crow::request& req, int game_
             Player_Game_Ratings pgr;
             pgr.player_email = pemail;
             pgr.game_id = game_id;
-            pgr.game_parameter1_value = player_info["game_parameter1_value"].i();
-            pgr.game_parameter2_value = player_info["game_parameter2_value"].i();
-            pgr.game_parameter3_value = player_info["game_parameter3_value"].i();
-            pgr.game_parameter4_value = player_info["game_parameter4_value"].i();
 
+            std::vector<std::pair<int*, std::string>> game_parms;
+            game_parms.push_back(std::make_pair(&pgr.game_parameter1_value, "game_parameter1_value"));
+            game_parms.push_back(std::make_pair(&pgr.game_parameter2_value, "game_parameter2_value"));
+            game_parms.push_back(std::make_pair(&pgr.game_parameter3_value, "game_parameter3_value"));
+            game_parms.push_back(std::make_pair(&pgr.game_parameter4_value, "game_parameter4_value"));
+
+            for (std::pair<int*, std::string> game_parm : game_parms) {
+                if (player_info.has(game_parm.second)) {
+                    try {
+                        *game_parm.first = player_info[game_parm.second].i();
+                    } catch(...) {
+                        std::string error = "No stats were added due to incorrect format of player value for player " +
+                            pemail + " and parameter " + game_parm.second;
+                        return crow::response(417, error);
+                    }
+                } else {
+                    *game_parm.first = 0;
+                }
+            }
+
+            pgrs.push_back(pgr);
+        }
+
+        // Adding stats that we know they are in the correct format
+        for (Player_Game_Ratings pgr : pgrs) {
             pgr = DB->add_player_rating(pgr);
             if (!pgr.is_valid) {
                 std::string error = "Internal Server Error due to player " + pgr.player_email;
                 return crow::response(500, error);
-            } else {
-                added = true;
             }
         }
 
-        if (added) {
+        if (pgrs.size() > 0) {
             return crow::response(200, "Player stats were added");
         } else {
             return crow::response(200, "No player stats added due to empty request");
@@ -440,7 +476,7 @@ crow::response APIEndPoints::deletePlayerStats(const crow::request& req, int gam
 
     pgr = DB->remove_player_rating(player_email, game_id);
     if (!pgr.is_valid) {
-      return crow::response(500, "Something went wrong");
+      return crow::response(500, "Internal Server Error");
     }
 
     return crow::response(200, "Player stats were removed");
@@ -462,6 +498,7 @@ crow::response APIEndPoints::deletePlayerStats(const crow::request& req, int gam
 crow::response APIEndPoints::updatePlayerStats(const crow::request& req, int game_id, std::string player_email) {
   try {
     crow::json::rvalue user_req = crow::json::load(req.body);
+    Player_Game_Ratings pgr;
 
     // Authenticating user
     std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
@@ -475,20 +512,39 @@ crow::response APIEndPoints::updatePlayerStats(const crow::request& req, int gam
         return crow::response(403, error);
     }
 
-    Player_Game_Ratings pgr;
-    pgr = DB->get_player_game_rating(player_email, game_id);
-    if (!pgr.is_valid) {
-      return crow::response(404, "The given player does not have ratings for this game");
+    std::vector<std::pair<int*, std::string>> game_parms;
+    game_parms.push_back(std::make_pair(&pgr.game_parameter1_value, "game_parameter1_value"));
+    game_parms.push_back(std::make_pair(&pgr.game_parameter2_value, "game_parameter2_value"));
+    game_parms.push_back(std::make_pair(&pgr.game_parameter3_value, "game_parameter3_value"));
+    game_parms.push_back(std::make_pair(&pgr.game_parameter4_value, "game_parameter4_value"));
+
+    for (std::pair<int*, std::string> game_parm : game_parms) {
+        if (user_req.has(game_parm.second)) {
+            try {
+                *game_parm.first = user_req[game_parm.second].i();
+            } catch(...) {
+                std::string error = "No stats were updated due to incorrect format of player value for player "
+                    + player_email + " and parameter " + game_parm.second;
+                return crow::response(417, error);
+            }
+        } else {
+            *game_parm.first = 0;
+        }
     }
 
-    pgr.game_parameter1_value = user_req["game_parameter1_value"].i();
-    pgr.game_parameter2_value = user_req["game_parameter2_value"].i();
-    pgr.game_parameter3_value = user_req["game_parameter3_value"].i();
-    pgr.game_parameter4_value = user_req["game_parameter4_value"].i();
-    pgr = DB->update_player_rating(player_email, game_id, pgr);
+    pgr.player_email = player_email;
+    pgr.game_id = game_id;
 
-    if (!pgr.is_valid) {
-      return crow::response(500, "Something went wrong");
+    Player_Game_Ratings pgr_existing_player = DB->get_player_game_rating(player_email, game_id);
+    if (pgr_existing_player.is_valid) {
+        pgr = DB->update_player_rating(player_email, game_id, pgr);
+
+        if (!pgr.is_valid) {
+            std::string error = "Internal Server Error due to player " + pgr.player_email;
+            return crow::response(500, error);
+        }
+    } else {
+        return crow::response(404, "The given player does not have ratings for this game");
     }
 
     return crow::response(200, "Player stats were updated");
@@ -579,7 +635,7 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
       // Authentication
       std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
       if (tokenInfo.first != 200) {
-        return crow::response(tokenInfo.first, tokenInfo.second);;
+        return crow::response(tokenInfo.first, tokenInfo.second);
       }
 
       developer_email = tokenInfo.second;
@@ -710,14 +766,14 @@ crow::response APIEndPoints::matchmake(const crow::request& req, Matchmaking* M)
 
 // return everything about the game details to the user except game_id and developer_email
 crow::response APIEndPoints::getGame(const crow::request& req, int game_id) {
-  // authentication from bandaid
-  std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
-  if (tokenInfo.first != 200) {
-    return crow::response(tokenInfo.first, tokenInfo.second);
-  }
-  std::string developer_email = tokenInfo.second;
-  // ^^ added by bandaid ^^
-      Game_Details game_details;
+    // Authentication
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+    if (tokenInfo.first != 200) {
+        return crow::response(tokenInfo.first, tokenInfo.second);
+    }
+
+    std::string developer_email = tokenInfo.second;
+    Game_Details game_details;
     try {
       crow::json::rvalue user = crow::json::load(req.body);
       if (!developerOwnsGame(developer_email, game_id)) {
@@ -757,72 +813,72 @@ crow::response APIEndPoints::getGame(const crow::request& req, int game_id) {
 
 // create set for PUT request to not reset all elements and to catch errors
 crow::response APIEndPoints::putGame(const crow::request& req, int game_id) {
-  // authentication from bandaid
-  std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
-  if (tokenInfo.first != 200) {
-    return crow::response(tokenInfo.first, tokenInfo.second);
-  }
-  std::string developer_email = tokenInfo.second;
-  // ^^ added by bandaid ^^
-  try {
-      crow::json::rvalue game_body = crow::json::load(req.body);
-      if (!developerOwnsGame(developer_email, game_id)) {
-        return crow::response(403, "Invalid authentication");
-      }
-      std::set<std::string> all_keys = {"game_name",
-      "game_parameter1_name", "game_parameter1_weight",
-      "game_parameter2_name", "game_parameter2_weight",
-      "game_parameter3_name", "game_parameter3_weight",
-      "game_parameter4_name", "game_parameter4_weight",
-      "category", "players_per_team", "teams_per_match"};
+    // Authentication
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+    if (tokenInfo.first != 200) {
+        return crow::response(tokenInfo.first, tokenInfo.second);
+    }
 
-      Game_Details game_details;
-      for (std::string p : game_body.keys()) {
-        game_details.game_id = game_id;
-        if (p == "game_name") {
-          game_details.game_name = game_body["game_name"].s();
-        } else if (p == "game_parameter1_name") {
-          game_details.game_parameter1_name = game_body["game_parameter1_name"].s();
-        } else if (p == "game_parameter1_weight") {
-          game_details.game_parameter1_weight = game_body["game_parameter1_weight"].d();
-        } else if (p == "game_parameter2_name") {
-          game_details.game_parameter2_name = game_body["game_parameter2_name"].s();
-        } else if (p == "game_parameter2_weight") {
-          game_details.game_parameter2_weight = game_body["game_parameter2_weight"].d();
-        } else if (p == "game_parameter3_name") {
-          game_details.game_parameter3_name = game_body["game_parameter3_name"].s();
-        } else if (p == "game_parameter3_weight") {
-          game_details.game_parameter3_weight = game_body["game_parameter3_weight"].d();
-        } else if (p == "game_parameter4_name") {
-          game_details.game_parameter4_name = game_body["game_parameter4_name"].s();
-        } else if (p == "game_parameter4_weight") {
-          game_details.game_parameter4_weight = game_body["game_parameter4_weight"].d();
-        } else if (p == "category") {
-          game_details.category = game_body["category"].s();
-        } else if (p == "players_per_team") {
-          game_details.players_per_team = game_body["players_per_team"].i();
-        } else if (p == "teams_per_match") {
-          game_details.teams_per_match = game_body["teams_per_match"].i();
+    std::string developer_email = tokenInfo.second;
+    try {
+        crow::json::rvalue game_body = crow::json::load(req.body);
+        if (!developerOwnsGame(developer_email, game_id)) {
+            return crow::response(403, "Invalid authentication");
         }
-      }
-      game_details.developer_email = developer_email;
-      DB->update_game_details(game_id, game_details);
-      return crow::response(200, "Added requested game details");
+        std::set<std::string> all_keys = {"game_name",
+        "game_parameter1_name", "game_parameter1_weight",
+        "game_parameter2_name", "game_parameter2_weight",
+        "game_parameter3_name", "game_parameter3_weight",
+        "game_parameter4_name", "game_parameter4_weight",
+        "category", "players_per_team", "teams_per_match"};
+
+        Game_Details game_details = DB->get_game_details(game_id);
+        for (std::string p : game_body.keys()) {
+            game_details.game_id = game_id;
+            if (p == "game_name") {
+            game_details.game_name = game_body["game_name"].s();
+            } else if (p == "game_parameter1_name") {
+            game_details.game_parameter1_name = game_body["game_parameter1_name"].s();
+            } else if (p == "game_parameter1_weight") {
+            game_details.game_parameter1_weight = game_body["game_parameter1_weight"].d();
+            } else if (p == "game_parameter2_name") {
+            game_details.game_parameter2_name = game_body["game_parameter2_name"].s();
+            } else if (p == "game_parameter2_weight") {
+            game_details.game_parameter2_weight = game_body["game_parameter2_weight"].d();
+            } else if (p == "game_parameter3_name") {
+            game_details.game_parameter3_name = game_body["game_parameter3_name"].s();
+            } else if (p == "game_parameter3_weight") {
+            game_details.game_parameter3_weight = game_body["game_parameter3_weight"].d();
+            } else if (p == "game_parameter4_name") {
+            game_details.game_parameter4_name = game_body["game_parameter4_name"].s();
+            } else if (p == "game_parameter4_weight") {
+            game_details.game_parameter4_weight = game_body["game_parameter4_weight"].d();
+            } else if (p == "category") {
+            game_details.category = game_body["category"].s();
+            } else if (p == "players_per_team") {
+            game_details.players_per_team = game_body["players_per_team"].i();
+            } else if (p == "teams_per_match") {
+            game_details.teams_per_match = game_body["teams_per_match"].i();
+            }
+        }
+        game_details.developer_email = developer_email;
+        DB->update_game_details(game_id, game_details);
+        return crow::response(200, "Added requested game details");
     } catch(...) {
-      return crow::response(400, "Invalid request body");
+    return crow::response(400, "Invalid request body");
     }
 }
 
 
 crow::response APIEndPoints::deleteGame(const crow::request& req, int game_id) {
-  // authentication from bandaid
-  std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
-  if (tokenInfo.first != 200) {
-    return crow::response(tokenInfo.first, tokenInfo.second);
-  }
-  std::string developer_email = tokenInfo.second;
-  // ^^ added by bandaid ^^
-      Game_Details game_details;
+    // Authentication
+    std::pair<int, std::string> tokenInfo = authenticateTokenGetErrorCode(req);
+    if (tokenInfo.first != 200) {
+        return crow::response(tokenInfo.first, tokenInfo.second);
+    }
+
+    std::string developer_email = tokenInfo.second;
+    Game_Details game_details;
     try {
       crow::json::rvalue x = crow::json::load(req.body);
       if (!developerOwnsGame(developer_email, game_id)) {

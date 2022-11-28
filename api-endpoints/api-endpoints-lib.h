@@ -50,7 +50,12 @@ class APIEndPoints {
     APIEndPoints() : DB(new DBService()), auth(new AuthService()), onHeap(true) {}  // default constructor
     APIEndPoints(DBService* db, AuthService *auth, bool dbOnHeap = false) :
         DB(db), auth(auth), onHeap(dbOnHeap) {}
-    ~APIEndPoints() {if (onHeap) { delete DB; delete auth;}}
+    ~APIEndPoints() {
+        if (onHeap) {
+            delete DB;
+            delete auth;
+        }
+    }
 
     // All API Endpoints
     std::pair <int, std::string> getGames(const crow::request& req);  // Gets all client's games
