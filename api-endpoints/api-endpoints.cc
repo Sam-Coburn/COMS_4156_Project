@@ -153,7 +153,7 @@ std::pair <int, std::string> APIEndPoints::postGames(const crow::request& req) {
           i = 1;
         }
         // any other case
-        for (i; i < s.size(); i++) {
+        for (; i < s.size(); i++) {
           if (s[i] == '.') {
             dotCount++;
           } else if (!std::isdigit(s[i])) {

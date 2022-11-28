@@ -148,12 +148,14 @@ TEST(MatchmakingTests,  Matchmaking_Endpoint_Tests_Set2) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
     player_1.game_parameter2_value = 0;
     player_1.game_parameter3_value = 0;
     player_1.game_parameter4_value = 0;
+    player_1.is_valid = true;
 
     Developer valid_developer;
     valid_developer.developer_email = "developer@gmail.com";
@@ -291,12 +293,14 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set1) {
     player_1.game_parameter2_value = 0;
     player_1.game_parameter3_value = 0;
     player_1.game_parameter4_value = 0;
+    player_1.is_valid = true;
 
     Player_Game_Ratings player_2;
     player_2.game_parameter1_value = 1000;
     player_2.game_parameter2_value = 0;
     player_2.game_parameter3_value = 0;
     player_2.game_parameter4_value = 0;
+    player_2.is_valid = true;
 
     EXPECT_CALL(DB, get_game_details(_))
     .WillRepeatedly(Return(chess));
@@ -348,12 +352,14 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set2) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
     player_1.game_parameter2_value = 0;
     player_1.game_parameter3_value = 0;
     player_1.game_parameter4_value = 0;
+    player_1.is_valid = true;
 
     EXPECT_CALL(DB, get_game_details(_))
     .WillRepeatedly(Return(chess));
@@ -394,24 +400,28 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set3) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Player_Game_Ratings player_1;
     player_1.game_parameter1_value = 2000;
     player_1.game_parameter2_value = 0;
     player_1.game_parameter3_value = 0;
     player_1.game_parameter4_value = 0;
+    player_1.is_valid = true;
 
     Player_Game_Ratings player_2;
     player_2.game_parameter1_value = 1000;
     player_2.game_parameter2_value = 0;
     player_2.game_parameter3_value = 0;
     player_2.game_parameter4_value = 0;
+    player_2.is_valid = true;
 
     Player_Game_Ratings player_3;
     player_3.game_parameter1_value = 0;
     player_3.game_parameter2_value = 0;
     player_3.game_parameter3_value = 0;
     player_3.game_parameter4_value = 0;
+    player_3.is_valid = true;
 
     EXPECT_CALL(DB, get_game_details(_))
     .WillRepeatedly(Return(chess));
@@ -472,6 +482,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set4) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -481,6 +492,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set4) {
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
     checkers.category = "Strategy";
+    checkers.is_valid = true;
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -491,12 +503,14 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set4) {
     player_1_chess.game_parameter2_value = 0;
     player_1_chess.game_parameter3_value = 0;
     player_1_chess.game_parameter4_value = 0;
+    player_1_chess.is_valid = true;
 
     Player_Game_Ratings player_2_chess;
     player_2_chess.game_parameter1_value = 1000;
     player_2_chess.game_parameter2_value = 0;
     player_2_chess.game_parameter3_value = 0;
     player_2_chess.game_parameter4_value = 0;
+    player_2_chess.is_valid = true;
 
     Player_Game_Ratings null_player;
     null_player.is_valid = false;
@@ -555,6 +569,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set5) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -564,6 +579,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set5) {
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
     checkers.category = "Strategy";
+    checkers.is_valid = true;
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -574,18 +590,21 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set5) {
     player_1_chess.game_parameter2_value = 0;
     player_1_chess.game_parameter3_value = 0;
     player_1_chess.game_parameter4_value = 0;
+    player_1_chess.is_valid = true;
 
     Player_Game_Ratings player_1_checkers;
     player_1_checkers.game_parameter1_value = 2000;
     player_1_checkers.game_parameter2_value = 0;
     player_1_checkers.game_parameter3_value = 0;
     player_1_checkers.game_parameter4_value = 0;
+    player_1_checkers.is_valid = true;
 
     Player_Game_Ratings player_2_chess;
     player_2_chess.game_parameter1_value = 1000;
     player_2_chess.game_parameter2_value = 0;
     player_2_chess.game_parameter3_value = 0;
     player_2_chess.game_parameter4_value = 0;
+    player_2_chess.is_valid = true;
 
     Player_Game_Ratings null_player;
     null_player.is_valid = false;
@@ -645,6 +664,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set6) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -654,6 +674,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set6) {
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
     checkers.category = "Strategy";
+    checkers.is_valid = true;
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -664,18 +685,21 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set6) {
     player_1_chess.game_parameter2_value = 0;
     player_1_chess.game_parameter3_value = 0;
     player_1_chess.game_parameter4_value = 0;
+    player_1_chess.is_valid = true;
 
     Player_Game_Ratings player_2_chess;
     player_2_chess.game_parameter1_value = 1000;
     player_2_chess.game_parameter2_value = 0;
     player_2_chess.game_parameter3_value = 0;
     player_2_chess.game_parameter4_value = 0;
+    player_2_chess.is_valid = true;
 
     Player_Game_Ratings player_2_checkers;
     player_2_checkers.game_parameter1_value = 2000;
     player_2_checkers.game_parameter2_value = 0;
     player_2_checkers.game_parameter3_value = 0;
     player_2_checkers.game_parameter4_value = 0;
+    player_2_checkers.is_valid = true;
 
     Player_Game_Ratings null_player;
     null_player.is_valid = false;
@@ -735,6 +759,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set7) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -744,6 +769,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set7) {
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
     checkers.category = "Strategy";
+    checkers.is_valid = true;
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -754,24 +780,28 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set7) {
     player_1_chess.game_parameter2_value = 0;
     player_1_chess.game_parameter3_value = 0;
     player_1_chess.game_parameter4_value = 0;
+    player_1_chess.is_valid = true;
 
     Player_Game_Ratings player_1_checkers;
     player_1_checkers.game_parameter1_value = 500;
     player_1_checkers.game_parameter2_value = 0;
     player_1_checkers.game_parameter3_value = 0;
     player_1_checkers.game_parameter4_value = 0;
+    player_1_checkers.is_valid = true;
 
     Player_Game_Ratings player_2_chess;
     player_2_chess.game_parameter1_value = 1000;
     player_2_chess.game_parameter2_value = 0;
     player_2_chess.game_parameter3_value = 0;
     player_2_chess.game_parameter4_value = 0;
+    player_2_chess.is_valid = true;
 
     Player_Game_Ratings player_2_checkers;
     player_2_checkers.game_parameter1_value = 2000;
     player_2_checkers.game_parameter2_value = 0;
     player_2_checkers.game_parameter3_value = 0;
     player_2_checkers.game_parameter4_value = 0;
+    player_2_checkers.is_valid = true;
 
     EXPECT_CALL(DB, get_game_details(_))
     .WillRepeatedly(Return(chess));
@@ -828,6 +858,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set8) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -838,6 +869,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set8) {
     checkers.teams_per_match = 2;
     checkers.category = "Strategy";
     checkers.category = "Strategy";
+    checkers.is_valid = true;
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -848,30 +880,35 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set8) {
     player_1_chess.game_parameter2_value = 0;
     player_1_chess.game_parameter3_value = 0;
     player_1_chess.game_parameter4_value = 0;
+    player_1_chess.is_valid = true;
 
     Player_Game_Ratings player_1_checkers;
     player_1_checkers.game_parameter1_value = 500;
     player_1_checkers.game_parameter2_value = 0;
     player_1_checkers.game_parameter3_value = 0;
     player_1_checkers.game_parameter4_value = 0;
+    player_1_checkers.is_valid = true;
 
     Player_Game_Ratings player_2_chess;
     player_2_chess.game_parameter1_value = 1000;
     player_2_chess.game_parameter2_value = 0;
     player_2_chess.game_parameter3_value = 0;
     player_2_chess.game_parameter4_value = 0;
+    player_2_chess.is_valid = true;
 
     Player_Game_Ratings player_2_checkers;
     player_2_checkers.game_parameter1_value = 2000;
     player_2_checkers.game_parameter2_value = 0;
     player_2_checkers.game_parameter3_value = 0;
     player_2_checkers.game_parameter4_value = 0;
+    player_2_checkers.is_valid = true;
 
     Player_Game_Ratings player_3_chess;
     player_3_chess.game_parameter1_value = 1;
     player_3_chess.game_parameter2_value = 0;
     player_3_chess.game_parameter3_value = 0;
     player_3_chess.game_parameter4_value = 0;
+    player_3_chess.is_valid = true;
 
     Player_Game_Ratings null_player;
     null_player.is_valid = false;
@@ -940,6 +977,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set9) {
     chess.players_per_team = 1;
     chess.teams_per_match = 2;
     chess.category = "Strategy";
+    chess.is_valid = true;
 
     Game_Details checkers;
     checkers.game_parameter1_weight = 1;
@@ -949,6 +987,7 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set9) {
     checkers.players_per_team = 1;
     checkers.teams_per_match = 2;
     checkers.category = "Strategy";
+    checkers.is_valid = true;
 
     std::vector<Game_Details> all_games;
     all_games.push_back(chess);
@@ -959,12 +998,14 @@ TEST(MatchmakingTests, Matchmaking_Backend_Tests_Set9) {
     player_1_chess.game_parameter2_value = 0;
     player_1_chess.game_parameter3_value = 0;
     player_1_chess.game_parameter4_value = 0;
+    player_1_chess.is_valid = true;
 
     Player_Game_Ratings player_1_checkers;
     player_1_checkers.game_parameter1_value = 500;
     player_1_checkers.game_parameter2_value = 0;
     player_1_checkers.game_parameter3_value = 0;
     player_1_checkers.game_parameter4_value = 0;
+    player_1_checkers.is_valid = true;
 
     EXPECT_CALL(DB, get_game_details(_))
     .WillRepeatedly(Return(chess));

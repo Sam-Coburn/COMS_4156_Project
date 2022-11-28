@@ -118,14 +118,6 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `player_email:string`
   - Authorization Header: `Bearer <API-Key>`
 
-- `DELETE /games/{game_id}/players/{player_email}`
-  - Description:
-    Removes player's stats for a game.
-  - Request Parameters:
-    - `game_id:int`
-    - `player_email:string`
-  - Authorization Header: `Bearer <API-Key>`
-
 - `PUT /games/{game_id}/players/{player_email}`
   - Description:
     Updates player's stats for a game.
@@ -138,6 +130,16 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `game_parameter2_value:float`
     - `game_parameter3_value:float`
     - `game_parameter4_value:float`
+    
+- `DELETE /games/{game_id}/players/{player_email}`
+  - Description:
+    Removes player's stats for a game.
+  - Request Parameters:
+    - `game_id:int`
+    - `player_email:string`
+  - Authorization Header: `Bearer <API-Key>`
+
+
       
 ## Build + Run
 Inside top-level project directory, do
