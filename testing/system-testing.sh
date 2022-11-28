@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Variables
-# URL=http://127.0.0.1:80
-URL=http://0.0.0.0:8080
+#URL=http://0.0.0.0:8080 # docker
+URL=http://0.0.0.0:18080
 
 developer1_email='nintendo.systest@gmail.com'
 developer1_password='nintendo_systest_pwd'
