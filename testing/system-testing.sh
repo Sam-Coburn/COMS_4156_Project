@@ -66,7 +66,7 @@ game4_teams_per_match=4
 game4_players_per_team=1
 
 player1_email="yoshi@gmail.com"
-player1_game_parameter1_value=30
+player1_game_parameter1_value=30.5
 player1_game_parameter2_value=2
 player1_game_parameter3_value=1
 player1_game_parameter4_value=0
@@ -75,7 +75,7 @@ player2_email="waluigi@gmail.com"
 player2_game_parameter1_value=35
 player2_game_parameter2_value=4
 player2_game_parameter3_value=0
-player2_game_parameter4_value=0
+player2_game_parameter4_value=0.2
 
 player3_email="bowser@gmail.com"
 player3_game_parameter1_value=40
@@ -878,20 +878,24 @@ else
                 player_game_parameter3_value=$player7_game_parameter3_value
                 player_game_parameter4_value=$player7_game_parameter4_value
             fi
+            game_parameter1_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter1_value'-'$player_game_parameter1_value')}' )
+            game_parameter2_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter2_value'-'$player_game_parameter2_value')}' )
+            game_parameter3_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter3_value'-'$player_game_parameter3_value')}' )
+            game_parameter4_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter4_value'-'$player_game_parameter4_value')}' )
 
-            if [[ $key_game_parameter1_value -ne $player_game_parameter1_value ]]; then
+            if awk "BEGIN {exit !($game_parameter1_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (AddedPlayersCorrectlyTest): Developer 1 has incorrect parameter1 value for player" $k". Expected" $player_game_parameter1_value", but received" $key_game_parameter1_value
             fi
-            if [[ $key_game_parameter2_value -ne $player_game_parameter2_value ]]; then
+            if awk "BEGIN {exit !($game_parameter2_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (AddedPlayersCorrectlyTest): Developer 1 has incorrect parameter2 value for player" $k". Expected" $player_game_parameter2_value", but received" $key_game_parameter2_value
             fi
-            if [[ $key_game_parameter3_value -ne $player_game_parameter3_value ]]; then
+            if awk "BEGIN {exit !($game_parameter3_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (AddedPlayersCorrectlyTest): Developer 1 has incorrect parameter3 value for player" $k". Expected" $player_game_parameter3_value", but received" $key_game_parameter3_value
             fi
-            if [[ $key_game_parameter4_value -ne $player_game_parameter4_value ]]; then
+            if awk "BEGIN {exit !($game_parameter4_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (AddedPlayersCorrectlyTest): Developer 1 has incorrect parameter4 value for player" $k". Expected" $player_game_parameter4_value", but received" $key_game_parameter4_value
             fi
@@ -1056,19 +1060,24 @@ else
                 player_game_parameter4_value=$player9_game_parameter4_value
             fi
 
-            if [[ $key_game_parameter1_value -ne $player_game_parameter1_value ]]; then
+            game_parameter1_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter1_value'-'$player_game_parameter1_value')}' )
+            game_parameter2_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter2_value'-'$player_game_parameter2_value')}' )
+            game_parameter3_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter3_value'-'$player_game_parameter3_value')}' )
+            game_parameter4_value_diff=$( awk 'BEGIN{printf ("%.3f", '$key_game_parameter4_value'-'$player_game_parameter4_value')}' )
+
+            if awk "BEGIN {exit !($game_parameter1_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter1 value for player" $k". Expected" $player_game_parameter1_value", but received" $key_game_parameter1_value
             fi
-            if [[ $key_game_parameter2_value -ne $player_game_parameter2_value ]]; then
+            if awk "BEGIN {exit !($game_parameter2_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter2 value for player" $k". Expected" $player_game_parameter2_value", but received" $key_game_parameter2_value
             fi
-            if [[ $key_game_parameter3_value -ne $player_game_parameter3_value ]]; then
+            if awk "BEGIN {exit !($game_parameter3_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter3 value for player" $k". Expected" $player_game_parameter3_value", but received" $key_game_parameter3_value
             fi
-            if [[ $key_game_parameter4_value -ne $player_game_parameter4_value ]]; then
+            if awk "BEGIN {exit !($game_parameter4_value_diff >= 0.05)}"; then
                 num_errors=$((num_errors+1))
                 echo "ERROR  (UpdatedPlayerStatsTest): Developer 1 has incorrect parameter4 value for player" $k". Expected" $player_game_parameter4_value", but received" $key_game_parameter4_value
             fi
