@@ -104,6 +104,10 @@ jobs:
           sudo aptitude -y install libgoogle-glog-dev
       - name: Install Auth Libraries
         run: sudo apt-get install libssl-dev
+      - name: Install jq for end-to-end testing
+        run: |
+          sudo apt update
+          sudo apt install -y jq
       - name: Setup MySQL
         uses: shogo82148/actions-setup-mysql@v1
         with:
@@ -113,6 +117,8 @@ jobs:
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
+      - name: End-to-End Tests
+        run: testing/system-testing.sh
       - name: Unit Test - Authentication
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-units
