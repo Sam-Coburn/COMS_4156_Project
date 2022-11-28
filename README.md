@@ -2,6 +2,7 @@
 
 ## Client Link
 Client (Web UI): https://github.com/uarman29/COMS4156_Matchmaking_Client \
+[Instructions for Using Web UI Client](./reports/Client End-To-End Test Procedure.pdf)
 Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Client2
 
 ## Endpoints
