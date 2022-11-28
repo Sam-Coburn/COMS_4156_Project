@@ -117,8 +117,6 @@ jobs:
         run: sudo mysql -h 127.0.0.1 -u root --password=123 < "matchmaking_api_db_sql.sql"
       - name: Build Project
         run: bazel build --linkopt="-ljsoncpp" //main:main
-      - name: End-to-End Tests
-        run: testing/system-testing.sh
       - name: Unit Test - Authentication
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-auth-routes-units
@@ -152,5 +150,7 @@ jobs:
       - name: Integration Test - Matchmaking
         run: | 
           bazel test --linkopt="-ljsoncpp" --test_output=all --test_env=GLOG_minloglevel=1 //testing:test-matchmaking-route-integration
+      - name: End-to-End Tests
+        run: testing/system-testing.sh
       # - name: Test Project (all the tests at once)
       #   run: bazel test --linkopt="-ljsoncpp" --test_output=all //testing:test
