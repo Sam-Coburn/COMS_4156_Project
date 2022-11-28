@@ -119,7 +119,7 @@ jobs:
         run: bazel build --linkopt="-ljsoncpp" //main:main
       - name: End-to-End Tests
         run: |
-          bazel-bin/main/main &
+          bazel-bin/main/main &  > /dev/null
           PID=$!
           sleep 1
           testing/system-testing.sh
