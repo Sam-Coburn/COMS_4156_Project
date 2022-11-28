@@ -12,6 +12,11 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
   - Request Body:
     - `developer_email:string`
     - `developer_password:string`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```409: Developer already exists```
+
 
 - `POST /login`
   - Description:
@@ -20,12 +25,22 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
   - Request Body:
     - `developer_email:string`
     - `developer_password:string`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Credentials```
+    - ```404: Developer does not exist```
       
 - `DELETE /login`
   - Description
     Deletes a devloper from database provided the
     credentials match developer trying to be deleted
   - Authorization Header: `Bearer <API-Key>`
+  - Response Codes:
+    - ```200: Success```
+    - ```401: Invalid Token```
+    - ```404: Developer does not exist```
+    - ```500: Internal Server Error```
     
 - `POST /games`
   - Description:
@@ -38,12 +53,20 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `weights:Array<Float>`
     - `teams_per_match:Integer`
     - `players_per_team:Integer`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Token```
     
 
 - `GET /games`
   - Description:
     Retrieve a list of all games assocaited with developer's account
   - Authorization Header: `Bearer <API-Key>`
+  - Response Codes:
+    - ```200: Success```
+    - ```204: No Content```
+    - ```401: Invalid Token```
 
 - `POST /matchmake`
   - Description:
@@ -54,6 +77,10 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `game_id:int`
     - `matchmaking_type: 'basic' or 'advanced'`
     - `player_emails:vector<string>`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Credentials```
       
 - `GET /games/<int>`
   - Description:
@@ -61,6 +88,11 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
   - Request Parameters:
     - `game_id:int`
   - Authorization Header: `Bearer <API-Key>`
+  - Response Codes:
+    - ```200: Success```
+    - ```401: Invalid Token / No token```
+    - ```403: Not authorized```
+    - ```404: Game Id not found```
 
 - `PUT /games/<int>`
   - Description:
@@ -81,6 +113,12 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `game_parameter4_weight:float`
     - `teams_per_match:Integer`
     - `players_per_team:Integer`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Game Id not found```
  
 - `DELETE /games/<int>`
   - Description:
@@ -88,6 +126,11 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
   - Request Parameters:
     - `game_id:int`
   - Authorization Header: `Bearer <API-Key>`
+  - Response Code:
+    - ```200: Success```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Game id not found```
  
 - `GET /games/{game-id}/players`
   - Description:
@@ -95,6 +138,13 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
   - Request Parameters:
     - `game_id:int`
   - Authorization Header: `Bearer <API-Key>`
+  - Response Codes:
+    - ```200: Success```
+    - ```204: No players found```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Game id not found```
+    - ```500: Internal Server Error```
 
 - `POST /games/<int>/players`
   - Description:
@@ -109,6 +159,15 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
       - `game_parameter2_value:float`
       - `game_parameter3_value:float`
       - `game_parameter4_value:float`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Game id not found```
+    - ```409: Player rating already exists```
+    - ```417: Invalid input fields```
+    - ```500: Internal Server Error```
 
 - `GET /games/{game-id}/players/{player_email}`
   - Description:
@@ -117,6 +176,12 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `game_id:int`
     - `player_email:string`
   - Authorization Header: `Bearer <API-Key>`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Rating not found```
 
 - `PUT /games/{game_id}/players/{player_email}`
   - Description:
@@ -130,6 +195,14 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `game_parameter2_value:float`
     - `game_parameter3_value:float`
     - `game_parameter4_value:float`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Game id not found```
+    - ```417: Invalid Input Fields```
+    - ```500: Internal Server Error```
     
 - `DELETE /games/{game_id}/players/{player_email}`
   - Description:
@@ -138,6 +211,12 @@ Alternative Client (Server): https://github.com/uarman29/COMS4156_Matchmaking_Cl
     - `game_id:int`
     - `player_email:string`
   - Authorization Header: `Bearer <API-Key>`
+  - Response Codes:
+    - ```200: Success```
+    - ```400: Invalid Input```
+    - ```401: Invalid Token```
+    - ```403: Not authorized```
+    - ```404: Game id not found```
 
 
       
@@ -354,6 +433,13 @@ When you start the project you should see something like the following:
 (2022-10-10 15:01:13) [INFO    ] Call `app.loglevel(crow::LogLevel::Warning)` to hide Info level logs.
 
 ```
+
+## How to build your own client
+To make a client using our service the third party would simply have to make HTTP requests to our endpoints. Our documentation specifies the parameters, headers, response codes, and bodies required for each endpoint so as long as the third party makes http requests using these specifications and catches every response code it would be simple to create their own client. 
+
+For examples you can navigate to /src/app/services/matchmaking-api.service.ts in our sample Matchmaking Client which essentially just wraps every http call to every one of our endpoints in its own function.
+
+
 ## Extra Notes
 Tutorials I read to make this set up bazel + test:
 https://bazel.build/start/cpp
